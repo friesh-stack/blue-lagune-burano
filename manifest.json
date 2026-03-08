@@ -1,0 +1,26 @@
+{
+  "name": "Blue Lagune Burano",
+  "short_name": "Blue Lagune",
+  "description": "Exklusive Immobilien auf Burano — Venezianische Lagune",
+  "start_url": "/blue-lagune-burano/",
+  "scope": "/blue-lagune-burano/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#01111F",
+  "theme_color": "#00B4D8",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
