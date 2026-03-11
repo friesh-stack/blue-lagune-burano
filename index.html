@@ -2284,13 +2284,11 @@ async function _vaAskAI(question) {
   }
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://blue-lagune-proxy.friesh.workers.dev', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': _vaGetApiKey(),
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-request-header': 'allow'
+        'x-api-key': _vaGetApiKey()
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
