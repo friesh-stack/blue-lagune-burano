@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RaumScanner – Sprachgesteuerte Grundrisserfassung</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Clash+Display:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap');
+
+:root {
+  --ink: #0d0d0d;
+  --paper: #f5f0e8;
+  --paper2: #ede8dc;
+  --paper3: #e0dace;
+  --accent: #d4472a;
+  --accent2: #2a7dd4;
+  --green: #2ab86e;
+  --border: #c8c0b0;
+  --muted: #9a9080;
+  --shadow: rgba(13,13,13,0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Barlow', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* GRAIN OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+header {
+  padding: 16px 24px;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--paper);
+}
+
+.logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.logo .accent { color: var(--accent); }
+
+.header-badge {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* LEFT PANEL */
+.left-panel {
+  border-right: 2px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* CAPTURE ZONE */
+.capture-zone {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--paper);
+}
+
+.zone-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+/* API KEY */
+.api-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.api-input {
+  flex: 1;
+  background: var(--paper2);
+  border: 1.5px solid var(--border);
+  color: var(--ink);
+  padding: 8px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  border-radius: 2px;
+}
+.api-input:focus { outline: none; border-color: var(--ink); }
+.api-save-btn {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 8px 14px;
+  font-family: 'Barlow Condensed', monospace;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+/* VOICE BUTTON */
+.voice-center {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.mic-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  transition: all 0.2s;
+  position: relative;
+  flex-shrink: 0;
+}
+.mic-btn:hover { background: var(--ink); color: var(--paper); }
+.mic-btn.recording {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  animation: pulse-ring 1.2s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(212,71,42,0.5); }
+  70% { box-shadow: 0 0 0 20px rgba(212,71,42,0); }
+  100% { box-shadow: 0 0 0 0 rgba(212,71,42,0); }
+}
+
+.voice-info { flex: 1; }
+.voice-status {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.voice-hint {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* TRANSCRIPT BOX */
+.transcript-box {
+  background: var(--paper2);
+  border: 1.5px solid var(--border);
+  border-radius: 2px;
+  padding: 10px 14px;
+  min-height: 44px;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 10px;
+  position: relative;
+}
+.transcript-box.active { border-color: var(--accent); }
+.transcript-placeholder { color: var(--muted); font-style: italic; }
+
+/* MANUAL INPUT */
+.manual-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.manual-input {
+  flex: 1;
+  background: var(--paper2);
+  border: 1.5px solid var(--border);
+  color: var(--ink);
+  padding: 8px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  border-radius: 2px;
+}
+.manual-input:focus { outline: none; border-color: var(--ink); }
+.parse-btn {
+  background: var(--accent2);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.parse-btn:hover { opacity: 0.85; }
+
+/* PHOTO ZONE */
+.photo-zone {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--paper);
+}
+
+.photo-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.photo-upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 70px;
+  border: 2px dashed var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+  background: var(--paper2);
+  font-size: 11px;
+  color: var(--muted);
+  gap: 4px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px;
+}
+.photo-upload-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+.photo-thumbs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.photo-thumb {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+}
+.photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.photo-thumb .remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 50%;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.photo-thumb .ai-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(42,184,110,0.9);
+  color: white;
+  font-size: 8px;
+  text-align: center;
+  padding: 2px;
+  font-family: 'Space Mono', monospace;
+}
+
+.analyze-btn {
+  background: var(--green);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+  cursor: pointer;
+  align-self: flex-end;
+  flex-shrink: 0;
+}
+.analyze-btn:hover { opacity: 0.85; }
+.analyze-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ROOMS LIST */
+.rooms-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.rooms-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px 10px;
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+
+.rooms-header-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.add-manual-btn {
+  background: none;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  padding: 5px 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.add-manual-btn:hover { background: var(--ink); color: var(--paper); }
+
+.rooms-list {
+  padding: 8px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.room-card {
+  background: var(--paper2);
+  border: 1.5px solid var(--border);
+  border-radius: 2px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: start;
+  transition: border-color 0.15s;
+  position: relative;
+}
+.room-card:hover { border-color: var(--ink); }
+.room-card .left-stripe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 2px 0 0 2px;
+}
+
+.room-card-main { padding-left: 8px; }
+
+.room-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.room-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2px 6px;
+  border-radius: 1px;
+}
+
+.room-name-input {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed transparent;
+  color: var(--ink);
+  width: 100%;
+  cursor: text;
+  padding: 0;
+}
+.room-name-input:focus { outline: none; border-bottom-color: var(--border); }
+
+.room-dims {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dim-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dim-label {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.dim-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dim-input {
+  width: 64px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  padding: 4px 6px;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  border-radius: 2px;
+  text-align: right;
+}
+.dim-input:focus { outline: none; border-color: var(--ink); }
+.dim-unit { font-size: 10px; color: var(--muted); }
+
+.dim-area {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.area-label { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.area-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--accent);
+  line-height: 1;
+}
+.area-unit { font-size: 11px; color: var(--muted); }
+
+.room-card-actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+
+.card-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.card-btn:hover { border-color: var(--ink); color: var(--ink); }
+.card-btn.delete:hover { border-color: var(--accent); color: var(--accent); }
+
+.room-notes {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+  padding-left: 8px;
+  margin-top: 4px;
+}
+
+.room-photo-strip {
+  display: flex;
+  gap: 4px;
+  padding-left: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+.room-photo-mini {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 1px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.ai-chip {
+  font-size: 9px;
+  background: var(--green);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-family: 'Space Mono', monospace;
+  margin-left: 4px;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.right-panel-header {
+  padding: 14px 20px;
+  border-bottom: 2px solid var(--ink);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.export-btn {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 6px 14px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.export-btn:hover { background: var(--accent); }
+
+/* FLOOR PLAN CANVAS */
+.floorplan-wrap {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+  background: var(--paper2);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+canvas#fp-canvas {
+  background: white;
+  box-shadow: 0 4px 20px var(--shadow);
+  max-width: 100%;
+}
+
+/* SUMMARY */
+.summary-section {
+  padding: 14px 20px;
+  border-top: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+.summary-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.stat-block { text-align: center; }
+.stat-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--accent);
+  line-height: 1;
+}
+.stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.room-summary-list { display: flex; flex-direction: column; gap: 4px; max-height: 160px; overflow-y: auto; }
+.room-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding: 4px 8px;
+  background: var(--paper2);
+  border-radius: 1px;
+}
+.room-summary-name { font-weight: 500; }
+.room-summary-area { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); }
+
+/* LOG */
+.log-section {
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+  max-height: 80px;
+  overflow-y: auto;
+  background: var(--paper3);
+}
+.log-entry {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.log-entry.ok { color: var(--green); }
+.log-entry.err { color: var(--accent); }
+.log-entry.info { color: var(--accent2); }
+
+/* Hidden file input */
+#photo-file-input { display: none; }
+
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--paper2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* COLORS for rooms */
+.room-colors { --c0:#d4472a;--c1:#2a7dd4;--c2:#2ab86e;--c3:#c47d2a;--c4:#8b2ad4;--c5:#2ab8b8;--c6:#d42a7d;--c7:#7db82a; }
+
+@media (max-width: 800px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .right-panel { display: none; }
+}
+</style>
+</head>
+<body class="room-colors">
+
+<header>
+  <div class="logo">Raum<span class="accent">Scanner</span> Pro</div>
+  <div class="header-badge">KI-GESTÜTZTE GRUNDRISSERFASSUNG</div>
+</header>
+
+<div class="main-layout">
+  <!-- LEFT: INPUT PANEL -->
+  <div class="left-panel">
+
+    <!-- API KEY -->
+    <div class="capture-zone">
+      <div class="zone-title">① API-Schlüssel (Anthropic)</div>
+      <div class="api-bar">
+        <input type="password" class="api-input" id="api-key-input" placeholder="sk-ant-api..." autocomplete="off">
+        <button class="api-save-btn" onclick="saveApiKey()">SPEICHERN</button>
+      </div>
+
+      <!-- VOICE CAPTURE -->
+      <div class="zone-title">② Spracheingabe</div>
+      <div class="voice-center">
+        <button class="mic-btn" id="mic-btn" onclick="toggleRecording()" title="Mikrofon starten">
+          🎤
+        </button>
+        <div class="voice-info">
+          <div class="voice-status" id="voice-status">Bereit</div>
+          <div class="voice-hint">
+            z.B. <em>„Raum 1, Wohnzimmer, 3,50 Meter lang, 2,60 Meter breit"</em><br>
+            oder <em>„Schlafzimmer, 4 mal 3,5 Meter"</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="transcript-box" id="transcript-box">
+        <span class="transcript-placeholder" id="transcript-placeholder">Erkannte Sprache erscheint hier…</span>
+        <span id="transcript-text"></span>
+      </div>
+
+      <div class="manual-row">
+        <input type="text" class="manual-input" id="manual-input"
+          placeholder='Oder tippen: „Küche 3,2 x 2,8 m"'
+          onkeydown="if(event.key==='Enter') parseManualInput()">
+        <button class="parse-btn" onclick="parseManualInput()">→ KI PARSEN</button>
+      </div>
+    </div>
+
+    <!-- PHOTO CAPTURE -->
+    <div class="photo-zone">
+      <div class="zone-title">③ Fotos / Raumaufnahmen</div>
+      <div class="photo-row">
+        <label class="photo-upload-btn" for="photo-file-input">
+          <span style="font-size:22px;">📷</span>
+          <span>Foto hinzufügen</span>
+        </label>
+        <div class="photo-thumbs" id="photo-thumbs"></div>
+        <button class="analyze-btn" id="analyze-btn" onclick="analyzePhotos()" disabled>
+          🔍 KI analysieren
+        </button>
+      </div>
+      <input type="file" id="photo-file-input" accept="image/*" multiple onchange="handlePhotoUpload(this)">
+    </div>
+
+    <!-- ROOMS LIST -->
+    <div class="rooms-section">
+      <div class="rooms-header">
+        <div class="rooms-header-title">Räume <span id="room-count-badge" style="font-size:12px;color:var(--muted);">(0)</span></div>
+        <button class="add-manual-btn" onclick="addEmptyRoom()">+ Raum hinzufügen</button>
+      </div>
+      <div class="rooms-list" id="rooms-list">
+        <div style="text-align:center; padding: 30px; color: var(--muted); font-size:13px;">
+          Noch keine Räume erfasst.<br>Sprache, Tippen oder Foto verwenden ↑
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: FLOOR PLAN + SUMMARY -->
+  <div class="right-panel">
+    <div class="right-panel-header">
+      Grundriss
+      <button class="export-btn" onclick="exportReport()">↓ BERICHT</button>
+    </div>
+
+    <div class="floorplan-wrap">
+      <canvas id="fp-canvas" width="300" height="300"></canvas>
+    </div>
+
+    <div class="summary-section">
+      <div class="summary-title">Flächenübersicht</div>
+      <div class="summary-stats">
+        <div class="stat-block">
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-lbl">m² Gesamt</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-num" id="stat-rooms">0</div>
+          <div class="stat-lbl">Räume</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-num" id="stat-avg">—</div>
+          <div class="stat-lbl">m² Ø</div>
+        </div>
+      </div>
+      <div class="room-summary-list" id="room-summary-list"></div>
+    </div>
+
+    <div class="log-section" id="log-section"></div>
+  </div>
+</div>
+
+<script>
+// ===================== STATE =====================
+let rooms = [];
+let pendingPhotos = []; // {dataURL, file}
+let apiKey = localStorage.getItem('raumscanner_apikey') || '';
+let recognition = null;
+let isRecording = false;
+let fullTranscript = '';
+
+const ROOM_COLORS = ['#d4472a','#2a7dd4','#2ab86e','#c47d2a','#8b2ad4','#2ab8b8','#d42a7d','#7db82a'];
+
+// ===================== API KEY =====================
+if (apiKey) document.getElementById('api-key-input').value = apiKey;
+
+function saveApiKey() {
+  apiKey = document.getElementById('api-key-input').value.trim();
+  localStorage.setItem('raumscanner_apikey', apiKey);
+  log('API-Schlüssel gespeichert', 'ok');
+}
+
+// ===================== LOGGING =====================
+function log(msg, type = 'info') {
+  const sec = document.getElementById('log-section');
+  const el = document.createElement('div');
+  el.className = 'log-entry ' + type;
+  el.textContent = `[${new Date().toLocaleTimeString('de-DE')}] ${msg}`;
+  sec.insertBefore(el, sec.firstChild);
+  if (sec.children.length > 20) sec.removeChild(sec.lastChild);
+}
+
+// ===================== VOICE RECOGNITION =====================
+function initRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) { log('Spracherkennung nicht unterstützt (Chrome empfohlen)', 'err'); return false; }
+  recognition = new SpeechRecognition();
+  recognition.lang = 'de-DE';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onresult = (e) => {
+    let interim = '', final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+      else interim += e.results[i][0].transcript;
+    }
+    if (final) fullTranscript += final;
+    document.getElementById('transcript-placeholder').style.display = 'none';
+    document.getElementById('transcript-text').textContent = fullTranscript + interim;
+    document.getElementById('transcript-box').classList.add('active');
+  };
+
+  recognition.onend = () => {
+    if (isRecording) recognition.start(); // auto-restart
+  };
+
+  recognition.onerror = (e) => {
+    log('Mikrofon-Fehler: ' + e.error, 'err');
+    isRecording = false;
+    updateMicUI();
+  };
+  return true;
+}
+
+function toggleRecording() {
+  if (!recognition && !initRecognition()) return;
+
+  if (!isRecording) {
+    fullTranscript = '';
+    document.getElementById('transcript-text').textContent = '';
+    document.getElementById('transcript-placeholder').style.display = 'inline';
+    document.getElementById('transcript-box').classList.remove('active');
+    recognition.start();
+    isRecording = true;
+    log('Aufnahme gestartet…', 'info');
+  } else {
+    recognition.stop();
+    isRecording = false;
+    // Parse the transcript
+    if (fullTranscript.trim()) {
+      document.getElementById('manual-input').value = fullTranscript.trim();
+      setTimeout(() => parseManualInput(), 300);
+    }
+    log('Aufnahme beendet', 'ok');
+  }
+  updateMicUI();
+}
+
+function updateMicUI() {
+  const btn = document.getElementById('mic-btn');
+  const status = document.getElementById('voice-status');
+  btn.classList.toggle('recording', isRecording);
+  btn.textContent = isRecording ? '⏹' : '🎤';
+  status.textContent = isRecording ? '● Aufnahme läuft…' : 'Bereit';
+}
+
+// ===================== AI PARSING =====================
+async function callClaude(systemPrompt, userContent) {
+  if (!apiKey) { log('Kein API-Schlüssel gespeichert!', 'err'); return null; }
+
+  const body = {
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 1000,
+    system: systemPrompt,
+    messages: [{ role: 'user', content: userContent }]
+  };
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || 'API-Fehler');
+  }
+  const data = await res.json();
+  return data.content[0]?.text || '';
+}
+
+async function parseManualInput() {
+  const text = document.getElementById('manual-input').value.trim();
+  if (!text) return;
+
+  const btn = document.querySelector('.parse-btn');
+  btn.innerHTML = '<span class="spinner"></span> Analysiere…';
+  btn.disabled = true;
+  log('Analysiere Text: ' + text.substring(0, 60), 'info');
+
+  const system = `Du bist ein Assistent für Grundrisserfassung. Analysiere den deutschen Text und extrahiere ALLE genannten Räume mit ihren Abmessungen.
+
+Antworte NUR mit einem JSON-Array, keine anderen Texte, keine Codeblöcke:
+[
+  {
+    "name": "Wohnzimmer",
+    "type": "wohnzimmer",
+    "laenge": 3.5,
+    "breite": 2.6,
+    "notizen": "optional weitere Infos"
+  }
+]
+
+Typen: wohnzimmer, schlafzimmer, kueche, bad, wc, flur, abstellraum, balkon, buero, keller, sonstiges
+
+Regeln:
+- Kommazahlen wie "3,50" → 3.5
+- "4 mal 3" → laenge:4, breite:3
+- Wenn nur eine Zahl: setze beide auf diese Zahl
+- Fehlende Maße: setze auf null
+- Extrahiere ALLE Räume aus dem Text`;
+
+  try {
+    const result = await callClaude(system, text);
+    const clean = result.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    parsed.forEach(r => {
+      addRoom({
+        name: r.name || 'Raum',
+        type: r.type || 'sonstiges',
+        laenge: r.laenge || null,
+        breite: r.breite || null,
+        notizen: r.notizen || '',
+        photos: []
+      });
+    });
+
+    log(`${parsed.length} Raum/Räume erkannt und hinzugefügt`, 'ok');
+    document.getElementById('manual-input').value = '';
+  } catch (e) {
+    log('Parse-Fehler: ' + e.message, 'err');
+  } finally {
+    btn.textContent = '→ KI PARSEN';
+    btn.disabled = false;
+  }
+}
+
+// ===================== PHOTO HANDLING =====================
+function handlePhotoUpload(input) {
+  const files = Array.from(input.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      pendingPhotos.push({ dataURL: e.target.result, file });
+      renderPhotoThumbs();
+      document.getElementById('analyze-btn').disabled = false;
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function renderPhotoThumbs() {
+  const container = document.getElementById('photo-thumbs');
+  container.innerHTML = '';
+  pendingPhotos.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'photo-thumb';
+    div.innerHTML = `
+      <img src="${p.dataURL}" alt="Foto ${i+1}">
+      <button class="remove" onclick="removePhoto(${i})">✕</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function removePhoto(i) {
+  pendingPhotos.splice(i, 1);
+  renderPhotoThumbs();
+  if (!pendingPhotos.length) document.getElementById('analyze-btn').disabled = true;
+}
+
+async function analyzePhotos() {
+  if (!pendingPhotos.length) return;
+  if (!apiKey) { log('Kein API-Schlüssel!', 'err'); return; }
+
+  const btn = document.getElementById('analyze-btn');
+  btn.innerHTML = '<span class="spinner"></span> KI analysiert…';
+  btn.disabled = true;
+  log(`Analysiere ${pendingPhotos.length} Foto(s) mit Claude Vision…`, 'info');
+
+  // Build message with images
+  const content = [
+    {
+      type: 'text',
+      text: `Analysiere diese Raumfotos und extrahiere alle erkennbaren Räume.
+Wenn Maße sichtbar sind (Maßbänder, Aufkleber, Grundrisse an der Wand), nutze sie.
+Schätze sonst die Raumgröße anhand von Möbeln und typischen Raumproportionen.
+
+Antworte NUR mit JSON (kein Markdown):
+[{"name":"Raumname","type":"typ","laenge":3.5,"breite":2.8,"notizen":"Schätzung basierend auf..."}]
+
+Typen: wohnzimmer, schlafzimmer, kueche, bad, wc, flur, abstellraum, balkon, buero, keller, sonstiges`
+    },
+    ...pendingPhotos.map(p => ({
+      type: 'image',
+      source: {
+        type: 'base64',
+        media_type: p.file.type || 'image/jpeg',
+        data: p.dataURL.split(',')[1]
+      }
+    }))
+  ];
+
+  try {
+    const body = {
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content }]
+    };
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'API-Fehler');
+    }
+
+    const data = await res.json();
+    const text = data.content[0]?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+
+    let parsed;
+    try { parsed = JSON.parse(clean); }
+    catch { throw new Error('Ungültige JSON-Antwort: ' + clean.substring(0,100)); }
+
+    const photosCopy = [...pendingPhotos];
+    parsed.forEach((r, i) => {
+      addRoom({
+        name: r.name || 'Raum',
+        type: r.type || 'sonstiges',
+        laenge: r.laenge || null,
+        breite: r.breite || null,
+        notizen: r.notizen || '',
+        photos: photosCopy.map(p => p.dataURL)
+      });
+    });
+
+    // Mark thumbs as analyzed
+    document.querySelectorAll('.photo-thumb').forEach(t => {
+      const badge = document.createElement('div');
+      badge.className = 'ai-badge';
+      badge.textContent = 'KI ✓';
+      t.appendChild(badge);
+    });
+
+    log(`${parsed.length} Raum/Räume aus Foto(s) erkannt`, 'ok');
+    pendingPhotos = [];
+    renderPhotoThumbs();
+
+  } catch(e) {
+    log('Foto-Analyse Fehler: ' + e.message, 'err');
+  } finally {
+    btn.textContent = '🔍 KI analysieren';
+    btn.disabled = false;
+  }
+}
+
+// ===================== ROOMS =====================
+function addRoom(data = {}) {
+  const room = {
+    id: Date.now() + Math.random(),
+    name: data.name || 'Neuer Raum',
+    type: data.type || 'sonstiges',
+    laenge: data.laenge ?? '',
+    breite: data.breite ?? '',
+    notizen: data.notizen || '',
+    photos: data.photos || [],
+    color: ROOM_COLORS[rooms.length % ROOM_COLORS.length]
+  };
+  rooms.push(room);
+  renderRooms();
+  renderFloorplan();
+  updateStats();
+  return room;
+}
+
+function addEmptyRoom() {
+  addRoom({ name: 'Raum ' + (rooms.length + 1) });
+}
+
+function deleteRoom(id) {
+  rooms = rooms.filter(r => r.id !== id);
+  renderRooms();
+  renderFloorplan();
+  updateStats();
+}
+
+function updateRoomField(id, field, value) {
+  const r = rooms.find(r => r.id === id);
+  if (!r) return;
+  if (field === 'laenge' || field === 'breite') {
+    r[field] = parseFloat(value.replace(',','.')) || null;
+  } else {
+    r[field] = value;
+  }
+  renderFloorplan();
+  updateStats();
+  renderSummaryList();
+}
+
+function getArea(r) {
+  if (!r.laenge || !r.breite) return null;
+  return (r.laenge * r.breite).toFixed(2);
+}
+
+function renderRooms() {
+  const list = document.getElementById('rooms-list');
+  document.getElementById('room-count-badge').textContent = `(${rooms.length})`;
+
+  if (!rooms.length) {
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted);font-size:13px;">Noch keine Räume erfasst.<br>Sprache, Tippen oder Foto verwenden ↑</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  rooms.forEach((r, i) => {
+    const area = getArea(r);
+    const card = document.createElement('div');
+    card.className = 'room-card';
+    card.dataset.id = r.id;
+
+    const photoStrip = r.photos.length
+      ? `<div class="room-photo-strip">${r.photos.slice(0,4).map(p =>
+          `<img class="room-photo-mini" src="${p}" title="Raumfoto">`).join('')}</div>`
+      : '';
+
+    card.innerHTML = `
+      <div class="left-stripe" style="background:${r.color}"></div>
+      <div class="room-card-main">
+        <div class="room-card-title">
+          <span class="room-number">${String(i+1).padStart(2,'0')}</span>
+          <input type="text" class="room-name-input" value="${r.name}"
+            onchange="updateRoomField('${r.id}','name',this.value)"
+            title="Raumname bearbeiten">
+          ${r.notizen ? '<span class="ai-chip">KI</span>' : ''}
+        </div>
+        <div class="room-dims">
+          <div class="dim-field">
+            <div class="dim-label">Länge</div>
+            <div class="dim-input-row">
+              <input type="text" class="dim-input" value="${r.laenge || ''}"
+                placeholder="0.00"
+                onchange="updateRoomField('${r.id}','laenge',this.value)">
+              <span class="dim-unit">m</span>
+            </div>
+          </div>
+          <div class="dim-field">
+            <div class="dim-label">Breite</div>
+            <div class="dim-input-row">
+              <input type="text" class="dim-input" value="${r.breite || ''}"
+                placeholder="0.00"
+                onchange="updateRoomField('${r.id}','breite',this.value)">
+              <span class="dim-unit">m</span>
+            </div>
+          </div>
+          <div class="dim-area">
+            <div class="area-label">Fläche</div>
+            <div class="area-value">${area || '—'}</div>
+            <div class="area-unit">${area ? 'm²' : ''}</div>
+          </div>
+        </div>
+        ${r.notizen ? `<div class="room-notes">${r.notizen}</div>` : ''}
+        ${photoStrip}
+      </div>
+      <div class="room-card-actions">
+        <button class="card-btn delete" onclick="deleteRoom('${r.id}')" title="Löschen">✕</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// ===================== FLOOR PLAN RENDER =====================
+function renderFloorplan() {
+  const canvas = document.getElementById('fp-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = 300, H = 300;
+  canvas.width = W; canvas.height = H;
+
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, W, H);
+
+  const validRooms = rooms.filter(r => r.laenge && r.breite);
+  if (!validRooms.length) {
+    ctx.fillStyle = '#ccc';
+    ctx.font = '12px Barlow, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Grundriss erscheint hier', W/2, H/2);
+    return;
+  }
+
+  // Simple auto-layout: place rooms in a grid
+  const cols = Math.ceil(Math.sqrt(validRooms.length));
+  const maxL = Math.max(...validRooms.map(r => r.laenge));
+  const maxB = Math.max(...validRooms.map(r => r.breite));
+
+  const margin = 20;
+  const cellW = (W - margin * 2) / cols;
+  const cellH = (H - margin * 2) / Math.ceil(validRooms.length / cols);
+
+  validRooms.forEach((r, i) => {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const cx = margin + col * cellW;
+    const cy = margin + row * cellH;
+
+    // Scale room within cell
+    const scale = Math.min(cellW / (r.laenge + 0.5), cellH / (r.breite + 0.5)) * 0.85;
+    const rw = r.laenge * scale;
+    const rh = r.breite * scale;
+    const rx = cx + (cellW - rw) / 2;
+    const ry = cy + (cellH - rh) / 2;
+
+    // Fill
+    const hex = r.color;
+    const rgb = parseInt(hex.slice(1),16);
+    const rr=(rgb>>16)&255, rg=(rgb>>8)&255, rb=rgb&255;
+    ctx.fillStyle = `rgba(${rr},${rg},${rb},0.12)`;
+    ctx.fillRect(rx, ry, rw, rh);
+
+    // Border
+    ctx.strokeStyle = r.color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(rx, ry, rw, rh);
+
+    // Name
+    ctx.fillStyle = '#0d0d0d';
+    ctx.font = `bold ${Math.max(8, Math.min(11, rw/r.name.length*1.5))}px Barlow Condensed, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(r.name, rx + rw/2, ry + rh/2 - 4);
+
+    // Area
+    ctx.fillStyle = r.color;
+    ctx.font = `${Math.max(7, Math.min(9, rw/5))}px Space Mono, monospace`;
+    ctx.fillText(getArea(r) + 'm²', rx + rw/2, ry + rh/2 + 10);
+
+    // Dimensions
+    ctx.fillStyle = '#999';
+    ctx.font = '7px Space Mono, monospace';
+    ctx.fillText(r.laenge+'×'+r.breite+'m', rx + rw/2, ry + rh + 9);
+  });
+
+  ctx.textAlign = 'left';
+}
+
+// ===================== STATS =====================
+function updateStats() {
+  const validRooms = rooms.filter(r => r.laenge && r.breite);
+  const total = validRooms.reduce((s, r) => s + r.laenge * r.breite, 0);
+  document.getElementById('stat-total').textContent = total.toFixed(1);
+  document.getElementById('stat-rooms').textContent = rooms.length;
+  document.getElementById('stat-avg').textContent = validRooms.length
+    ? (total / validRooms.length).toFixed(1) : '—';
+  renderSummaryList();
+}
+
+function renderSummaryList() {
+  const list = document.getElementById('room-summary-list');
+  list.innerHTML = '';
+  rooms.forEach(r => {
+    const area = getArea(r);
+    const row = document.createElement('div');
+    row.className = 'room-summary-row';
+    row.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:8px;height:8px;border-radius:1px;background:${r.color};flex-shrink:0;"></div>
+        <span class="room-summary-name">${r.name}</span>
+      </div>
+      <span class="room-summary-area">${area ? area + ' m²' : '—'}</span>
+    `;
+    list.appendChild(row);
+  });
+}
+
+// ===================== EXPORT =====================
+function exportReport() {
+  const canvas = document.getElementById('fp-canvas');
+  const imgData = canvas.toDataURL('image/png');
+
+  const validRooms = rooms.filter(r => r.laenge && r.breite);
+  const total = validRooms.reduce((s, r) => s + r.laenge * r.breite, 0);
+
+  let tableRows = rooms.map((r, i) => {
+    const area = getArea(r);
+    return `<tr>
+      <td>${i+1}</td>
+      <td><span style="display:inline-block;width:10px;height:10px;background:${r.color};border-radius:2px;margin-right:6px;"></span>${r.name}</td>
+      <td>${r.laenge || '—'} m</td>
+      <td>${r.breite || '—'} m</td>
+      <td><strong>${area ? area + ' m²' : '—'}</strong></td>
+      <td style="color:#666;font-size:11px;">${r.notizen || ''}</td>
+    </tr>`;
+  }).join('');
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+  <meta charset="UTF-8">
+  <title>Grundriss-Bericht</title>
+  <style>
+    body { font-family: 'Barlow', Arial, sans-serif; margin: 40px; color: #0d0d0d; max-width: 900px; }
+    h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
+    .subtitle { color: #888; font-size: 13px; margin-bottom: 28px; font-family: monospace; }
+    .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; align-items: start; }
+    img.fp { width: 100%; border: 1px solid #ddd; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background: #0d0d0d; color: #f5f0e8; padding: 10px 12px; text-align: left; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+    td { padding: 10px 12px; border-bottom: 1px solid #e8e4dc; }
+    tr:last-child td { border-bottom: none; }
+    .total-row { background: #f5f0e8; font-weight: bold; }
+    .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-box { border: 1.5px solid #ddd; padding: 14px; text-align: center; border-radius: 2px; }
+    .stat-num { font-size: 32px; font-weight: 700; color: #d4472a; line-height: 1; }
+    .stat-lbl { font-size: 11px; color: #888; margin-top: 4px; }
+    @media print { button { display: none; } }
+  </style>
+  </head><body>
+  <h1>Grundriss-Bericht</h1>
+  <div class="subtitle">Erstellt mit RaumScanner Pro · ${new Date().toLocaleDateString('de-DE', {day:'2-digit',month:'long',year:'numeric'})}</div>
+  <div class="stat-grid">
+    <div class="stat-box"><div class="stat-num">${total.toFixed(1)}</div><div class="stat-lbl">m² Gesamtfläche</div></div>
+    <div class="stat-box"><div class="stat-num">${rooms.length}</div><div class="stat-lbl">Räume</div></div>
+    <div class="stat-box"><div class="stat-num">${validRooms.length ? (total/validRooms.length).toFixed(1) : '—'}</div><div class="stat-lbl">m² Durchschnitt</div></div>
+  </div>
+  <div class="layout">
+    <div><img class="fp" src="${imgData}" alt="Grundriss"></div>
+    <div>
+      <table>
+        <thead><tr><th>#</th><th>Raum</th><th>Länge</th><th>Breite</th><th>Fläche</th><th>Notizen</th></tr></thead>
+        <tbody>
+          ${tableRows}
+          <tr class="total-row"><td colspan="4">Gesamtfläche</td><td>${total.toFixed(2)} m²</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+  <button onclick="window.print()" style="background:#d4472a;color:white;border:none;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;border-radius:2px;letter-spacing:1px;">
+    🖨 DRUCKEN / PDF SPEICHERN
+  </button>
+  </body></html>`);
+  win.document.close();
+}
+
+// Init
+renderRooms();
+renderFloorplan();
+updateStats();
+log('RaumScanner bereit. API-Schlüssel eingeben und los!', 'info');
+</script>
+</body>
+</html>
