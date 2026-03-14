@@ -266,9 +266,12 @@ canvas#fpCanvas{width:100%;border-radius:10px;background:#060e1a;display:block}
     <div class="floorplan-wrap" id="fpWrap">
       <div class="fp-hdr">
         <div class="section-title" data-i18n="floorPlanTitle">Grundriss-Übersicht</div>
-        <button class="btn-ghost" style="font-size:.75rem" onclick="drawFloorPlan()" data-i18n="redraw">↻ Neu zeichnen</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn-ghost" style="font-size:.75rem" id="btnFurniture" onclick="toggleFurniture()">🪑 Möbel einzeichnen</button>
+          <button class="btn-ghost" style="font-size:.75rem" onclick="drawFloorPlan()" data-i18n="redraw">↻ Neu zeichnen</button>
+        </div>
       </div>
-      <canvas id="fpCanvas" height="380"></canvas>
+      <canvas id="fpCanvas" height="420"></canvas>
     </div>
   </div>
 </div>
@@ -303,8 +306,8 @@ const I18N = {
     speakMeasure:'🎙 Maße sprechen', speakMeasureHint:'Sprechen Sie die Maße…',
     floorPlanTitle:'Grundriss-Übersicht', redraw:'↻ Neu zeichnen',
     print:'🖨️ Drucken', whatsapp:'📱 WhatsApp', email:'✉️ E-Mail', maps:'📍 Google Maps',
-    analyzePrompt:'Du bist ein professioneller Raumvermesser. Analysiere dieses Raumfoto und erstelle eine kompakte Grundriss-Beschreibung: Raumtyp, geschätzte Maße (Länge × Breite), Besonderheiten (Fenster, Türen, Nischen), Raumhöhe falls erkennbar, und kurze Nutzungsempfehlung. Antworte auf Deutsch, präzise und strukturiert, maximal 200 Wörter.',
-    analyzeRoomPrompt:'Du bist ein professioneller Raumvermesser. Analysiere dieses Foto des Raumes "{name}". Beschreibe: Raumtyp, geschätzte Maße (Länge × Breite, falls erkennbar), Fenster/Türen/Besonderheiten, Raumhöhe falls erkennbar, Zustand, Nutzungsempfehlung. Deutsch, maximal 180 Wörter, strukturiert.',
+    analyzePrompt:'Du bist ein professioneller Raumvermesser. Analysiere dieses Raumfoto. Antworte auf Deutsch ohne Markdown-Formatierung (keine ** oder #). Beschreibe: Raumtyp, geschätzte Maße (Länge × Breite), Fenster/Türen/Besonderheiten, Raumhöhe falls erkennbar, Nutzungsempfehlung. Maximal 200 Wörter. Dann füge einen Block hinzu:\n[ELEMENTS]\n{"windows":[{"wall":"N","pos":0.5,"width":1.2}],"doors":[{"wall":"S","pos":0.3,"width":0.9,"side":"inside"}],"features":[]}\n[/ELEMENTS]\nwall = N/S/E/W, pos = 0..1 Position entlang der Wand, width in Meter.',
+    analyzeRoomPrompt:'Du bist ein professioneller Raumvermesser. Analysiere dieses Foto des Raumes "{name}". Antworte auf Deutsch ohne Markdown-Formatierung (keine ** oder #). Beschreibe: Raumtyp, Maße falls erkennbar, Fenster/Türen/Besonderheiten (z.B. Kamin), Zustand, Nutzungsempfehlung. Max 180 Wörter. Dann füge hinzu:\n[ELEMENTS]\n{"windows":[{"wall":"N","pos":0.5,"width":1.2}],"doors":[{"wall":"S","pos":0.3,"width":0.9,"side":"inside"}],"features":[{"type":"kamin","wall":"N","pos":0.8}]}\n[/ELEMENTS]\nwall=N/S/E/W, pos=0..1, width in Meter.',
     srLang:'de-DE', ttsLang:'de-DE',
     nameHint:'Objektname sprechen…', addrHint:'Adresse sprechen…',
     roomAddedMsg:' hinzugefügt.', dimsMsg:'Maße: ', onMsg:' mal ', meterUnit:' Meter.',
@@ -330,7 +333,13 @@ const I18N = {
     speakMeasure:'🎙 Dire le misure', speakMeasureHint:'Dire le misure…',
     floorPlanTitle:'Planimetria', redraw:'↻ Ridisegna',
     print:'🖨️ Stampa', whatsapp:'📱 WhatsApp', email:'✉️ E-Mail', maps:'📍 Google Maps',
-    analyzePrompt:'Sei un professionista del rilievo immobiliare. Analizza questa foto del locale e crea una descrizione planimetrica: tipo di locale, misure stimate (lunghezza × larghezza), caratteristiche (finestre, porte, nicchie), altezza se visibile, e breve raccomandazione d\'uso. Rispondi in italiano, preciso e strutturato, massimo 200 parole.',
+    analyzePrompt:'Sei un professionista del rilievo. Analizza questa foto. Rispondi in italiano senza Markdown (no **). Descrivi: tipo, misure, finestre/porte/caratteristiche, altezza, raccomandazione. Max 200 parole. Poi aggiungi:
+    analyzeRoomPrompt:'Sei un professionista del rilievo. Analizza questa foto del locale "{name}". Rispondi in italiano senza Markdown. Max 180 parole. Poi aggiungi:
+[ELEMENTS]
+{"windows":[],"doors":[],"features":[]}
+[/ELEMENTS]',
+{"windows":[{"wall":"N","pos":0.5,"width":1.2}],"doors":[{"wall":"S","pos":0.3,"width":0.9,"side":"inside"}],"features":[]}
+[/ELEMENTS]',
     analyzeRoomPrompt:'Sei un professionista del rilievo immobiliare. Analizza questa foto del locale "{name}". Descrivi: tipo, misure stimate (L × L), finestre/porte/caratteristiche, altezza se visibile, stato, raccomandazione d\'uso. Italiano, max 180 parole, strutturato.',
     srLang:'it-IT', ttsLang:'it-IT',
     nameHint:'Dire il nome dell\'immobile…', addrHint:'Dire l\'indirizzo…',
@@ -351,7 +360,13 @@ const I18N = {
     gpsBtn:'📍 GPS Position', speaking:'Speaking…', continueBtn:'Continue →',
     quickScanTitle:'📷 Quick Scan', quickScanSub:'Take a photo of the room — Claude AI analyses it instantly.',
     takePhoto:'📷 Take photo', fromFile:'🗂 Load from file', analyzing:'Claude analysing…',
-    readAloud:'🔊 Read aloud', roomsTitle:'Rooms', roomByVoice:'🎙 Add room by voice',
+    analyzePrompt:'You are a professional surveyor. Analyse this photo. Reply in English without Markdown (no **). Describe: type, estimated size, windows/doors/features, height, recommendation. Max 200 words. Then add:
+    analyzeRoomPrompt:'You are a professional surveyor. Analyse this photo of room "{name}". Reply in English without Markdown. Max 180 words. Then add:
+[ELEMENTS]
+{"windows":[],"doors":[],"features":[]}
+[/ELEMENTS]',
+{"windows":[{"wall":"N","pos":0.5,"width":1.2}],"doors":[{"wall":"S","pos":0.3,"width":0.9,"side":"inside"}],"features":[]}
+[/ELEMENTS]',
     speakRoomHint:'Say room name and dimensions…', addRoom:'＋ Add room',
     length:'Length', width:'Width', height:'Height', meters:'Metres',
     speakMeasure:'🎙 Say measurements', speakMeasureHint:'Say the measurements…',
@@ -513,7 +528,17 @@ function updateDim() {
   r.l = parseFloat(document.getElementById('dimL').value) || 0;
   r.b = parseFloat(document.getElementById('dimB').value) || 0;
   r.h = parseFloat(document.getElementById('dimH').value) || 0;
+  // Update description: replace any estimated dimensions with real ones
+  if(r.l && r.b && r.analysis) {
+    const dimNote = `\n[Gemessene Maße: ${r.l} × ${r.b} m${r.h ? ' × ' + r.h + ' m Höhe' : ''}]`;
+    // Remove old dimension note if present, add new
+    const cleaned = r.analysis.replace(/\n?\[Gemessene Maße:.*?\]/g,'');
+    r.analysis = cleaned + dimNote;
+    const el = document.getElementById('phResultTxt');
+    if(el) el.innerHTML = r.analysis.replace(/\n/g,'<br>');
+  }
   renderRooms();
+  drawFloorPlan();
 }
 
 /* ── QUICK SCAN ── */
@@ -547,7 +572,8 @@ async function handleQuickPhoto(inp) {
         })
       });
       const d = await res.json();
-      quickAnalysis = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : T('analyzing');
+      let rawQ = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : T('analyzing');
+      quickAnalysis = cleanText(rawQ.replace(/\[ELEMENTS\][\s\S]*?\[\/ELEMENTS\]/g,'').trim());
       document.getElementById('quickPhStatus').style.display='none';
       document.getElementById('quickPhResultTxt').innerHTML = quickAnalysis.replace(/\n/g,'<br>');
       document.getElementById('quickPhResultTxt').classList.add('show');
@@ -663,15 +689,21 @@ async function handlePhoto(inp) {
         body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:800, messages:[{role:'user', content}]})
       });
       const d = await res.json();
-      const txt = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : T('analyzing');
+      let rawTxt = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : T('analyzing');
+      // Parse structural elements
+      const elements = parseElements(rawTxt);
+      if(elements) r.elements = elements;
+      // Clean display text: strip ** and [ELEMENTS] block
+      const cleanTxt = cleanText(rawTxt.replace(/\[ELEMENTS\][\s\S]*?\[\/ELEMENTS\]/g,'').trim());
       // Store analysis on current photo AND as combined room analysis
-      r.photos[photoIdx].analysis = txt;
-      r.analysis = txt;
+      r.photos[photoIdx].analysis = cleanTxt;
+      r.analysis = cleanTxt;
       document.getElementById('phStatus').style.display = 'none';
-      document.getElementById('phResultTxt').innerHTML = txt.replace(/\n/g,'<br>');
+      document.getElementById('phResultTxt').innerHTML = cleanTxt.replace(/\n/g,'<br>');
       document.getElementById('phResultTxt').classList.add('show');
       document.getElementById('btnTTS').classList.add('show');
       renderPhotoStrip();
+      drawFloorPlan();
       window.scrollTo(0, scrollY);
     } catch(err) {
       document.getElementById('phStatus').innerHTML = T('analysisError');
@@ -835,72 +867,283 @@ speechSynthesis.getVoices();
 window.speechSynthesis && speechSynthesis.addEventListener('voiceschanged',()=>{});
 
 /* ── FLOOR PLAN CANVAS ── */
+let showFurniture = false;
+
+// Strip markdown ** from text
+function cleanText(txt) {
+  return txt ? txt.replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').replace(/#{1,3}\s*/g,'') : txt;
+}
+
+// Parse [ELEMENTS] JSON block from AI response
+function parseElements(txt) {
+  try {
+    const m = txt.match(/\[ELEMENTS\]([\s\S]*?)\[\/ELEMENTS\]/);
+    if(m) return JSON.parse(m[1].trim());
+  } catch(e){}
+  return null;
+}
+
 function drawFloorPlan() {
   const canvas = document.getElementById('fpCanvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = canvas.offsetWidth * window.devicePixelRatio || 800;
-  ctx.scale(window.devicePixelRatio||1, 1);
+  const dpr = window.devicePixelRatio || 1;
   const W = canvas.offsetWidth || 800;
-  const H = 380;
-  canvas.height = H;
-  ctx.fillStyle = '#060e1a';
+  const H = 420;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  // Background
+  ctx.fillStyle = '#f5f0e8';
   ctx.fillRect(0,0,W,H);
 
   const rooms = state.rooms.filter(r=>r.l>0&&r.b>0);
   if(!rooms.length){
-    ctx.fillStyle = 'rgba(136,153,170,.4)';
+    ctx.fillStyle = 'rgba(80,80,100,.4)';
     ctx.font = '13px Outfit, sans-serif';
     ctx.textAlign='center';
-    ctx.fillText('Fügen Sie Räume mit Maßen hinzu', W/2, H/2);
+    ctx.fillText('Räume mit Maßen hinzufügen', W/2, H/2);
     return;
   }
-  const PAD = 20;
-  // Find bounding box (simple row layout)
-  const totalW = rooms.reduce((s,r)=>s+r.l,0) + (rooms.length-1)*0.5;
-  const maxH = Math.max(...rooms.map(r=>r.b));
-  const scaleX = (W-PAD*2) / totalW;
-  const scaleY = (H-PAD*2-30) / maxH;
-  const scale = Math.min(scaleX, scaleY, 60);
-  const COLORS = ['#00b4d8','#06d6a0','#f4c533','#e63946','#7b2d8b','#ff9f1c','#2ec4b6'];
+
+  const PAD = 28;
+  const WALL = 10; // wall thickness px
+  const totalL = rooms.reduce((s,r)=>s+r.l,0) + (rooms.length-1)*0.3;
+  const maxB = Math.max(...rooms.map(r=>r.b));
+  const scaleX = (W - PAD*2) / totalL;
+  const scaleY = (H - PAD*2 - 32) / maxB;
+  const sc = Math.min(scaleX, scaleY, 65);
+
+  const ROOM_FILL = ['#e8f4f8','#e8f8f0','#fff8e8','#f8e8e8','#f0e8f8','#e8f0f0','#f8f0e8'];
+  const ROOM_WALL = ['#1a6080','#1a8060','#806020','#802020','#602080','#206060','#806040'];
+
   let cx = PAD;
   const baseY = PAD + 10;
-  rooms.forEach((r,i)=>{
-    const rw = r.l*scale;
-    const rh = r.b*scale;
-    const ry = baseY + (maxH*scale - rh)/2;
-    const col = COLORS[i%COLORS.length];
-    // Fill
-    ctx.fillStyle = col + '1a';
-    ctx.fillRect(cx, ry, rw, rh);
-    // Border
-    ctx.strokeStyle = col + 'cc';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(cx, ry, rw, rh);
-    // Name
-    ctx.fillStyle = col;
-    ctx.font = `bold ${Math.max(9,Math.min(12,rw/8))}px Outfit, sans-serif`;
-    ctx.textAlign='center';
-    ctx.fillText(roomIcon(r.name)+' '+r.name, cx+rw/2, ry+rh/2-6);
-    // Dims
-    ctx.fillStyle = 'rgba(255,255,255,.55)';
-    ctx.font = `${Math.max(8,Math.min(10,rw/10))}px JetBrains Mono, monospace`;
-    ctx.fillText(`${r.l}×${r.b}m`, cx+rw/2, ry+rh/2+8);
-    if(r.l&&r.b){
-      const sqm = (r.l*r.b).toFixed(1)+'m²';
-      ctx.fillText(sqm, cx+rw/2, ry+rh/2+20);
+
+  rooms.forEach((room, i) => {
+    const rw = room.l * sc;
+    const rh = room.b * sc;
+    const rx = cx;
+    const ry = baseY + (maxB*sc - rh) / 2;
+    const fill = ROOM_FILL[i % ROOM_FILL.length];
+    const wallCol = ROOM_WALL[i % ROOM_WALL.length];
+
+    // Room fill
+    ctx.fillStyle = fill;
+    ctx.fillRect(rx+WALL, ry+WALL, rw-WALL*2, rh-WALL*2);
+
+    // Draw walls with openings
+    const el = room.elements || {};
+    const wins = el.windows || [];
+    const doors = el.doors || [];
+    const feats = el.features || [];
+
+    // Helper: draw wall segment with gaps
+    function drawWall(x1,y1,x2,y2,gaps) {
+      // gaps: [{start:0..1, end:0..1}] as fraction of wall length
+      const len = Math.hypot(x2-x1,y2-y1);
+      ctx.strokeStyle = wallCol;
+      ctx.lineWidth = WALL;
+      ctx.lineCap = 'square';
+      if(!gaps || !gaps.length) {
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+        return;
+      }
+      // Sort gaps
+      const sorted = [...gaps].sort((a,b)=>a.start-b.start);
+      let pos = 0;
+      sorted.forEach(g => {
+        const gs = Math.max(0,g.start); const ge = Math.min(1,g.end);
+        if(gs > pos) {
+          ctx.beginPath();
+          ctx.moveTo(x1+(x2-x1)*pos, y1+(y2-y1)*pos);
+          ctx.lineTo(x1+(x2-x1)*gs, y1+(y2-y1)*gs);
+          ctx.stroke();
+        }
+        pos = ge;
+      });
+      if(pos < 1) {
+        ctx.beginPath();
+        ctx.moveTo(x1+(x2-x1)*pos, y1+(y2-y1)*pos);
+        ctx.lineTo(x2,y2); ctx.stroke();
+      }
     }
-    cx += rw + 0.5*scale;
+
+    // Build gaps per wall from windows + doors
+    function buildGaps(wallId) {
+      const gaps = [];
+      wins.filter(w=>w.wall===wallId).forEach(w=>{
+        const ww = (w.width||1.0)/room[wallId==='N'||wallId==='S'?'l':'b'];
+        const c = w.pos||0.5;
+        gaps.push({start: c-ww/2, end: c+ww/2, type:'window'});
+      });
+      doors.filter(d=>d.wall===wallId).forEach(d=>{
+        const dw = (d.width||0.9)/room[wallId==='N'||wallId==='S'?'l':'b'];
+        const c = d.pos||0.5;
+        gaps.push({start: c-dw/2, end: c+dw/2, type:'door', opens:d.opens, side:d.side});
+      });
+      return gaps;
+    }
+
+    const gN = buildGaps('N'), gS = buildGaps('S'), gE = buildGaps('E'), gW = buildGaps('W');
+
+    // Draw 4 walls
+    drawWall(rx, ry, rx+rw, ry, gN);           // North
+    drawWall(rx, ry+rh, rx+rw, ry+rh, gS);     // South
+    drawWall(rx, ry, rx, ry+rh, gW);            // West
+    drawWall(rx+rw, ry, rx+rw, ry+rh, gE);     // East
+
+    // Draw window symbols (double line in gap)
+    function drawWindowSymbol(x1,y1,x2,y2,gap) {
+      const lx1=x1+(x2-x1)*gap.start, ly1=y1+(y2-y1)*gap.start;
+      const lx2=x1+(x2-x1)*gap.end,   ly2=y1+(y2-y1)*gap.end;
+      const mx=(lx1+lx2)/2, my=(ly1+ly2)/2;
+      const nx=(ly2-ly1)/Math.hypot(lx2-lx1,ly2-ly1)*4;
+      const ny=(lx2-lx1)/Math.hypot(lx2-lx1,ly2-ly1)*4;
+      ctx.strokeStyle = '#3080c0'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(lx1,ly1); ctx.lineTo(lx2,ly2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(lx1+nx,ly1-ny); ctx.lineTo(lx2+nx,ly2-ny); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(lx1-nx,ly1+ny); ctx.lineTo(lx2-nx,ly2+ny); ctx.stroke();
+    }
+    // Draw door arc symbol
+    function drawDoorArc(x1,y1,x2,y2,gap,opens,side) {
+      const lx1=x1+(x2-x1)*gap.start, ly1=y1+(y2-y1)*gap.start;
+      const lx2=x1+(x2-x1)*gap.end,   ly2=y1+(y2-y1)*gap.end;
+      const dlen=Math.hypot(lx2-lx1,ly2-ly1);
+      const nx=(ly2-ly1)/dlen, ny=(lx2-lx1)/dlen;
+      const flip = side==='outside' ? 1 : -1;
+      ctx.strokeStyle='#805000'; ctx.lineWidth=1.2;
+      ctx.beginPath(); ctx.moveTo(lx1,ly1);
+      ctx.arc(lx1,ly1, dlen, Math.atan2(ly2-ly1,lx2-lx1), Math.atan2(flip*nx*dlen,flip*ny*dlen), false);
+      ctx.stroke();
+      ctx.strokeStyle='#c08040'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(lx1,ly1); ctx.lineTo(lx2,ly2); ctx.stroke();
+    }
+
+    const wallCoords = {
+      N:[rx,ry,rx+rw,ry], S:[rx,ry+rh,rx+rw,ry+rh],
+      W:[rx,ry,rx,ry+rh], E:[rx+rw,ry,rx+rw,ry+rh]
+    };
+    ['N','S','E','W'].forEach(w=>{
+      const [wx1,wy1,wx2,wy2] = wallCoords[w];
+      buildGaps(w).forEach(g=>{
+        if(g.type==='window') drawWindowSymbol(wx1,wy1,wx2,wy2,g);
+        else drawDoorArc(wx1,wy1,wx2,wy2,g,g.opens,g.side);
+      });
+    });
+
+    // Draw fireplace / features
+    feats.forEach(f=>{
+      if(f.type==='kamin'||f.type==='fireplace'||f.type==='camino') {
+        const wallId = f.wall||'N';
+        const [wx1,wy1,wx2,wy2] = wallCoords[wallId];
+        const p = f.pos||0.5;
+        const fw = Math.min(sc*0.8, 30);
+        const mx=wx1+(wx2-wx1)*p, my=wy1+(wy2-wy1)*p;
+        const nx=(wy2-wy1)/Math.hypot(wx2-wx1,wy2-wy1)*8;
+        const ny=(wx2-wx1)/Math.hypot(wx2-wx1,wy2-wy1)*8;
+        ctx.fillStyle='#8b3a3a';
+        ctx.fillRect(mx-fw/2, my-4, fw, 16);
+        ctx.fillStyle='#c05050';
+        ctx.fillRect(mx-fw/4, my, fw/2, 10);
+        ctx.fillStyle='rgba(0,0,0,.5)'; ctx.font='8px Outfit';
+        ctx.textAlign='center';
+        ctx.fillText('🔥', mx, my+22);
+      }
+    });
+
+    // Furniture
+    if(showFurniture && room.furniture && room.furniture.length) {
+      room.furniture.forEach(furn => {
+        const fw = (furn.w||1) * sc;
+        const fl = (furn.l||1) * sc;
+        const fx = rx + WALL + (furn.x||0.05)*rw;
+        const fy = ry + WALL + (furn.y||0.05)*rh;
+        ctx.fillStyle = 'rgba(100,80,60,.18)';
+        ctx.strokeStyle = 'rgba(100,80,60,.6)';
+        ctx.lineWidth = 1;
+        ctx.fillRect(fx, fy, fw, fl);
+        ctx.strokeRect(fx, fy, fw, fl);
+        ctx.fillStyle = 'rgba(60,40,20,.7)';
+        ctx.font = `${Math.max(7,Math.min(10,fw/4))}px Outfit`;
+        ctx.textAlign='center';
+        ctx.fillText(furn.icon||'▭', fx+fw/2, fy+fl/2+3);
+        if(fw > 25) {
+          ctx.font = `6px Outfit`;
+          ctx.fillText(furn.name||'', fx+fw/2, fy+fl/2+13);
+        }
+      });
+    }
+
+    // Room label
+    ctx.fillStyle = wallCol;
+    ctx.font = `bold ${Math.max(9,Math.min(12,rw/9))}px Outfit, sans-serif`;
+    ctx.textAlign='center';
+    ctx.fillText(roomIcon(room.name)+' '+room.name, rx+rw/2, ry+rh/2-6);
+    // Dims label
+    ctx.fillStyle = 'rgba(0,0,0,.55)';
+    ctx.font = `${Math.max(7,Math.min(9,rw/12))}px JetBrains Mono, monospace`;
+    const dimTxt = room.l && room.b ? `${room.l}×${room.b}m` : '';
+    ctx.fillText(dimTxt, rx+rw/2, ry+rh/2+8);
+    if(room.l&&room.b) ctx.fillText((room.l*room.b).toFixed(1)+'m²', rx+rw/2, ry+rh/2+19);
+
+    // Wall dimension lines
+    ctx.fillStyle='rgba(0,0,0,.35)'; ctx.font='8px JetBrains Mono';
+    ctx.textAlign='center';
+    if(rw > 40) ctx.fillText(room.l+'m', rx+rw/2, ry-5);
+    if(rh > 30) {
+      ctx.save(); ctx.translate(rx-6, ry+rh/2); ctx.rotate(-Math.PI/2);
+      ctx.fillText(room.b+'m', 0, 0); ctx.restore();
+    }
+
+    cx += rw + 0.3*sc;
   });
-  // Total sqm
+
+  // Footer
   const total = rooms.reduce((s,r)=>s+(r.l*r.b),0);
-  ctx.fillStyle='rgba(255,255,255,.35)';
-  ctx.font='11px Outfit,sans-serif';
+  ctx.fillStyle='rgba(0,0,0,.35)'; ctx.font='10px Outfit';
   ctx.textAlign='left';
   ctx.fillText(`Gesamt: ${total.toFixed(1)} m² · ${rooms.length} Räume`, PAD, H-8);
   ctx.textAlign='right';
   ctx.fillText(state.propName||'', W-PAD, H-8);
 }
 window.addEventListener('resize',()=>drawFloorPlan());
+
+/* ── FURNITURE ── */
+async function toggleFurniture() {
+  if(showFurniture) {
+    showFurniture = false;
+    document.getElementById('btnFurniture').textContent = '🪑 Möbel einzeichnen';
+    drawFloorPlan();
+    return;
+  }
+  // Generate furniture for rooms that don't have it yet
+  const btn = document.getElementById('btnFurniture');
+  btn.textContent = '⏳ …';
+  btn.disabled = true;
+  const rooms = state.rooms.filter(r=>r.l>0&&r.b>0);
+  for(const r of rooms) {
+    if(r.furniture && r.furniture.length) continue;
+    try {
+      const res = await fetch(PROXY, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model:'claude-sonnet-4-20250514', max_tokens:400,
+          messages:[{role:'user', content:`Raum: ${r.name}, ${r.l}m × ${r.b}m. Schlage typische Möbel vor als JSON Array. Format: [{"name":"Bett","icon":"🛏","w":1.6,"l":2.0,"x":0.05,"y":0.05}, ...] x/y sind relative Positionen 0..1 im Raum (Anteil der Raumbreite/-länge). Nur JSON, kein Text.`}]
+        })
+      });
+      const d = await res.json();
+      let txt = d.content&&d.content[0]&&d.content[0].text||'[]';
+      txt = txt.replace(/```json|```/g,'').trim();
+      r.furniture = JSON.parse(txt);
+    } catch(e){ r.furniture = []; }
+  }
+  showFurniture = true;
+  btn.textContent = '🪑 Möbel ausblenden';
+  btn.disabled = false;
+  drawFloorPlan();
+}
 
 /* ── EXPORT ── */
 function buildSummaryText() {
