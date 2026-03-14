@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>RaumScanner Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080e1a;--surface:#0d1624;--card:#111d2e;--border:rgba(0,180,216,.18);
+  --aqua:#00b4d8;--mint:#06d6a0;--gold:#f4c533;--red:#e63946;--gray:#8899aa;
+  --text:#e8f0f8;--text2:rgba(232,240,248,.62);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif}
+
+/* LAYOUT */
+.app{display:flex;flex-direction:column;min-height:100vh;max-width:900px;margin:0 auto;padding:0 16px 80px}
+header{padding:18px 0 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.logo{font-size:1.3rem;font-weight:800;letter-spacing:-.02em}
+.logo span{color:var(--aqua)}
+.logo small{font-size:.65rem;color:var(--gray);letter-spacing:.12em;text-transform:uppercase;display:block;font-weight:400;margin-top:-2px}
+.hdr-prop{margin-left:auto;text-align:right;cursor:pointer}
+.hdr-prop-name{font-size:.82rem;font-weight:600;color:var(--mint)}
+.hdr-prop-sub{font-size:.68rem;color:var(--gray)}
+
+/* SETUP CARD */
+.setup-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;display:none}
+.setup-card.show{display:block}
+.setup-title{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--aqua);margin-bottom:14px;font-weight:600}
+.setup-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:500px){.setup-row{grid-template-columns:1fr}}
+.inp-wrap{display:flex;flex-direction:column;gap:5px}
+.inp-wrap label{font-size:.72rem;color:var(--gray);letter-spacing:.06em}
+.inp-wrap input,.inp-wrap textarea{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:inherit;font-size:.85rem;outline:none;transition:border .2s}
+.inp-wrap input:focus,.inp-wrap textarea:focus{border-color:var(--aqua)}
+.inp-wrap textarea{resize:vertical;min-height:60px}
+.mic-row{display:flex;gap:8px;margin-top:4px}
+.btn-mic{background:rgba(230,57,70,.15);border:1px solid rgba(230,57,70,.4);color:var(--red);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap}
+.btn-mic:hover{background:rgba(230,57,70,.25)}
+.btn-mic.listening{background:var(--red);color:#fff;animation:pulse-mic .8s infinite}
+@keyframes pulse-mic{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,.5)}50%{box-shadow:0 0 0 8px rgba(230,57,70,0)}}
+.btn-primary{background:linear-gradient(135deg,var(--aqua),#0077b6);border:none;color:#fff;border-radius:8px;padding:9px 20px;cursor:pointer;font-family:inherit;font-size:.85rem;font-weight:600;transition:opacity .2s,transform .1s}
+.btn-primary:hover{opacity:.88;transform:scale(1.02)}
+.btn-ghost{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--text2);border-radius:8px;padding:8px 16px;cursor:pointer;font-family:inherit;font-size:.82rem;transition:all .2s}
+.btn-ghost:hover{background:rgba(255,255,255,.13);color:var(--text)}
+
+/* VOICE STATUS */
+.voice-status{background:rgba(0,180,216,.07);border:1px solid rgba(0,180,216,.2);border-radius:8px;padding:8px 14px;font-size:.78rem;color:var(--aqua);margin-top:8px;display:none;align-items:center;gap:8px}
+.voice-status.show{display:flex}
+.v-dot{width:7px;height:7px;background:var(--red);border-radius:50%;animation:pulse-mic .8s infinite;flex-shrink:0}
+
+/* ROOM LIST */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);font-weight:600}
+.rooms-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+@media(max-width:500px){.rooms-grid{grid-template-columns:1fr}}
+.room-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.room-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--aqua);opacity:.4;transition:opacity .2s}
+.room-card:hover{border-color:rgba(0,180,216,.4);transform:translateY(-1px)}
+.room-card:hover::before{opacity:1}
+.room-card.active{border-color:var(--aqua);background:#0d1e33}
+.room-card.active::before{opacity:1}
+.rc-name{font-weight:600;font-size:.9rem;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.rc-icon{font-size:1.1rem}
+.rc-dims{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--mint);letter-spacing:.05em}
+.rc-sqm{font-size:.7rem;color:var(--gray);margin-top:2px}
+.rc-del{position:absolute;top:8px;right:10px;background:none;border:none;color:rgba(230,57,70,.4);cursor:pointer;font-size:.85rem;padding:2px;transition:color .2s}
+.rc-del:hover{color:var(--red)}
+.btn-add-room{background:rgba(6,214,160,.08);border:1px dashed rgba(6,214,160,.35);color:var(--mint);border-radius:12px;padding:14px;cursor:pointer;font-family:inherit;font-size:.85rem;font-weight:500;width:100%;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-add-room:hover{background:rgba(6,214,160,.15)}
+
+/* EDITOR PANEL */
+.editor{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px;display:none}
+.editor.show{display:block}
+.ed-title{font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.ed-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:500px){.ed-grid{grid-template-columns:1fr 1fr}}
+.dim-box{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center}
+.dim-box label{font-size:.65rem;letter-spacing:.1em;color:var(--gray);text-transform:uppercase;display:block;margin-bottom:5px}
+.dim-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:500;color:var(--aqua)}
+.dim-edit{background:transparent;border:none;color:var(--aqua);font-family:'JetBrains Mono',monospace;font-size:1rem;width:70px;text-align:center;outline:none}
+.dim-unit{font-size:.7rem;color:var(--gray);margin-top:2px}
+.ed-btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.btn-cam{background:linear-gradient(135deg,var(--red),#c1121f);border:none;color:#fff;border-radius:10px;padding:9px 16px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:600;display:flex;align-items:center;gap:6px;transition:opacity .2s,transform .1s}
+.btn-cam:hover{opacity:.88;transform:scale(1.02)}
+.btn-file{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:var(--text2);border-radius:10px;padding:9px 16px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:500;display:flex;align-items:center;gap:6px;transition:all .2s}
+.btn-file:hover{background:rgba(255,255,255,.17)}
+input[type=file]{display:none}
+
+/* PHOTO RESULT */
+.photo-result{display:none;margin-top:12px;background:rgba(6,214,160,.05);border:1px solid rgba(6,214,160,.2);border-radius:10px;padding:14px;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.photo-result.show{display:flex}
+.ph-img{width:110px;height:82px;object-fit:cover;border-radius:7px;flex-shrink:0;border:1px solid rgba(0,180,216,.3)}
+.ph-text-area{flex:1;min-width:160px}
+.ph-status{font-size:.78rem;color:var(--aqua);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.ph-result-txt{font-size:.78rem;color:var(--text2);line-height:1.65;display:none}
+.ph-result-txt.show{display:block}
+.btn-tts{background:rgba(0,180,216,.12);border:1px solid rgba(0,180,216,.3);color:var(--aqua);border-radius:7px;padding:5px 10px;cursor:pointer;font-size:.72rem;margin-top:6px;display:none;align-items:center;gap:5px;transition:all .2s}
+.btn-tts.show{display:flex}
+.btn-tts:hover{background:rgba(0,180,216,.22)}
+
+/* FLOOR PLAN */
+.floorplan-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px}
+.fp-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+canvas#fpCanvas{width:100%;border-radius:10px;background:#060e1a;display:block}
+
+/* EXPORT */
+.export-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(8,14,26,.96);border-top:1px solid var(--border);backdrop-filter:blur(16px);padding:12px 16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;z-index:100}
+.exp-btn{background:var(--card);border:1px solid var(--border);color:var(--text2);border-radius:10px;padding:9px 18px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:500;display:flex;align-items:center;gap:6px;transition:all .2s}
+.exp-btn:hover{border-color:var(--aqua);color:var(--text)}
+.exp-btn.green{border-color:rgba(6,214,160,.4);color:var(--mint)}
+.exp-btn.green:hover{background:rgba(6,214,160,.1)}
+.exp-btn.wa{border-color:rgba(37,211,102,.4);color:#25d366}
+.exp-btn.wa:hover{background:rgba(37,211,102,.1)}
+
+/* SPINNER */
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.25);border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* PRINT */
+@media print{
+  .export-bar,.btn-mic,.btn-add-room,.ed-btn-row,.rc-del{display:none!important}
+  .app{max-width:100%;padding:10px}
+  body{background:#fff;color:#000}
+  .room-card,.editor,.floorplan-wrap,.setup-card{border:1px solid #ccc;background:#fff}
+  canvas#fpCanvas{background:#f0f0f0}
+}
+
+/* LOCATION */
+.location-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.gmap-btn{background:rgba(66,133,244,.1);border:1px solid rgba(66,133,244,.3);color:#4285f4;border-radius:8px;padding:7px 13px;cursor:pointer;font-size:.78rem;display:flex;align-items:center;gap:5px;transition:all .2s;text-decoration:none}
+.gmap-btn:hover{background:rgba(66,133,244,.2)}
+.gps-status{font-size:.72rem;color:var(--gray);align-self:center}
+
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.tag-mic{background:rgba(230,57,70,.15);color:var(--red);border:1px solid rgba(230,57,70,.3)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">Raum<span>Scanner</span><small>Pro · KI-Vermessung</small></div>
+    <div class="hdr-prop" onclick="showSetup()" title="Objekt bearbeiten">
+      <div class="hdr-prop-name" id="hdrPropName">Objekt auswählen ▸</div>
+      <div class="hdr-prop-sub" id="hdrPropSub">Tippen oder Mikrofon</div>
+    </div>
+  </header>
+
+  <!-- SETUP -->
+  <div class="setup-card show" id="setupCard">
+    <div class="setup-title">🏠 Objekt einrichten</div>
+    <div class="setup-row">
+      <div class="inp-wrap">
+        <label>Objektbezeichnung</label>
+        <div style="display:flex;gap:6px">
+          <input type="text" id="propName" placeholder="z.B. Villa Burano, Apartment 3B">
+          <button class="btn-mic" onclick="micSetup('name')" id="mic-name" title="Sprechen">🎙</button>
+        </div>
+      </div>
+      <div class="inp-wrap">
+        <label>Adresse / Beschreibung</label>
+        <div style="display:flex;gap:6px">
+          <input type="text" id="propAddr" placeholder="z.B. Via Laguna 5, Burano">
+          <button class="btn-mic" onclick="micSetup('addr')" id="mic-addr" title="Sprechen">🎙</button>
+        </div>
+      </div>
+    </div>
+    <div class="location-row">
+      <button class="gmap-btn" onclick="getGPS()">📍 GPS-Position</button>
+      <span class="gps-status" id="gpsStatus"></span>
+    </div>
+    <div class="voice-status" id="setupVS"><span class="v-dot"></span><span id="setupVSTxt">Sprechen…</span></div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="saveSetup()">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- QUICK SCAN -->
+  <div id="mainPanel" style="display:none">
+    <div class="setup-card show" style="margin-bottom:20px;padding:18px 20px">
+      <div class="setup-title">📷 Schnell-Scan</div>
+      <p style="font-size:.82rem;color:var(--text2);margin-bottom:14px">Einfach ein Foto vom Raum aufnehmen — Claude KI analysiert sofort.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-cam" onclick="quickCam()">📷 Foto aufnehmen</button>
+        <button class="btn-file" onclick="quickFile()">🗂 Aus Datei laden</button>
+      </div>
+      <input type="file" id="quickCamInput" accept="image/*" capture="environment" onchange="handleQuickPhoto(this)">
+      <input type="file" id="quickFileInput" accept="image/*" onchange="handleQuickPhoto(this)">
+      <div class="photo-result" id="quickPhotoResult" style="margin-top:14px">
+        <img id="quickPhImg" class="ph-img" alt="Vorschau">
+        <div class="ph-text-area">
+          <div class="ph-status" id="quickPhStatus"><span class="spinner"></span> Claude analysiert…</div>
+          <div class="ph-result-txt" id="quickPhResultTxt"></div>
+          <button class="btn-tts" id="btnQuickTTS" onclick="readQuickResult()">🔊 Vorlesen</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-hdr">
+      <div class="section-title">Räume</div>
+      <button class="btn-mic" onclick="micAddRoom()" id="mic-room">🎙 Raum per Sprache</button>
+    </div>
+    <div class="voice-status" id="roomVS"><span class="v-dot"></span><span id="roomVSTxt">Sprechen Sie Raumname und Maße…</span></div>
+    <div class="rooms-grid" id="roomsGrid"></div>
+    <button class="btn-add-room" onclick="addRoomManual()">＋ Raum hinzufügen</button>
+
+    <!-- EDITOR -->
+    <div class="editor" id="editor">
+      <div class="ed-title"><span id="edRoomIcon">📐</span><span id="edRoomName">Raum</span></div>
+      <div class="ed-grid">
+        <div class="dim-box">
+          <label>Länge</label>
+          <input class="dim-edit" id="dimL" type="number" step="0.01" min="0" placeholder="0.00" onchange="updateDim()">
+          <div class="dim-unit">Meter</div>
+        </div>
+        <div class="dim-box">
+          <label>Breite</label>
+          <input class="dim-edit" id="dimB" type="number" step="0.01" min="0" placeholder="0.00" onchange="updateDim()">
+          <div class="dim-unit">Meter</div>
+        </div>
+        <div class="dim-box">
+          <label>Höhe</label>
+          <input class="dim-edit" id="dimH" type="number" step="0.01" min="0" placeholder="0.00" onchange="updateDim()">
+          <div class="dim-unit">Meter</div>
+        </div>
+      </div>
+      <div class="ed-btn-row">
+        <button class="btn-mic" onclick="micMeasure()" id="mic-meas">🎙 Maße sprechen</button>
+        <button class="btn-cam" onclick="camCapture()">📷 Foto aufnehmen</button>
+        <button class="btn-file" onclick="fileCapture()">🗂 Aus Datei</button>
+        <button class="btn-tts show" id="btnTTS" onclick="readResult()" style="margin-left:auto">🔊 Vorlesen</button>
+      </div>
+      <input type="file" id="camInput" accept="image/*" capture="environment" onchange="handlePhoto(this)">
+      <input type="file" id="fileInput" accept="image/*" onchange="handlePhoto(this)">
+      <div class="voice-status" id="measVS"><span class="v-dot"></span><span id="measVSTxt">Sprechen Sie die Maße…</span></div>
+      <div class="photo-result" id="photoResult">
+        <img id="phImg" class="ph-img" alt="Raum-Foto">
+        <div class="ph-text-area">
+          <div class="ph-status" id="phStatus"><span class="spinner"></span> Claude analysiert…</div>
+          <div class="ph-result-txt" id="phResultTxt"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLOOR PLAN -->
+    <div class="floorplan-wrap" id="fpWrap">
+      <div class="fp-hdr">
+        <div class="section-title">Grundriss-Übersicht</div>
+        <button class="btn-ghost" style="font-size:.75rem" onclick="drawFloorPlan()">↻ Neu zeichnen</button>
+      </div>
+      <canvas id="fpCanvas" height="380"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT BAR -->
+<div class="export-bar" id="exportBar" style="display:none">
+  <button class="exp-btn" onclick="doPrint()">🖨️ Drucken</button>
+  <button class="exp-btn wa" onclick="doWhatsApp()">📱 WhatsApp</button>
+  <button class="exp-btn" onclick="doEmail()">✉️ E-Mail</button>
+  <button class="exp-btn green" onclick="doMaps()">📍 Google Maps</button>
+</div>
+
+<script>
+const PROXY = 'https://blue-lagune-proxy.friesh.workers.dev';
+let state = {
+  propName: '', propAddr: '', lat: null, lng: null,
+  rooms: [], activeRoom: -1
+};
+
+const ROOM_ICONS = {
+  'küche':'🍳','bad':'🚿','badezimmer':'🚿','wc':'🚽','schlafzimmer':'🛏️',
+  'wohnzimmer':'🛋️','kinderzimmer':'🧸','arbeitszimmer':'💼','flur':'🚪',
+  'terrasse':'🌿','balkon':'🌿','keller':'🏚️','dachboden':'🏠','garage':'🚗',
+  'esszimmer':'🍽️','eingang':'🚪','abstellraum':'📦','hauswirtschaft':'🧺'
+};
+function roomIcon(name) {
+  if(!name) return '📐';
+  const low = name.toLowerCase();
+  for(const k of Object.keys(ROOM_ICONS)) if(low.includes(k)) return ROOM_ICONS[k];
+  return '📐';
+}
+
+/* ── SETUP ── */
+function showSetup() {
+  document.getElementById('setupCard').classList.add('show');
+  document.getElementById('propName').value = state.propName;
+  document.getElementById('propAddr').value = state.propAddr;
+}
+function saveSetup() {
+  state.propName = document.getElementById('propName').value.trim() || 'Mein Objekt';
+  state.propAddr = document.getElementById('propAddr').value.trim();
+  document.getElementById('hdrPropName').textContent = state.propName;
+  document.getElementById('hdrPropSub').textContent = state.propAddr || 'Adresse nicht gesetzt';
+  document.getElementById('setupCard').classList.remove('show');
+  document.getElementById('mainPanel').style.display = 'block';
+  document.getElementById('exportBar').style.display = 'flex';
+  renderRooms();
+}
+function getGPS() {
+  document.getElementById('gpsStatus').textContent = '…ermittle Position';
+  navigator.geolocation.getCurrentPosition(pos => {
+    state.lat = pos.coords.latitude.toFixed(6);
+    state.lng = pos.coords.longitude.toFixed(6);
+    document.getElementById('gpsStatus').textContent = `📍 ${state.lat}, ${state.lng}`;
+  }, () => {
+    document.getElementById('gpsStatus').textContent = '⚠️ Zugriff verweigert';
+  });
+}
+
+/* ── ROOMS ── */
+function renderRooms() {
+  const grid = document.getElementById('roomsGrid');
+  grid.innerHTML = '';
+  state.rooms.forEach((r, i) => {
+    const sqm = (r.l && r.b) ? (r.l * r.b).toFixed(2) + ' m²' : '';
+    const dims = (r.l && r.b) ? `${r.l}m × ${r.b}m` + (r.h ? ` × ${r.h}m` : '') : 'Maße fehlen';
+    const card = document.createElement('div');
+    card.className = 'room-card' + (i === state.activeRoom ? ' active' : '');
+    card.innerHTML = `
+      <div class="rc-name"><span class="rc-icon">${roomIcon(r.name)}</span>${r.name}</div>
+      <div class="rc-dims">${dims}</div>
+      ${sqm ? `<div class="rc-sqm">${sqm} Fläche</div>` : ''}
+      <button class="rc-del" onclick="delRoom(${i},event)">✕</button>`;
+    card.onclick = () => openEditor(i);
+    grid.appendChild(card);
+  });
+  drawFloorPlan();
+}
+function addRoomManual() {
+  const name = prompt('Raumbezeichnung:', 'Raum ' + (state.rooms.length + 1));
+  if(!name) return;
+  state.rooms.push({name, l:0, b:0, h:0, photo:null, analysis:''});
+  state.activeRoom = state.rooms.length - 1;
+  renderRooms();
+  openEditor(state.activeRoom);
+}
+function delRoom(i, e) {
+  e.stopPropagation();
+  if(!confirm('Raum löschen?')) return;
+  state.rooms.splice(i, 1);
+  if(state.activeRoom >= state.rooms.length) state.activeRoom = -1;
+  renderRooms();
+  if(state.activeRoom < 0) document.getElementById('editor').classList.remove('show');
+}
+function openEditor(i) {
+  state.activeRoom = i;
+  const r = state.rooms[i];
+  document.getElementById('edRoomIcon').textContent = roomIcon(r.name);
+  document.getElementById('edRoomName').textContent = r.name;
+  document.getElementById('dimL').value = r.l || '';
+  document.getElementById('dimB').value = r.b || '';
+  document.getElementById('dimH').value = r.h || '';
+  // Photo
+  const pr = document.getElementById('photoResult');
+  if(r.photo) {
+    document.getElementById('phImg').src = r.photo;
+    document.getElementById('phResultTxt').innerHTML = r.analysis ? r.analysis.replace(/\n/g,'<br>') : '';
+    document.getElementById('phResultTxt').classList.toggle('show', !!r.analysis);
+    document.getElementById('phStatus').style.display = 'none';
+    pr.classList.add('show');
+    document.getElementById('btnTTS').classList.toggle('show', !!r.analysis);
+  } else {
+    pr.classList.remove('show');
+    document.getElementById('btnTTS').classList.remove('show');
+  }
+  document.getElementById('editor').classList.add('show');
+  renderRooms();
+  document.getElementById('editor').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function updateDim() {
+  if(state.activeRoom < 0) return;
+  const r = state.rooms[state.activeRoom];
+  r.l = parseFloat(document.getElementById('dimL').value) || 0;
+  r.b = parseFloat(document.getElementById('dimB').value) || 0;
+  r.h = parseFloat(document.getElementById('dimH').value) || 0;
+  renderRooms();
+}
+
+/* ── QUICK SCAN ── */
+let quickAnalysis = '';
+function quickCam(){document.getElementById('quickCamInput').click()}
+function quickFile(){document.getElementById('quickFileInput').click()}
+async function handleQuickPhoto(inp) {
+  if(!inp.files||!inp.files[0]) return;
+  const file = inp.files[0];
+  const pr = document.getElementById('quickPhotoResult');
+  pr.classList.add('show');
+  document.getElementById('quickPhStatus').style.display='flex';
+  document.getElementById('quickPhResultTxt').classList.remove('show');
+  document.getElementById('btnQuickTTS').classList.remove('show');
+  const reader = new FileReader();
+  reader.onload = async e => {
+    const src = e.target.result;
+    const b64 = src.split(',')[1];
+    const mime = file.type||'image/jpeg';
+    document.getElementById('quickPhImg').src = src;
+    inp.value='';
+    try {
+      const res = await fetch(PROXY,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-20250514',max_tokens:600,
+          messages:[{role:'user',content:[
+            {type:'image',source:{type:'base64',media_type:mime,data:b64}},
+            {type:'text',text:'Du bist ein professioneller Raumvermesser. Analysiere dieses Raumfoto und erstelle eine kompakte Grundriss-Beschreibung: Raumtyp, geschätzte Maße (Länge × Breite), Besonderheiten (Fenster, Türen, Nischen), Raumhöhe falls erkennbar, und kurze Nutzungsempfehlung. Antworte auf Deutsch, präzise und strukturiert, maximal 200 Wörter.'}
+          ]}]
+        })
+      });
+      const d = await res.json();
+      quickAnalysis = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : 'Analyse nicht verfügbar.';
+      document.getElementById('quickPhStatus').style.display='none';
+      document.getElementById('quickPhResultTxt').innerHTML = quickAnalysis.replace(/\n/g,'<br>');
+      document.getElementById('quickPhResultTxt').classList.add('show');
+      document.getElementById('btnQuickTTS').classList.add('show');
+    } catch(err) {
+      document.getElementById('quickPhStatus').innerHTML='⚠️ Fehler bei der Analyse. Bitte erneut versuchen.';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+function readQuickResult(){speak(quickAnalysis)}
+
+/* ── PHOTO & CLAUDE VISION ── */
+function camCapture(){document.getElementById('camInput').click()}
+function fileCapture(){document.getElementById('fileInput').click()}
+async function handlePhoto(inp) {
+  if(!inp.files||!inp.files[0]) return;
+  if(state.activeRoom<0) return;
+  const file = inp.files[0];
+  const pr = document.getElementById('photoResult');
+  pr.classList.add('show');
+  document.getElementById('phStatus').style.display = 'flex';
+  document.getElementById('phResultTxt').classList.remove('show');
+  document.getElementById('btnTTS').classList.remove('show');
+  const reader = new FileReader();
+  reader.onload = async e => {
+    const src = e.target.result;
+    const b64 = src.split(',')[1];
+    const mime = file.type || 'image/jpeg';
+    document.getElementById('phImg').src = src;
+    state.rooms[state.activeRoom].photo = src;
+    inp.value='';
+    const rName = state.rooms[state.activeRoom].name;
+    try {
+      const res = await fetch(PROXY, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model:'claude-sonnet-4-20250514', max_tokens:600,
+          messages:[{role:'user', content:[
+            {type:'image', source:{type:'base64', media_type:mime, data:b64}},
+            {type:'text', text:`Du bist ein professioneller Raumvermesser. Analysiere dieses Foto des Raumes "${rName}". Beschreibe: Raumtyp, geschätzte Maße (Länge × Breite, falls erkennbar), Fenster/Türen/Besonderheiten, Raumhöhe falls erkennbar, Zustand, Nutzungsempfehlung. Deutsch, maximal 180 Wörter, strukturiert.`}
+          ]}]
+        })
+      });
+      const d = await res.json();
+      const txt = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : 'Analyse nicht verfügbar.';
+      state.rooms[state.activeRoom].analysis = txt;
+      document.getElementById('phStatus').style.display = 'none';
+      document.getElementById('phResultTxt').innerHTML = txt.replace(/\n/g,'<br>');
+      document.getElementById('phResultTxt').classList.add('show');
+      document.getElementById('btnTTS').classList.add('show');
+    } catch(err) {
+      document.getElementById('phStatus').innerHTML = '⚠️ Fehler bei Analyse';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+function readResult() {
+  if(state.activeRoom<0) return;
+  const txt = state.rooms[state.activeRoom].analysis;
+  if(!txt) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang='de-DE'; u.rate=0.95; u.pitch=1;
+  // prefer female DE voice
+  const voices = speechSynthesis.getVoices();
+  const v = voices.find(x=>x.lang.startsWith('de')&&x.name.toLowerCase().includes('female'))
+           || voices.find(x=>x.lang.startsWith('de'));
+  if(v) u.voice=v;
+  speechSynthesis.speak(u);
+}
+
+/* ── SPEECH RECOGNITION ── */
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+let activeSR = null;
+function stopSR() { if(activeSR){activeSR.stop();activeSR=null;} }
+
+function startSR(lang, onResult, statusEl, statusTxtEl, btnEl, hint) {
+  stopSR();
+  if(!SpeechRec){alert('Spracherkennung nicht unterstützt. Bitte Chrome verwenden.');return;}
+  const sr = new SpeechRec();
+  sr.lang = lang; sr.continuous=false; sr.interimResults=false;
+  activeSR = sr;
+  document.getElementById(statusEl).classList.add('show');
+  document.getElementById(statusTxtEl).textContent = hint || 'Sprechen…';
+  document.getElementById(btnEl).classList.add('listening');
+  sr.onresult = e => {
+    const txt = e.results[0][0].transcript;
+    document.getElementById(statusTxtEl).textContent = '✓ ' + txt;
+    onResult(txt);
+  };
+  sr.onerror = () => {
+    document.getElementById(statusEl).classList.remove('show');
+    document.getElementById(btnEl).classList.remove('listening');
+  };
+  sr.onend = () => {
+    document.getElementById(btnEl).classList.remove('listening');
+    setTimeout(()=>document.getElementById(statusEl).classList.remove('show'), 2000);
+    activeSR = null;
+  };
+  sr.start();
+}
+
+// Setup mic
+function micSetup(field) {
+  const btn = field==='name'?'mic-name':'mic-addr';
+  startSR('de-DE', txt => {
+    if(field==='name') {
+      state.propName = txt;
+      document.getElementById('propName').value = txt;
+    } else {
+      state.propAddr = txt;
+      document.getElementById('propAddr').value = txt;
+    }
+  }, 'setupVS','setupVSTxt', btn, field==='name'?'Objektname sprechen…':'Adresse sprechen…');
+}
+
+// Add room by voice
+function micAddRoom() {
+  startSR('de-DE', txt => {
+    // Try to parse room name + optional measurements from transcript
+    const parsed = parseVoiceRoom(txt);
+    state.rooms.push({name: parsed.name, l: parsed.l||0, b: parsed.b||0, h: parsed.h||0, photo:null, analysis:''});
+    state.activeRoom = state.rooms.length-1;
+    renderRooms();
+    openEditor(state.activeRoom);
+    speak(`${parsed.name} hinzugefügt.` + (parsed.l?` Maße: ${parsed.l} mal ${parsed.b} Meter.`:''));
+  }, 'roomVS','roomVSTxt','mic-room','Raumname und Maße sprechen…');
+}
+
+// Measure by voice
+function micMeasure() {
+  if(state.activeRoom<0){alert('Bitte zuerst einen Raum auswählen.');return;}
+  startSR('de-DE', txt => {
+    const m = parseMeasures(txt);
+    if(m.l){
+      state.rooms[state.activeRoom].l = m.l;
+      document.getElementById('dimL').value = m.l;
+    }
+    if(m.b){
+      state.rooms[state.activeRoom].b = m.b;
+      document.getElementById('dimB').value = m.b;
+    }
+    if(m.h){
+      state.rooms[state.activeRoom].h = m.h;
+      document.getElementById('dimH').value = m.h;
+    }
+    renderRooms();
+    let msg = '';
+    if(m.l&&m.b) msg = `Maße eingetragen: ${m.l} mal ${m.b} Meter`;
+    else if(m.l) msg = `Länge: ${m.l} Meter`;
+    if(msg) speak(msg);
+  }, 'measVS','measVSTxt','mic-meas','Maße sprechen: z.B. 4 Meter 50 auf 3 Meter 20…');
+}
+
+/* ── PARSING ── */
+const NUM_DE = {'null':0,'ein':1,'eine':1,'zwei':2,'drei':3,'vier':4,'fünf':5,'sechs':6,'sieben':7,'acht':8,'neun':9,'zehn':10,'elf':11,'zwölf':12,'dreizehn':13,'vierzehn':14,'fünfzehn':15,'sechzehn':16,'siebzehn':17,'achtzehn':18,'neunzehn':19,'zwanzig':20};
+function parseGermanNum(str) {
+  str = str.toLowerCase().trim().replace(',','.');
+  const f = parseFloat(str);
+  if(!isNaN(f)) return f;
+  if(NUM_DE[str]!==undefined) return NUM_DE[str];
+  // "vier komma fünf" → 4.5, "drei fünfzig" → 3.50
+  const komma = str.match(/(\w+)\s+komma\s+(\w+)/);
+  if(komma) {
+    const a = NUM_DE[komma[1]]??parseFloat(komma[1]);
+    const b = NUM_DE[komma[2]]??parseFloat(komma[2]);
+    if(!isNaN(a)&&!isNaN(b)) return parseFloat(`${a}.${b}`);
+  }
+  return null;
+}
+function parseMeasures(txt) {
+  // Normalize
+  txt = txt.toLowerCase()
+    .replace(/komma/g,'.').replace(/punkt/g,'.').replace(/und/g,'')
+    .replace(/,/g,'.').replace(/meter/g,'m').replace(/höhe/g,'h')
+    .replace(/hoch/g,'h').replace(/breit|breite/g,'b');
+  let l=null,b=null,h=null;
+  // Pattern: "X m auf Y m" or "X auf Y" or "X mal Y"
+  const onAuf = txt.match(/(\d+[\.\d]*)\s*m?\s*(?:auf|mal|x|×)\s*(\d+[\.\d]*)/i);
+  if(onAuf){l=parseFloat(onAuf[1]);b=parseFloat(onAuf[2]);}
+  // Pattern: höhe X m
+  const hMatch = txt.match(/(?:h|höhe|hoch)\s*(\d+[\.\d]*)/i);
+  if(hMatch) h=parseFloat(hMatch[1]);
+  // Fallback: just numbers in sequence
+  if(!l) {
+    const nums = [...txt.matchAll(/(\d+[,.]?\d*)/g)].map(m=>parseFloat(m[1].replace(',','.')));
+    if(nums.length>=2){l=nums[0];b=nums[1];}
+    if(nums.length>=3&&!h) h=nums[2];
+  }
+  return {l,b,h};
+}
+function parseVoiceRoom(txt) {
+  const lower = txt.toLowerCase();
+  const roomNames = ['küche','badezimmer','bad','wc','schlafzimmer','wohnzimmer','kinderzimmer','arbeitszimmer','flur','terrasse','balkon','keller','dachboden','garage','esszimmer','abstellraum','eingang'];
+  let name = '';
+  for(const rn of roomNames) {
+    if(lower.includes(rn)){name=rn.charAt(0).toUpperCase()+rn.slice(1);break;}
+  }
+  if(!name) {
+    // Use first part of transcript as name
+    const words = txt.split(' ');
+    name = words.slice(0,3).join(' ');
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+  }
+  const m = parseMeasures(txt);
+  return {name, ...m};
+}
+
+/* ── TTS ── */
+function speak(txt) {
+  if(!txt) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang='de-DE'; u.rate=1; u.pitch=1;
+  const voices = speechSynthesis.getVoices();
+  const v = voices.find(x=>x.lang.startsWith('de'))||null;
+  if(v) u.voice=v;
+  speechSynthesis.speak(u);
+}
+// Preload voices
+speechSynthesis.getVoices();
+window.speechSynthesis && speechSynthesis.addEventListener('voiceschanged',()=>{});
+
+/* ── FLOOR PLAN CANVAS ── */
+function drawFloorPlan() {
+  const canvas = document.getElementById('fpCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio || 800;
+  ctx.scale(window.devicePixelRatio||1, 1);
+  const W = canvas.offsetWidth || 800;
+  const H = 380;
+  canvas.height = H;
+  ctx.fillStyle = '#060e1a';
+  ctx.fillRect(0,0,W,H);
+
+  const rooms = state.rooms.filter(r=>r.l>0&&r.b>0);
+  if(!rooms.length){
+    ctx.fillStyle = 'rgba(136,153,170,.4)';
+    ctx.font = '13px Outfit, sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('Fügen Sie Räume mit Maßen hinzu', W/2, H/2);
+    return;
+  }
+  const PAD = 20;
+  // Find bounding box (simple row layout)
+  const totalW = rooms.reduce((s,r)=>s+r.l,0) + (rooms.length-1)*0.5;
+  const maxH = Math.max(...rooms.map(r=>r.b));
+  const scaleX = (W-PAD*2) / totalW;
+  const scaleY = (H-PAD*2-30) / maxH;
+  const scale = Math.min(scaleX, scaleY, 60);
+  const COLORS = ['#00b4d8','#06d6a0','#f4c533','#e63946','#7b2d8b','#ff9f1c','#2ec4b6'];
+  let cx = PAD;
+  const baseY = PAD + 10;
+  rooms.forEach((r,i)=>{
+    const rw = r.l*scale;
+    const rh = r.b*scale;
+    const ry = baseY + (maxH*scale - rh)/2;
+    const col = COLORS[i%COLORS.length];
+    // Fill
+    ctx.fillStyle = col + '1a';
+    ctx.fillRect(cx, ry, rw, rh);
+    // Border
+    ctx.strokeStyle = col + 'cc';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(cx, ry, rw, rh);
+    // Name
+    ctx.fillStyle = col;
+    ctx.font = `bold ${Math.max(9,Math.min(12,rw/8))}px Outfit, sans-serif`;
+    ctx.textAlign='center';
+    ctx.fillText(roomIcon(r.name)+' '+r.name, cx+rw/2, ry+rh/2-6);
+    // Dims
+    ctx.fillStyle = 'rgba(255,255,255,.55)';
+    ctx.font = `${Math.max(8,Math.min(10,rw/10))}px JetBrains Mono, monospace`;
+    ctx.fillText(`${r.l}×${r.b}m`, cx+rw/2, ry+rh/2+8);
+    if(r.l&&r.b){
+      const sqm = (r.l*r.b).toFixed(1)+'m²';
+      ctx.fillText(sqm, cx+rw/2, ry+rh/2+20);
+    }
+    cx += rw + 0.5*scale;
+  });
+  // Total sqm
+  const total = rooms.reduce((s,r)=>s+(r.l*r.b),0);
+  ctx.fillStyle='rgba(255,255,255,.35)';
+  ctx.font='11px Outfit,sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText(`Gesamt: ${total.toFixed(1)} m² · ${rooms.length} Räume`, PAD, H-8);
+  ctx.textAlign='right';
+  ctx.fillText(state.propName||'', W-PAD, H-8);
+}
+window.addEventListener('resize',()=>drawFloorPlan());
+
+/* ── EXPORT ── */
+function buildSummaryText() {
+  let txt = `🏠 ${state.propName}\n`;
+  if(state.propAddr) txt += `📍 ${state.propAddr}\n`;
+  if(state.lat) txt += `📡 GPS: ${state.lat}, ${state.lng}\n`;
+  txt += '\n';
+  state.rooms.forEach(r=>{
+    txt += `${roomIcon(r.name)} ${r.name}`;
+    if(r.l&&r.b) txt += ` — ${r.l}m × ${r.b}m (${(r.l*r.b).toFixed(1)} m²)`;
+    if(r.h) txt += ` × ${r.h}m Höhe`;
+    txt += '\n';
+    if(r.analysis) txt += `   ${r.analysis.substring(0,120)}…\n`;
+  });
+  const total = state.rooms.filter(r=>r.l&&r.b).reduce((s,r)=>s+(r.l*r.b),0);
+  if(total>0) txt += `\nGesamtfläche: ${total.toFixed(1)} m²`;
+  return txt;
+}
+function doPrint(){window.print()}
+function doWhatsApp(){
+  const tel = '393774128760';
+  const txt = encodeURIComponent(buildSummaryText()+(state.lat?`\n\nhttps://maps.google.com/?q=${state.lat},${state.lng}`:''));
+  window.open(`https://wa.me/${tel}?text=${txt}`,'_blank');
+}
+function doEmail(){
+  const subj = encodeURIComponent(`Raumvermessung: ${state.propName}`);
+  const body = encodeURIComponent(buildSummaryText()+(state.lat?`\n\nhttps://maps.google.com/?q=${state.lat},${state.lng}`:''));
+  window.location.href=`mailto:?subject=${subj}&body=${body}`;
+}
+function doMaps(){
+  if(state.lat) window.open(`https://maps.google.com/?q=${state.lat},${state.lng}`,'_blank');
+  else if(state.propAddr) window.open(`https://maps.google.com/?q=${encodeURIComponent(state.propAddr)}`,'_blank');
+  else alert('Bitte zuerst GPS-Position oder Adresse eingeben.');
+}
+</script>
+</body>
+</html>
