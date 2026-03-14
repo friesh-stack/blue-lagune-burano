@@ -135,109 +135,128 @@ canvas#fpCanvas{width:100%;border-radius:10px;background:#060e1a;display:block}
 
 .tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .tag-mic{background:rgba(230,57,70,.15);color:var(--red);border:1px solid rgba(230,57,70,.3)}
+
+/* LANG SWITCHER */
+.lang-sw{display:flex;gap:4px;margin-left:10px}
+.lang-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:var(--gray);border-radius:7px;padding:4px 9px;cursor:pointer;font-size:.72rem;font-weight:600;letter-spacing:.04em;transition:all .2s}
+.lang-btn:hover{background:rgba(255,255,255,.15);color:var(--text)}
+.lang-btn.active{background:rgba(0,180,216,.18);border-color:var(--aqua);color:var(--aqua)}
+/* PHOTO STRIP */
+.photo-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ph-thumb{position:relative;width:72px;height:54px;border-radius:6px;overflow:hidden;flex-shrink:0}
+.ph-thumb img{width:100%;height:100%;object-fit:cover}
+.ph-thumb-del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);border:none;color:#fff;border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;padding:0}
+.ph-thumb-active{border:2px solid var(--aqua)}
 </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <div class="logo">Raum<span>Scanner</span><small>Pro · KI-Vermessung</small></div>
+    <div class="logo">Raum<span>Scanner</span><small data-i18n="logoSub">Pro · KI-Vermessung</small></div>
+    <div class="lang-sw">
+      <button class="lang-btn active" onclick="setLang('de')">DE</button>
+      <button class="lang-btn" onclick="setLang('it')">IT</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
     <div class="hdr-prop" onclick="showSetup()" title="Objekt bearbeiten">
-      <div class="hdr-prop-name" id="hdrPropName">Objekt auswählen ▸</div>
-      <div class="hdr-prop-sub" id="hdrPropSub">Tippen oder Mikrofon</div>
+      <div class="hdr-prop-name" id="hdrPropName" data-i18n="selectProp">Objekt auswählen ▸</div>
+      <div class="hdr-prop-sub" id="hdrPropSub" data-i18n="tapOrMic">Tippen oder Mikrofon</div>
     </div>
   </header>
 
   <!-- SETUP -->
   <div class="setup-card show" id="setupCard">
-    <div class="setup-title">🏠 Objekt einrichten</div>
+    <div class="setup-title" data-i18n="setupTitle">🏠 Objekt einrichten</div>
     <div class="setup-row">
       <div class="inp-wrap">
-        <label>Objektbezeichnung</label>
+        <label data-i18n="propLabel">Objektbezeichnung</label>
         <div style="display:flex;gap:6px">
-          <input type="text" id="propName" placeholder="z.B. Villa Burano, Apartment 3B">
+          <input type="text" id="propName" data-i18n-ph="propPh">
           <button class="btn-mic" onclick="micSetup('name')" id="mic-name" title="Sprechen">🎙</button>
         </div>
       </div>
       <div class="inp-wrap">
-        <label>Adresse / Beschreibung</label>
+        <label data-i18n="addrLabel">Adresse / Beschreibung</label>
         <div style="display:flex;gap:6px">
-          <input type="text" id="propAddr" placeholder="z.B. Via Laguna 5, Burano">
+          <input type="text" id="propAddr" data-i18n-ph="addrPh">
           <button class="btn-mic" onclick="micSetup('addr')" id="mic-addr" title="Sprechen">🎙</button>
         </div>
       </div>
     </div>
     <div class="location-row">
-      <button class="gmap-btn" onclick="getGPS()">📍 GPS-Position</button>
+      <button class="gmap-btn" onclick="getGPS()" data-i18n="gpsBtn">📍 GPS-Position</button>
       <span class="gps-status" id="gpsStatus"></span>
     </div>
-    <div class="voice-status" id="setupVS"><span class="v-dot"></span><span id="setupVSTxt">Sprechen…</span></div>
+    <div class="voice-status" id="setupVS"><span class="v-dot"></span><span id="setupVSTxt" data-i18n="speaking">Sprechen…</span></div>
     <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn-primary" onclick="saveSetup()">Weiter →</button>
+      <button class="btn-primary" onclick="saveSetup()" data-i18n="continueBtn">Weiter →</button>
     </div>
   </div>
 
   <!-- QUICK SCAN -->
   <div id="mainPanel" style="display:none">
     <div class="setup-card show" style="margin-bottom:20px;padding:18px 20px">
-      <div class="setup-title">📷 Schnell-Scan</div>
-      <p style="font-size:.82rem;color:var(--text2);margin-bottom:14px">Einfach ein Foto vom Raum aufnehmen — Claude KI analysiert sofort.</p>
+      <div class="setup-title" data-i18n="quickScanTitle">📷 Schnell-Scan</div>
+      <p style="font-size:.82rem;color:var(--text2);margin-bottom:14px" data-i18n="quickScanSub">Einfach ein Foto vom Raum aufnehmen — Claude KI analysiert sofort.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn-cam" onclick="quickCam()">📷 Foto aufnehmen</button>
-        <button class="btn-file" onclick="quickFile()">🗂 Aus Datei laden</button>
+        <button class="btn-cam" onclick="quickCam()" data-i18n="takePhoto">📷 Foto aufnehmen</button>
+        <button class="btn-file" onclick="quickFile()" data-i18n="fromFile">🗂 Aus Datei laden</button>
       </div>
       <input type="file" id="quickCamInput" accept="image/*" capture="environment" onchange="handleQuickPhoto(this)">
       <input type="file" id="quickFileInput" accept="image/*" onchange="handleQuickPhoto(this)">
       <div class="photo-result" id="quickPhotoResult" style="margin-top:14px">
         <img id="quickPhImg" class="ph-img" alt="Vorschau">
         <div class="ph-text-area">
-          <div class="ph-status" id="quickPhStatus"><span class="spinner"></span> Claude analysiert…</div>
+          <div class="ph-status" id="quickPhStatus"><span class="spinner"></span> <span data-i18n="analyzing">Claude analysiert…</span></div>
           <div class="ph-result-txt" id="quickPhResultTxt"></div>
-          <button class="btn-tts" id="btnQuickTTS" onclick="readQuickResult()">🔊 Vorlesen</button>
+          <button class="btn-tts" id="btnQuickTTS" onclick="readQuickResult()" data-i18n="readAloud">🔊 Vorlesen</button>
         </div>
       </div>
     </div>
 
     <div class="section-hdr">
-      <div class="section-title">Räume</div>
-      <button class="btn-mic" onclick="micAddRoom()" id="mic-room">🎙 Raum per Sprache</button>
+      <div class="section-title" data-i18n="roomsTitle">Räume</div>
+      <button class="btn-mic" onclick="micAddRoom()" id="mic-room" data-i18n="roomByVoice">🎙 Raum per Sprache</button>
     </div>
-    <div class="voice-status" id="roomVS"><span class="v-dot"></span><span id="roomVSTxt">Sprechen Sie Raumname und Maße…</span></div>
+    <div class="voice-status" id="roomVS"><span class="v-dot"></span><span id="roomVSTxt" data-i18n="speakRoomHint">Sprechen Sie Raumname und Maße…</span></div>
     <div class="rooms-grid" id="roomsGrid"></div>
-    <button class="btn-add-room" onclick="addRoomManual()">＋ Raum hinzufügen</button>
+    <button class="btn-add-room" onclick="addRoomManual()" data-i18n="addRoom">＋ Raum hinzufügen</button>
 
     <!-- EDITOR -->
     <div class="editor" id="editor">
       <div class="ed-title"><span id="edRoomIcon">📐</span><span id="edRoomName">Raum</span></div>
       <div class="ed-grid">
         <div class="dim-box">
-          <label>Länge</label>
+          <label data-i18n="length">Länge</label>
           <input class="dim-edit" id="dimL" type="number" step="0.01" min="0" placeholder="0.00" onchange="updateDim()">
-          <div class="dim-unit">Meter</div>
+          <div class="dim-unit" data-i18n="meters">Meter</div>
         </div>
         <div class="dim-box">
-          <label>Breite</label>
+          <label data-i18n="width">Breite</label>
           <input class="dim-edit" id="dimB" type="number" step="0.01" min="0" placeholder="0.00" onchange="updateDim()">
-          <div class="dim-unit">Meter</div>
+          <div class="dim-unit" data-i18n="meters">Meter</div>
         </div>
         <div class="dim-box">
-          <label>Höhe</label>
+          <label data-i18n="height">Höhe</label>
           <input class="dim-edit" id="dimH" type="number" step="0.01" min="0" placeholder="0.00" onchange="updateDim()">
-          <div class="dim-unit">Meter</div>
+          <div class="dim-unit" data-i18n="meters">Meter</div>
         </div>
       </div>
       <div class="ed-btn-row">
-        <button class="btn-mic" onclick="micMeasure()" id="mic-meas">🎙 Maße sprechen</button>
-        <button class="btn-cam" onclick="camCapture()">📷 Foto aufnehmen</button>
-        <button class="btn-file" onclick="fileCapture()">🗂 Aus Datei</button>
-        <button class="btn-tts show" id="btnTTS" onclick="readResult()" style="margin-left:auto">🔊 Vorlesen</button>
+        <button class="btn-mic" onclick="micMeasure()" id="mic-meas" data-i18n="speakMeasure">🎙 Maße sprechen</button>
+        <button class="btn-cam" onclick="camCapture()" data-i18n="takePhoto">📷 Foto aufnehmen</button>
+        <button class="btn-file" onclick="fileCapture()" data-i18n="fromFile">🗂 Aus Datei</button>
+        <button class="btn-tts show" id="btnTTS" onclick="readResult()" style="margin-left:auto" data-i18n="readAloud">🔊 Vorlesen</button>
       </div>
       <input type="file" id="camInput" accept="image/*" capture="environment" onchange="handlePhoto(this)">
       <input type="file" id="fileInput" accept="image/*" onchange="handlePhoto(this)">
-      <div class="voice-status" id="measVS"><span class="v-dot"></span><span id="measVSTxt">Sprechen Sie die Maße…</span></div>
+      <div class="voice-status" id="measVS"><span class="v-dot"></span><span id="measVSTxt" data-i18n="speakMeasureHint">Sprechen Sie die Maße…</span></div>
+      <!-- Photo strip (multiple photos) -->
+      <div class="photo-strip" id="photoStrip"></div>
       <div class="photo-result" id="photoResult">
         <img id="phImg" class="ph-img" alt="Raum-Foto">
         <div class="ph-text-area">
-          <div class="ph-status" id="phStatus"><span class="spinner"></span> Claude analysiert…</div>
+          <div class="ph-status" id="phStatus"><span class="spinner"></span> <span data-i18n="analyzing">Claude analysiert…</span></div>
           <div class="ph-result-txt" id="phResultTxt"></div>
         </div>
       </div>
@@ -246,8 +265,8 @@ canvas#fpCanvas{width:100%;border-radius:10px;background:#060e1a;display:block}
     <!-- FLOOR PLAN -->
     <div class="floorplan-wrap" id="fpWrap">
       <div class="fp-hdr">
-        <div class="section-title">Grundriss-Übersicht</div>
-        <button class="btn-ghost" style="font-size:.75rem" onclick="drawFloorPlan()">↻ Neu zeichnen</button>
+        <div class="section-title" data-i18n="floorPlanTitle">Grundriss-Übersicht</div>
+        <button class="btn-ghost" style="font-size:.75rem" onclick="drawFloorPlan()" data-i18n="redraw">↻ Neu zeichnen</button>
       </div>
       <canvas id="fpCanvas" height="380"></canvas>
     </div>
@@ -256,18 +275,134 @@ canvas#fpCanvas{width:100%;border-radius:10px;background:#060e1a;display:block}
 
 <!-- EXPORT BAR -->
 <div class="export-bar" id="exportBar" style="display:none">
-  <button class="exp-btn" onclick="doPrint()">🖨️ Drucken</button>
-  <button class="exp-btn wa" onclick="doWhatsApp()">📱 WhatsApp</button>
-  <button class="exp-btn" onclick="doEmail()">✉️ E-Mail</button>
-  <button class="exp-btn green" onclick="doMaps()">📍 Google Maps</button>
+  <button class="exp-btn" onclick="doPrint()" data-i18n="print">🖨️ Drucken</button>
+  <button class="exp-btn wa" onclick="doWhatsApp()" data-i18n="whatsapp">📱 WhatsApp</button>
+  <button class="exp-btn" onclick="doEmail()" data-i18n="email">✉️ E-Mail</button>
+  <button class="exp-btn green" onclick="doMaps()" data-i18n="maps">📍 Google Maps</button>
 </div>
 
 <script>
 const PROXY = 'https://blue-lagune-proxy.friesh.workers.dev';
 let state = {
   propName: '', propAddr: '', lat: null, lng: null,
-  rooms: [], activeRoom: -1
+  rooms: [], activeRoom: -1, lang: 'de'
 };
+
+/* ── i18n ── */
+const I18N = {
+  de: {
+    logoSub:'Pro · KI-Vermessung', selectProp:'Objekt auswählen ▸', tapOrMic:'Tippen oder Mikrofon',
+    setupTitle:'🏠 Objekt einrichten', propLabel:'Objektbezeichnung', propPh:'z.B. Villa Burano, Apartment 3B',
+    addrLabel:'Adresse / Beschreibung', addrPh:'z.B. Via Laguna 5, Burano',
+    gpsBtn:'📍 GPS-Position', speaking:'Sprechen…', continueBtn:'Weiter →',
+    quickScanTitle:'📷 Schnell-Scan', quickScanSub:'Einfach ein Foto vom Raum aufnehmen — Claude KI analysiert sofort.',
+    takePhoto:'📷 Foto aufnehmen', fromFile:'🗂 Aus Datei laden', analyzing:'Claude analysiert…',
+    readAloud:'🔊 Vorlesen', roomsTitle:'Räume', roomByVoice:'🎙 Raum per Sprache',
+    speakRoomHint:'Sprechen Sie Raumname und Maße…', addRoom:'＋ Raum hinzufügen',
+    length:'Länge', width:'Breite', height:'Höhe', meters:'Meter',
+    speakMeasure:'🎙 Maße sprechen', speakMeasureHint:'Sprechen Sie die Maße…',
+    floorPlanTitle:'Grundriss-Übersicht', redraw:'↻ Neu zeichnen',
+    print:'🖨️ Drucken', whatsapp:'📱 WhatsApp', email:'✉️ E-Mail', maps:'📍 Google Maps',
+    analyzePrompt:'Du bist ein professioneller Raumvermesser. Analysiere dieses Raumfoto und erstelle eine kompakte Grundriss-Beschreibung: Raumtyp, geschätzte Maße (Länge × Breite), Besonderheiten (Fenster, Türen, Nischen), Raumhöhe falls erkennbar, und kurze Nutzungsempfehlung. Antworte auf Deutsch, präzise und strukturiert, maximal 200 Wörter.',
+    analyzeRoomPrompt:'Du bist ein professioneller Raumvermesser. Analysiere dieses Foto des Raumes "{name}". Beschreibe: Raumtyp, geschätzte Maße (Länge × Breite, falls erkennbar), Fenster/Türen/Besonderheiten, Raumhöhe falls erkennbar, Zustand, Nutzungsempfehlung. Deutsch, maximal 180 Wörter, strukturiert.',
+    srLang:'de-DE', ttsLang:'de-DE',
+    nameHint:'Objektname sprechen…', addrHint:'Adresse sprechen…',
+    roomAddedMsg:' hinzugefügt.', dimsMsg:'Maße: ', onMsg:' mal ', meterUnit:' Meter.',
+    gpsSearching:'…ermittle Position', gpsDenied:'⚠️ Zugriff verweigert',
+    analysisError:'⚠️ Fehler bei der Analyse. Bitte erneut versuchen.',
+    confirmDelete:'Raum löschen?', addRoomPrompt:'Raumbezeichnung:',
+    defaultRoom:'Raum ', noRoomSelected:'Bitte zuerst einen Raum auswählen.',
+    srNotSupported:'Spracherkennung nicht unterstützt. Bitte Chrome verwenden.',
+    noLocation:'Bitte zuerst GPS-Position oder Adresse eingeben.',
+    totalLabel:'Gesamt:', roomsLabel:'Räume', addRoomsHint:'Fügen Sie Räume mit Maßen hinzu',
+    emailSubj:'Raumvermessung: ', totalArea:'Gesamtfläche: ',
+  },
+  it: {
+    logoSub:'Pro · Rilievo IA', selectProp:'Seleziona immobile ▸', tapOrMic:'Digita o microfono',
+    setupTitle:'🏠 Configura immobile', propLabel:'Nome immobile', propPh:'es. Villa Burano, Appartamento 3B',
+    addrLabel:'Indirizzo / Descrizione', addrPh:'es. Via Laguna 5, Burano',
+    gpsBtn:'📍 Posizione GPS', speaking:'Parla…', continueBtn:'Avanti →',
+    quickScanTitle:'📷 Scansione rapida', quickScanSub:'Scatta una foto del locale — la IA Claude analizza subito.',
+    takePhoto:'📷 Scatta foto', fromFile:'🗂 Carica file', analyzing:'Claude analizza…',
+    readAloud:'🔊 Leggi ad alta voce', roomsTitle:'Locali', roomByVoice:'🎙 Locale via voce',
+    speakRoomHint:'Dì il nome e le misure del locale…', addRoom:'＋ Aggiungi locale',
+    length:'Lunghezza', width:'Larghezza', height:'Altezza', meters:'Metri',
+    speakMeasure:'🎙 Dire le misure', speakMeasureHint:'Dire le misure…',
+    floorPlanTitle:'Planimetria', redraw:'↻ Ridisegna',
+    print:'🖨️ Stampa', whatsapp:'📱 WhatsApp', email:'✉️ E-Mail', maps:'📍 Google Maps',
+    analyzePrompt:'Sei un professionista del rilievo immobiliare. Analizza questa foto del locale e crea una descrizione planimetrica: tipo di locale, misure stimate (lunghezza × larghezza), caratteristiche (finestre, porte, nicchie), altezza se visibile, e breve raccomandazione d\'uso. Rispondi in italiano, preciso e strutturato, massimo 200 parole.',
+    analyzeRoomPrompt:'Sei un professionista del rilievo immobiliare. Analizza questa foto del locale "{name}". Descrivi: tipo, misure stimate (L × L), finestre/porte/caratteristiche, altezza se visibile, stato, raccomandazione d\'uso. Italiano, max 180 parole, strutturato.',
+    srLang:'it-IT', ttsLang:'it-IT',
+    nameHint:'Dire il nome dell\'immobile…', addrHint:'Dire l\'indirizzo…',
+    roomAddedMsg:' aggiunto.', dimsMsg:'Misure: ', onMsg:' per ', meterUnit:' metri.',
+    gpsSearching:'…rilevamento posizione', gpsDenied:'⚠️ Accesso negato',
+    analysisError:'⚠️ Errore nell\'analisi. Riprovare.',
+    confirmDelete:'Eliminare il locale?', addRoomPrompt:'Nome locale:',
+    defaultRoom:'Locale ', noRoomSelected:'Selezionare prima un locale.',
+    srNotSupported:'Riconoscimento vocale non supportato. Usare Chrome.',
+    noLocation:'Inserire prima posizione GPS o indirizzo.',
+    totalLabel:'Totale:', roomsLabel:'locali', addRoomsHint:'Aggiungere locali con misure',
+    emailSubj:'Rilievo locale: ', totalArea:'Superficie totale: ',
+  },
+  en: {
+    logoSub:'Pro · AI Survey', selectProp:'Select property ▸', tapOrMic:'Type or microphone',
+    setupTitle:'🏠 Set up property', propLabel:'Property name', propPh:'e.g. Villa Burano, Apartment 3B',
+    addrLabel:'Address / Description', addrPh:'e.g. Via Laguna 5, Burano',
+    gpsBtn:'📍 GPS Position', speaking:'Speaking…', continueBtn:'Continue →',
+    quickScanTitle:'📷 Quick Scan', quickScanSub:'Take a photo of the room — Claude AI analyses it instantly.',
+    takePhoto:'📷 Take photo', fromFile:'🗂 Load from file', analyzing:'Claude analysing…',
+    readAloud:'🔊 Read aloud', roomsTitle:'Rooms', roomByVoice:'🎙 Add room by voice',
+    speakRoomHint:'Say room name and dimensions…', addRoom:'＋ Add room',
+    length:'Length', width:'Width', height:'Height', meters:'Metres',
+    speakMeasure:'🎙 Say measurements', speakMeasureHint:'Say the measurements…',
+    floorPlanTitle:'Floor Plan Overview', redraw:'↻ Redraw',
+    print:'🖨️ Print', whatsapp:'📱 WhatsApp', email:'✉️ E-Mail', maps:'📍 Google Maps',
+    analyzePrompt:'You are a professional room surveyor. Analyse this room photo and create a concise floor plan description: room type, estimated dimensions (length × width), features (windows, doors, niches), ceiling height if visible, and a brief usage recommendation. Reply in English, precise and structured, max 200 words.',
+    analyzeRoomPrompt:'You are a professional room surveyor. Analyse this photo of the room "{name}". Describe: type, estimated dimensions (L × W, if visible), windows/doors/features, ceiling height if visible, condition, usage recommendation. English, max 180 words, structured.',
+    srLang:'en-GB', ttsLang:'en-GB',
+    nameHint:'Say the property name…', addrHint:'Say the address…',
+    roomAddedMsg:' added.', dimsMsg:'Dimensions: ', onMsg:' by ', meterUnit:' metres.',
+    gpsSearching:'…getting position', gpsDenied:'⚠️ Access denied',
+    analysisError:'⚠️ Analysis error. Please try again.',
+    confirmDelete:'Delete room?', addRoomPrompt:'Room name:',
+    defaultRoom:'Room ', noRoomSelected:'Please select a room first.',
+    srNotSupported:'Speech recognition not supported. Please use Chrome.',
+    noLocation:'Please enter a GPS position or address first.',
+    totalLabel:'Total:', roomsLabel:'rooms', addRoomsHint:'Add rooms with dimensions',
+    emailSubj:'Room survey: ', totalArea:'Total area: ',
+  }
+};
+
+function T(key){ return (I18N[state.lang]||I18N.de)[key] || key; }
+
+function setLang(lang) {
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  // Update switcher buttons
+  document.querySelectorAll('.lang-btn').forEach(b=>{
+    b.classList.toggle('active', b.textContent.trim().toLowerCase()===lang);
+  });
+  // Apply all data-i18n text
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    const val = T(key);
+    if(val) el.textContent = val;
+  });
+  // Apply placeholders
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-ph');
+    const val = T(key);
+    if(val) el.placeholder = val;
+  });
+  // Update dynamic header if no prop set yet
+  if(!state.propName) {
+    document.getElementById('hdrPropName').textContent = T('selectProp');
+    document.getElementById('hdrPropSub').textContent = T('tapOrMic');
+  }
+}
+// Init language
+setLang('de');
+
 
 const ROOM_ICONS = {
   'küche':'🍳','bad':'🚿','badezimmer':'🚿','wc':'🚽','schlafzimmer':'🛏️',
@@ -289,23 +424,23 @@ function showSetup() {
   document.getElementById('propAddr').value = state.propAddr;
 }
 function saveSetup() {
-  state.propName = document.getElementById('propName').value.trim() || 'Mein Objekt';
+  state.propName = document.getElementById('propName').value.trim() || T('defaultRoom')+'1';
   state.propAddr = document.getElementById('propAddr').value.trim();
   document.getElementById('hdrPropName').textContent = state.propName;
-  document.getElementById('hdrPropSub').textContent = state.propAddr || 'Adresse nicht gesetzt';
+  document.getElementById('hdrPropSub').textContent = state.propAddr || T('tapOrMic');
   document.getElementById('setupCard').classList.remove('show');
   document.getElementById('mainPanel').style.display = 'block';
   document.getElementById('exportBar').style.display = 'flex';
   renderRooms();
 }
 function getGPS() {
-  document.getElementById('gpsStatus').textContent = '…ermittle Position';
+  document.getElementById('gpsStatus').textContent = T('gpsSearching');
   navigator.geolocation.getCurrentPosition(pos => {
     state.lat = pos.coords.latitude.toFixed(6);
     state.lng = pos.coords.longitude.toFixed(6);
     document.getElementById('gpsStatus').textContent = `📍 ${state.lat}, ${state.lng}`;
   }, () => {
-    document.getElementById('gpsStatus').textContent = '⚠️ Zugriff verweigert';
+    document.getElementById('gpsStatus').textContent = T('gpsDenied');
   });
 }
 
@@ -329,7 +464,7 @@ function renderRooms() {
   drawFloorPlan();
 }
 function addRoomManual() {
-  const name = prompt('Raumbezeichnung:', 'Raum ' + (state.rooms.length + 1));
+  const name = prompt(T('addRoomPrompt'), T('defaultRoom') + (state.rooms.length + 1));
   if(!name) return;
   state.rooms.push({name, l:0, b:0, h:0, photo:null, analysis:''});
   state.activeRoom = state.rooms.length - 1;
@@ -338,7 +473,7 @@ function addRoomManual() {
 }
 function delRoom(i, e) {
   e.stopPropagation();
-  if(!confirm('Raum löschen?')) return;
+  if(!confirm(T('confirmDelete'))) return;
   state.rooms.splice(i, 1);
   if(state.activeRoom >= state.rooms.length) state.activeRoom = -1;
   renderRooms();
@@ -347,17 +482,19 @@ function delRoom(i, e) {
 function openEditor(i) {
   state.activeRoom = i;
   const r = state.rooms[i];
+  if(!r.photos) r.photos = [];
   document.getElementById('edRoomIcon').textContent = roomIcon(r.name);
   document.getElementById('edRoomName').textContent = r.name;
   document.getElementById('dimL').value = r.l || '';
   document.getElementById('dimB').value = r.b || '';
   document.getElementById('dimH').value = r.h || '';
-  // Photo
+  // Photos
   const pr = document.getElementById('photoResult');
-  if(r.photo) {
-    document.getElementById('phImg').src = r.photo;
-    document.getElementById('phResultTxt').innerHTML = r.analysis ? r.analysis.replace(/\n/g,'<br>') : '';
-    document.getElementById('phResultTxt').classList.toggle('show', !!r.analysis);
+  if(r.photos.length > 0) {
+    const idx = r.activePhoto || 0;
+    document.getElementById('phImg').src = r.photos[idx].src;
+    document.getElementById('phResultTxt').innerHTML = r.photos[idx].analysis ? r.photos[idx].analysis.replace(/\n/g,'<br>') : '';
+    document.getElementById('phResultTxt').classList.toggle('show', !!r.photos[idx].analysis);
     document.getElementById('phStatus').style.display = 'none';
     pr.classList.add('show');
     document.getElementById('btnTTS').classList.toggle('show', !!r.analysis);
@@ -365,6 +502,7 @@ function openEditor(i) {
     pr.classList.remove('show');
     document.getElementById('btnTTS').classList.remove('show');
   }
+  renderPhotoStrip();
   document.getElementById('editor').classList.add('show');
   renderRooms();
   document.getElementById('editor').scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -404,18 +542,18 @@ async function handleQuickPhoto(inp) {
           model:'claude-sonnet-4-20250514',max_tokens:600,
           messages:[{role:'user',content:[
             {type:'image',source:{type:'base64',media_type:mime,data:b64}},
-            {type:'text',text:'Du bist ein professioneller Raumvermesser. Analysiere dieses Raumfoto und erstelle eine kompakte Grundriss-Beschreibung: Raumtyp, geschätzte Maße (Länge × Breite), Besonderheiten (Fenster, Türen, Nischen), Raumhöhe falls erkennbar, und kurze Nutzungsempfehlung. Antworte auf Deutsch, präzise und strukturiert, maximal 200 Wörter.'}
+            {type:'text',text:T('analyzePrompt')}
           ]}]
         })
       });
       const d = await res.json();
-      quickAnalysis = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : 'Analyse nicht verfügbar.';
+      quickAnalysis = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : T('analyzing');
       document.getElementById('quickPhStatus').style.display='none';
       document.getElementById('quickPhResultTxt').innerHTML = quickAnalysis.replace(/\n/g,'<br>');
       document.getElementById('quickPhResultTxt').classList.add('show');
       document.getElementById('btnQuickTTS').classList.add('show');
     } catch(err) {
-      document.getElementById('quickPhStatus').innerHTML='⚠️ Fehler bei der Analyse. Bitte erneut versuchen.';
+      document.getElementById('quickPhStatus').innerHTML=T('analysisError');
     }
   };
   reader.readAsDataURL(file);
@@ -425,44 +563,118 @@ function readQuickResult(){speak(quickAnalysis)}
 /* ── PHOTO & CLAUDE VISION ── */
 function camCapture(){document.getElementById('camInput').click()}
 function fileCapture(){document.getElementById('fileInput').click()}
+
+function renderPhotoStrip() {
+  if(state.activeRoom < 0) return;
+  const r = state.rooms[state.activeRoom];
+  const strip = document.getElementById('photoStrip');
+  strip.innerHTML = '';
+  if(!r.photos || !r.photos.length) return;
+  r.photos.forEach((p, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'ph-thumb' + (i === r.activePhoto ? ' ph-thumb-active' : '');
+    wrap.innerHTML = `<img src="${p.src}" alt="Foto ${i+1}"><button class="ph-thumb-del" onclick="delPhoto(${i},event)">✕</button>`;
+    wrap.onclick = (e) => { if(!e.target.classList.contains('ph-thumb-del')) showPhoto(i); };
+    strip.appendChild(wrap);
+  });
+}
+function showPhoto(i) {
+  if(state.activeRoom < 0) return;
+  const r = state.rooms[state.activeRoom];
+  r.activePhoto = i;
+  const p = r.photos[i];
+  document.getElementById('phImg').src = p.src;
+  const pr = document.getElementById('photoResult');
+  pr.classList.add('show');
+  document.getElementById('phStatus').style.display = 'none';
+  if(p.analysis) {
+    document.getElementById('phResultTxt').innerHTML = p.analysis.replace(/\n/g,'<br>');
+    document.getElementById('phResultTxt').classList.add('show');
+    document.getElementById('btnTTS').classList.add('show');
+  } else {
+    document.getElementById('phResultTxt').classList.remove('show');
+    document.getElementById('btnTTS').classList.remove('show');
+  }
+  renderPhotoStrip();
+}
+function delPhoto(i, e) {
+  e.stopPropagation();
+  const r = state.rooms[state.activeRoom];
+  r.photos.splice(i, 1);
+  if(!r.photos.length) {
+    document.getElementById('photoResult').classList.remove('show');
+    document.getElementById('btnTTS').classList.remove('show');
+  } else {
+    r.activePhoto = Math.min(r.activePhoto || 0, r.photos.length - 1);
+    showPhoto(r.activePhoto);
+  }
+  renderPhotoStrip();
+  // Update combined analysis text
+  r.analysis = r.photos.map(p=>p.analysis||'').filter(Boolean).join('\n\n---\n\n');
+}
+
 async function handlePhoto(inp) {
   if(!inp.files||!inp.files[0]) return;
   if(state.activeRoom<0) return;
   const file = inp.files[0];
+  const r = state.rooms[state.activeRoom];
+  if(!r.photos) r.photos = [];
+
+  // Prevent page scroll jump
+  const scrollY = window.scrollY;
+
   const pr = document.getElementById('photoResult');
   pr.classList.add('show');
   document.getElementById('phStatus').style.display = 'flex';
   document.getElementById('phResultTxt').classList.remove('show');
   document.getElementById('btnTTS').classList.remove('show');
+
   const reader = new FileReader();
   reader.onload = async e => {
     const src = e.target.result;
     const b64 = src.split(',')[1];
     const mime = file.type || 'image/jpeg';
     document.getElementById('phImg').src = src;
-    state.rooms[state.activeRoom].photo = src;
-    inp.value='';
-    const rName = state.rooms[state.activeRoom].name;
+    inp.value = '';
+
+    // Add photo to strip immediately
+    const photoIdx = r.photos.length;
+    r.photos.push({src, analysis: '', b64, mime});
+    r.activePhoto = photoIdx;
+    renderPhotoStrip();
+
+    // Restore scroll position
+    window.scrollTo(0, scrollY);
+
+    const rName = r.name;
+    const photoNum = r.photos.length;
+    const multiHint = photoNum > 1 ? ` Das ist Foto ${photoNum} von diesem Raum. Bitte alle Informationen aus allen Fotos zusammenfassen und ergänzen.` : '';
+
     try {
+      // Build messages with all photos if multiple
+      let content = [];
+      r.photos.forEach((p, idx) => {
+        if(p.b64) content.push({type:'image', source:{type:'base64', media_type:p.mime, data:p.b64}});
+      });
+      content.push({type:'text', text: T('analyzeRoomPrompt').replace('{name}', rName) + (photoNum > 1 ? ` Bitte alle ${photoNum} Fotos gemeinsam auswerten für eine vollständigere Analyse.` : '')});
+
       const res = await fetch(PROXY, {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          model:'claude-sonnet-4-20250514', max_tokens:600,
-          messages:[{role:'user', content:[
-            {type:'image', source:{type:'base64', media_type:mime, data:b64}},
-            {type:'text', text:`Du bist ein professioneller Raumvermesser. Analysiere dieses Foto des Raumes "${rName}". Beschreibe: Raumtyp, geschätzte Maße (Länge × Breite, falls erkennbar), Fenster/Türen/Besonderheiten, Raumhöhe falls erkennbar, Zustand, Nutzungsempfehlung. Deutsch, maximal 180 Wörter, strukturiert.`}
-          ]}]
-        })
+        body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:800, messages:[{role:'user', content}]})
       });
       const d = await res.json();
-      const txt = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : 'Analyse nicht verfügbar.';
-      state.rooms[state.activeRoom].analysis = txt;
+      const txt = d.content&&d.content[0]&&d.content[0].text ? d.content[0].text : T('analyzing');
+      // Store analysis on current photo AND as combined room analysis
+      r.photos[photoIdx].analysis = txt;
+      r.analysis = txt;
       document.getElementById('phStatus').style.display = 'none';
       document.getElementById('phResultTxt').innerHTML = txt.replace(/\n/g,'<br>');
       document.getElementById('phResultTxt').classList.add('show');
       document.getElementById('btnTTS').classList.add('show');
+      renderPhotoStrip();
+      window.scrollTo(0, scrollY);
     } catch(err) {
-      document.getElementById('phStatus').innerHTML = '⚠️ Fehler bei Analyse';
+      document.getElementById('phStatus').innerHTML = T('analysisError');
     }
   };
   reader.readAsDataURL(file);
@@ -473,11 +685,9 @@ function readResult() {
   if(!txt) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(txt);
-  u.lang='de-DE'; u.rate=0.95; u.pitch=1;
-  // prefer female DE voice
+  u.lang=T('ttsLang'); u.rate=0.95; u.pitch=1;
   const voices = speechSynthesis.getVoices();
-  const v = voices.find(x=>x.lang.startsWith('de')&&x.name.toLowerCase().includes('female'))
-           || voices.find(x=>x.lang.startsWith('de'));
+  const v = voices.find(x=>x.lang.startsWith(state.lang)) || null;
   if(v) u.voice=v;
   speechSynthesis.speak(u);
 }
@@ -487,11 +697,11 @@ const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
 let activeSR = null;
 function stopSR() { if(activeSR){activeSR.stop();activeSR=null;} }
 
-function startSR(lang, onResult, statusEl, statusTxtEl, btnEl, hint) {
+function startSR(onResult, statusEl, statusTxtEl, btnEl, hint) {
   stopSR();
-  if(!SpeechRec){alert('Spracherkennung nicht unterstützt. Bitte Chrome verwenden.');return;}
+  if(!SpeechRec){alert(T('srNotSupported'));return;}
   const sr = new SpeechRec();
-  sr.lang = lang; sr.continuous=false; sr.interimResults=false;
+  sr.lang = T('srLang'); sr.continuous=false; sr.interimResults=false;
   activeSR = sr;
   document.getElementById(statusEl).classList.add('show');
   document.getElementById(statusTxtEl).textContent = hint || 'Sprechen…';
@@ -516,7 +726,7 @@ function startSR(lang, onResult, statusEl, statusTxtEl, btnEl, hint) {
 // Setup mic
 function micSetup(field) {
   const btn = field==='name'?'mic-name':'mic-addr';
-  startSR('de-DE', txt => {
+  startSR(txt => {
     if(field==='name') {
       state.propName = txt;
       document.getElementById('propName').value = txt;
@@ -524,45 +734,35 @@ function micSetup(field) {
       state.propAddr = txt;
       document.getElementById('propAddr').value = txt;
     }
-  }, 'setupVS','setupVSTxt', btn, field==='name'?'Objektname sprechen…':'Adresse sprechen…');
+  }, 'setupVS','setupVSTxt', btn, field==='name'?T('nameHint'):T('addrHint'));
 }
 
 // Add room by voice
 function micAddRoom() {
-  startSR('de-DE', txt => {
-    // Try to parse room name + optional measurements from transcript
+  startSR(txt => {
     const parsed = parseVoiceRoom(txt);
     state.rooms.push({name: parsed.name, l: parsed.l||0, b: parsed.b||0, h: parsed.h||0, photo:null, analysis:''});
     state.activeRoom = state.rooms.length-1;
     renderRooms();
     openEditor(state.activeRoom);
-    speak(`${parsed.name} hinzugefügt.` + (parsed.l?` Maße: ${parsed.l} mal ${parsed.b} Meter.`:''));
-  }, 'roomVS','roomVSTxt','mic-room','Raumname und Maße sprechen…');
+    speak(parsed.name + T('roomAddedMsg') + (parsed.l ? T('dimsMsg') + parsed.l + T('onMsg') + parsed.b + T('meterUnit') : ''));
+  }, 'roomVS','roomVSTxt','mic-room', T('speakRoomHint'));
 }
 
 // Measure by voice
 function micMeasure() {
-  if(state.activeRoom<0){alert('Bitte zuerst einen Raum auswählen.');return;}
-  startSR('de-DE', txt => {
+  if(state.activeRoom<0){alert(T('noRoomSelected'));return;}
+  startSR(txt => {
     const m = parseMeasures(txt);
-    if(m.l){
-      state.rooms[state.activeRoom].l = m.l;
-      document.getElementById('dimL').value = m.l;
-    }
-    if(m.b){
-      state.rooms[state.activeRoom].b = m.b;
-      document.getElementById('dimB').value = m.b;
-    }
-    if(m.h){
-      state.rooms[state.activeRoom].h = m.h;
-      document.getElementById('dimH').value = m.h;
-    }
+    if(m.l){ state.rooms[state.activeRoom].l = m.l; document.getElementById('dimL').value = m.l; }
+    if(m.b){ state.rooms[state.activeRoom].b = m.b; document.getElementById('dimB').value = m.b; }
+    if(m.h){ state.rooms[state.activeRoom].h = m.h; document.getElementById('dimH').value = m.h; }
     renderRooms();
     let msg = '';
-    if(m.l&&m.b) msg = `Maße eingetragen: ${m.l} mal ${m.b} Meter`;
-    else if(m.l) msg = `Länge: ${m.l} Meter`;
+    if(m.l&&m.b) msg = T('dimsMsg') + m.l + T('onMsg') + m.b + T('meterUnit');
+    else if(m.l) msg = T('length') + ': ' + m.l + T('meterUnit');
     if(msg) speak(msg);
-  }, 'measVS','measVSTxt','mic-meas','Maße sprechen: z.B. 4 Meter 50 auf 3 Meter 20…');
+  }, 'measVS','measVSTxt','mic-meas', T('speakMeasureHint'));
 }
 
 /* ── PARSING ── */
@@ -624,9 +824,9 @@ function speak(txt) {
   if(!txt) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(txt);
-  u.lang='de-DE'; u.rate=1; u.pitch=1;
+  u.lang = T('ttsLang'); u.rate=1; u.pitch=1;
   const voices = speechSynthesis.getVoices();
-  const v = voices.find(x=>x.lang.startsWith('de'))||null;
+  const v = voices.find(x=>x.lang.startsWith(state.lang))||null;
   if(v) u.voice=v;
   speechSynthesis.speak(u);
 }
