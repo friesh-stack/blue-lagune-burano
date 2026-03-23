@@ -859,8 +859,18 @@ function startSR(onResult, statusEl, statusTxtEl, btnEl, hint) {
     setTimeout(()=>{ if(seEl) seEl.classList.remove('show'); }, 2500);
     activeSR = null;
   };
-  try { sr.start(); }
-  catch(e){ toast('🎙 Mikrofon-Start fehlgeschlagen: '+e.message,'error',5000); }
+  // Android Chrome: getUserMedia pre-request vor SpeechRecognition.start()
+  const _doStart = () => {
+    try { sr.start(); }
+    catch(e){ toast('🎙 Mikrofon-Start fehlgeschlagen: '+e.message,'error',5000); }
+  };
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => { stream.getTracks().forEach(t => t.stop()); _doStart(); })
+      .catch(() => _doStart());
+  } else {
+    _doStart();
+  }
 }
 
 function micSetup(field) {
