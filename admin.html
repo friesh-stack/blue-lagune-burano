@@ -348,7 +348,10 @@
         <div class="section-title">Objekte & Preise</div>
         <div class="section-sub">Preise, Beschreibungen und Details der 6 Immobilien bearbeiten</div>
 
-        <div class="prop-tabs" id="propTabs"></div>
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+          <div class="prop-tabs" id="propTabs" style="margin-bottom:0;flex:1"></div>
+          <button class="btn btn-ghost" onclick="addNewProp()" style="white-space:nowrap;flex-shrink:0">＋ Neues Objekt</button>
+        </div>
         <div id="propEditor"></div>
       </div>
 
@@ -651,6 +654,20 @@ function renderPropEditor(i) {
       <div class="field"><label>Lage (Kurztext unter Karte)</label><input id="pe_location" value="${esc(p.location)}" oninput="markDirty()"></div>
     </div>
     <div class="card">
+      <div class="card-title">Titelbild</div>
+      <div class="field">
+        <label>Foto hochladen (Base64)</label>
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:.4rem">
+          <img id="pe_imgPreview" style="width:120px;height:80px;object-fit:cover;border-radius:.5rem;border:1px solid rgba(255,255,255,.15);display:none">
+          <label class="btn btn-ghost" style="cursor:pointer">
+            📷 Foto wählen
+            <input type="file" id="pe_imgFile" accept="image/*" style="display:none" onchange="loadPropImg(this)">
+          </label>
+          <button class="btn btn-ghost" id="pe_imgClearBtn" onclick="clearPropImg()" style="color:#f87171;display:none">✕ Entfernen</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
       <div class="card-title">Beschreibungen</div>
       <div class="field"><label>Kurzbeschreibung (Kartentext)</label><textarea id="pe_short" oninput="markDirty()">${esc(p.shortDesc)}</textarea></div>
       <div class="field"><label>Volltextbeschreibung (Modal/Detail)</label><textarea class="tall" id="pe_full" oninput="markDirty()">${esc(p.fullDesc)}</textarea></div>
@@ -659,6 +676,55 @@ function renderPropEditor(i) {
       <button class="btn btn-primary" onclick="savePropFromUI();saveToStorage()">💾 Speichern</button>
     </div>
   `;
+  setPropImgUI(p.img || '');
+}
+
+function setPropImgUI(src) {
+  const prev = document.getElementById('pe_imgPreview');
+  const clr  = document.getElementById('pe_imgClearBtn');
+  if (!prev) return;
+  if (src) {
+    prev.src = src; prev.style.display = 'block';
+    if (clr) clr.style.display = 'inline-flex';
+  } else {
+    prev.src = ''; prev.style.display = 'none';
+    if (clr) clr.style.display = 'none';
+  }
+}
+
+function loadPropImg(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    data.properties[currentProp].img = e.target.result;
+    setPropImgUI(e.target.result);
+    markDirty();
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearPropImg() {
+  data.properties[currentProp].img = '';
+  setPropImgUI('');
+  markDirty();
+}
+
+function addNewProp() {
+  savePropFromUI();
+  const newId = Math.max(...data.properties.map(p => p.id)) + 1;
+  data.properties.push({
+    id: newId, name: 'Neues Objekt ' + newId,
+    type: 'fertig', lage: 'kanal',
+    hafen: false, garten: false, premium: false,
+    location: '', sqm: 80, floors: 2, rooms: 3,
+    price: '€ 0', achtelPrice: '',
+    shortDesc: '', fullDesc: '', img: ''
+  });
+  currentProp = data.properties.length - 1;
+  renderPropTabs();
+  renderPropEditor(currentProp);
+  markDirty();
 }
 
 function savePropFromUI() {
