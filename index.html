@@ -2361,7 +2361,23 @@ function _vaStartListening() {
     }
   };
 
-  _vaRecog.start();
+  // Android Chrome: getUserMedia pre-request vor SpeechRecognition.start()
+  const _startRecog = () => {
+    try { _vaRecog.start(); }
+    catch(e) {
+      _vaListening = false; _vaMicState('idle');
+      _vaShowLine(lang==='en' ? 'Microphone start failed.'
+        : lang==='it' ? 'Avvio microfono fallito.'
+        : 'Mikrofon-Start fehlgeschlagen.', 'agent');
+    }
+  };
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => { stream.getTracks().forEach(t => t.stop()); _startRecog(); })
+      .catch(() => _startRecog());
+  } else {
+    _startRecog();
+  }
 }
 
 // ── Send to Claude API and speak reply ──
