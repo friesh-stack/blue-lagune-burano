@@ -123,6 +123,20 @@ canvas#fpCanvas{width:100%;border-radius:10px;display:block}
   canvas#fpCanvas{background:#f5f0e8}
 }
 
+/* VIDEO SCAN */
+.video-card{background:var(--card);border:1px solid rgba(244,197,51,.25);border-radius:16px;padding:20px;margin-bottom:20px}
+.video-preview-wrap{position:relative;border-radius:10px;overflow:hidden;background:#000;margin:12px 0;display:none}
+.video-preview-wrap.show{display:block}
+video#videoPreview{width:100%;max-height:240px;object-fit:cover;display:block}
+.rec-badge{position:absolute;top:10px;left:12px;background:var(--red);color:#fff;border-radius:6px;padding:3px 9px;font-size:.7rem;font-weight:700;letter-spacing:.08em;display:flex;align-items:center;gap:5px;animation:pulse-rec 1s infinite}
+@keyframes pulse-rec{0%,100%{opacity:1}50%{opacity:.5}}
+.rec-transcript{background:rgba(0,0,0,.6);color:#fff;font-size:.72rem;padding:6px 10px;border-top:1px solid rgba(255,255,255,.1);min-height:28px;line-height:1.5}
+.video-result{background:rgba(6,214,160,.05);border:1px solid rgba(6,214,160,.2);border-radius:10px;padding:14px;margin-top:10px;display:none}
+.video-result.show{display:block}
+.photo-count-badge{font-size:.65rem;background:rgba(0,180,216,.15);color:var(--aqua);border-radius:5px;padding:1px 6px;margin-left:6px;font-weight:600}
+.btn-describe{background:rgba(244,197,51,.12);border:1px solid rgba(244,197,51,.35);color:var(--gold);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap}
+.btn-describe:hover{background:rgba(244,197,51,.22)}
+.btn-describe.listening{background:var(--gold);color:#000;animation:pulse-mic .8s infinite}
 /* TOAST */
 .rs-toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#1a2a3a;border:1px solid rgba(0,180,216,.4);color:var(--text);border-radius:10px;padding:10px 18px;font-size:.82rem;z-index:9999;max-width:90vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.4);transition:opacity .3s;pointer-events:none}
 .rs-toast.error{border-color:rgba(230,57,70,.6);background:#2a1a1a}
@@ -197,6 +211,25 @@ canvas#fpCanvas{width:100%;border-radius:10px;display:block}
       </div>
     </div>
 
+    <!-- VIDEO SCAN -->
+    <div class="video-card" id="videoCard">
+      <div class="setup-title">🎬 Video-Scan</div>
+      <p style="font-size:.82rem;color:var(--text2);margin-bottom:12px" id="videoScanSubTxt">Kamera starten &amp; alle Räume durchgehen — KI erkennt automatisch Zimmer, Maße und Grundriss.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-primary" id="btnStartVideo" onclick="startVideoScan()">▶ Video-Scan starten</button>
+        <button class="btn-cam" id="btnStopVideo" onclick="stopVideoScan()" style="display:none">⏹ Stoppen &amp; Auswerten</button>
+      </div>
+      <div class="video-preview-wrap" id="videoPreviewWrap">
+        <video id="videoPreview" autoplay muted playsinline></video>
+        <div class="rec-badge">● REC</div>
+        <div class="rec-transcript" id="recTranscript">Sprechen Sie: „Das ist das Schlafzimmer, 4 mal 5 Meter…"</div>
+      </div>
+      <div class="video-result" id="videoResult">
+        <div class="ph-status" id="videoStatus"><span class="spinner"></span> <span>Claude analysiert Video…</span></div>
+        <div class="ph-result-txt show" id="videoResultTxt"></div>
+      </div>
+    </div>
+
     <!-- ROOMS -->
     <div class="section-hdr">
       <div class="section-title" id="roomsTitleTxt">Räume</div>
@@ -227,9 +260,14 @@ canvas#fpCanvas{width:100%;border-radius:10px;display:block}
         </div>
       </div>
       <div class="ed-btn-row">
-        <button class="btn-mic" onclick="micMeasure()" id="mic-meas">🎙 Maße sprechen</button>
-        <button class="btn-cam" onclick="camCapture()" id="takePhotoTxt">📷 Foto aufnehmen</button>
-        <button class="btn-file" onclick="fileCapture()" id="fromFileTxt">🗂 Aus Datei</button>
+        <button class="btn-describe" onclick="micDescribeRoom()" id="mic-describe">🎙 Raum beschreiben</button>
+        <button class="btn-mic" onclick="micMeasure()" id="mic-meas">🎙 Maße</button>
+      </div>
+      <div class="voice-status" id="describeVS"><span class="v-dot"></span><span id="describeVSTxt">Raum beschreiben…</span></div>
+      <div class="ed-btn-row" style="margin-top:6px">
+        <button class="btn-cam" onclick="camCapture()" id="takePhotoTxt">📷 Foto</button>
+        <button class="btn-file" onclick="fileCapture()" id="fromFileTxt">🗂 Datei</button>
+        <span id="photoCountBadge" class="photo-count-badge" style="display:none">0/3</span>
         <button class="btn-tts show" id="btnTTS" onclick="readResult()" style="margin-left:auto">🔊 Vorlesen</button>
       </div>
       <!-- Back camera only, no selfie -->
@@ -654,6 +692,21 @@ function renderPhotoStrip() {
     wrap.onclick = ()=>showPhotoAt(i);
     strip.appendChild(wrap);
   });
+  updatePhotoCountBadge();
+}
+function updatePhotoCountBadge() {
+  if(state.activeRoom<0) return;
+  const r = state.rooms[state.activeRoom];
+  const badge = document.getElementById('photoCountBadge');
+  if(!badge) return;
+  const n = (r.photos||[]).length;
+  if(n > 0) {
+    badge.textContent = n+'/3 Fotos';
+    badge.style.display = 'inline-block';
+    badge.style.color = n>=3 ? 'var(--gold)' : 'var(--aqua)';
+  } else {
+    badge.style.display = 'none';
+  }
 }
 function showPhotoAt(i) {
   if(state.activeRoom<0) return;
@@ -797,8 +850,11 @@ async function handlePhoto(inp) {
       document.getElementById('phResultTxt').classList.add('show');
       document.getElementById('btnTTS').classList.add('show');
       renderPhotoStrip();
+      updatePhotoCountBadge();
       drawFloorPlan();
       window.scrollTo(0, scrollY);
+      // Auto-vorlesen nach Analyse
+      setTimeout(() => readResult(), 400);
     } catch(err) {
       document.getElementById('phStatus').innerHTML = T('analysisError');
       toast('⚠️ KI-Analyse fehlgeschlagen: '+err.message,'error',6000);
@@ -859,7 +915,7 @@ function startSR(onResult, statusEl, statusTxtEl, btnEl, hint) {
     setTimeout(()=>{ if(seEl) seEl.classList.remove('show'); }, 2500);
     activeSR = null;
   };
-  // Android Chrome: getUserMedia pre-request vor SpeechRecognition.start()
+  // Android Chrome: getUserMedia pre-request
   const _doStart = () => {
     try { sr.start(); }
     catch(e){ toast('🎙 Mikrofon-Start fehlgeschlagen: '+e.message,'error',5000); }
@@ -895,6 +951,74 @@ function micAddRoom() {
     speak(parsed.name+T('roomAddedMsg')+(parsed.l?T('dimsMsg')+parsed.l+T('onMsg')+parsed.b+T('meterUnit'):''));
   }, 'roomVS', 'roomVSTxt', 'mic-room', T('speakRoomHint'));
 }
+/* ── RAUM BESCHREIBEN per Sprache → Claude KI-Parsing ── */
+function micDescribeRoom() {
+  const btn = document.getElementById('mic-describe');
+  const vsEl = document.getElementById('describeVS');
+  const vsTxt = document.getElementById('describeVSTxt');
+  if(vsEl) vsEl.classList.add('show');
+  if(vsTxt) vsTxt.textContent = T('srLang')==='de-DE' ? 'Raum beschreiben…' : T('srLang')==='it-IT' ? 'Descrivi il locale…' : 'Describe the room…';
+  if(btn) btn.classList.add('listening');
+  startSR(async txt => {
+    if(btn) btn.classList.remove('listening');
+    if(vsEl) vsEl.classList.remove('show');
+    if(vsTxt) vsTxt.textContent = '⏳ Claude analysiert…';
+    if(vsEl) vsEl.classList.add('show');
+    // Send transcript to Claude for structured parsing
+    try {
+      const res = await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,
+          messages:[{role:'user',content:
+            'Analysiere diese Raumbeschreibung und gib NUR JSON zurück (kein Text davor/danach):
+"'+txt+'"
+
+'+
+            'Format:
+{"name":"Schlafzimmer","l":4.0,"b":5.0,"h":2.5,"elements":{"windows":[{"wall":"N","pos":0.5,"width":1.2}],"doors":[{"wall":"S","pos":0.3,"width":0.9,"side":"inside"}],"features":[]}}
+'+
+            'Mögliche Raumnamen: Schlafzimmer, Wohnzimmer, Küche, Bad, Flur, Kinderzimmer, Arbeitszimmer, Esszimmer, Gästezimmer, Keller, Terrasse.
+'+
+            'Wenn Maße fehlen, schätze sinnvolle Werte für diesen Raumtyp.
+'+
+            'Nur JSON, kein Markdown.'
+          }]})});
+      const d = await res.json();
+      let raw = (d.content&&d.content[0]&&d.content[0].text)||'{}';
+      raw = raw.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(raw);
+      if(state.activeRoom >= 0) {
+        const r = state.rooms[state.activeRoom];
+        if(parsed.name) {
+          r.name = parsed.name;
+          document.getElementById('edRoomName').textContent = parsed.name;
+          document.getElementById('edRoomIcon').textContent = roomIcon(parsed.name);
+        }
+        if(parsed.l) { r.l = parsed.l; document.getElementById('dimL').value = parsed.l; }
+        if(parsed.b) { r.b = parsed.b; document.getElementById('dimB').value = parsed.b; }
+        if(parsed.h) { r.h = parsed.h; document.getElementById('dimH').value = parsed.h; }
+        if(parsed.elements) r.elements = parsed.elements;
+        // Build analysis text
+        const lang = state.lang||'de';
+        const descTxt = (lang==='de'
+          ? (parsed.name||'Raum')+': '+( parsed.l&&parsed.b ? parsed.l+' × '+parsed.b+' m' : '' )+(parsed.h?' × '+parsed.h+' m Höhe':'')
+          : (lang==='it'
+            ? (parsed.name||'Locale')+': '+(parsed.l&&parsed.b ? parsed.l+' × '+parsed.b+' m' : '')
+            : (parsed.name||'Room')+': '+(parsed.l&&parsed.b ? parsed.l+' × '+parsed.b+' m' : '')));
+        if(!r.analysis) r.analysis = descTxt;
+        renderRooms();
+        drawFloorPlan();
+        speak(descTxt);
+      }
+      if(vsEl) vsEl.classList.remove('show');
+      toast('✓ Raum erkannt: '+(parsed.name||'?')+' '+(parsed.l&&parsed.b?parsed.l+'×'+parsed.b+'m':''),'ok');
+    } catch(e) {
+      if(vsEl) vsEl.classList.remove('show');
+      toast('⚠️ Parsing fehlgeschlagen: '+e.message,'error',5000);
+    }
+  }, 'describeVS', 'describeVSTxt', 'mic-describe',
+    T('srLang')==='de-DE' ? 'Raum beschreiben…' : 'Describe room…');
+}
+
 function micMeasure() {
   if(state.activeRoom<0){ alert(T('noRoomSelected')); return; }
   startSR(txt=>{
@@ -1129,6 +1253,144 @@ window.addEventListener('resize',()=>drawFloorPlan());
 I18N.de.addRoomsHint='Räume mit Maßen hinzufügen'; I18N.de.roomsLabel='Räume';
 I18N.it.addRoomsHint='Aggiungere locali con misure'; I18N.it.roomsLabel='locali';
 I18N.en.addRoomsHint='Add rooms with dimensions'; I18N.en.roomsLabel='rooms';
+
+/* ══════════════════════════════════════
+   VIDEO SCAN
+══════════════════════════════════════ */
+let _vidStream = null, _vidSR = null, _vidTranscript = '', _vidFrames = [], _vidFrameTimer = null;
+
+async function startVideoScan() {
+  // Request camera + microphone
+  try {
+    _vidStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}, audio:true});
+  } catch(e) {
+    // Fallback: try without facingMode
+    try { _vidStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true}); }
+    catch(e2) { toast('⚠️ Kamera/Mikrofon nicht verfügbar: '+e2.message,'error',6000); return; }
+  }
+  // Show preview
+  const vidEl = document.getElementById('videoPreview');
+  vidEl.srcObject = _vidStream;
+  document.getElementById('videoPreviewWrap').classList.add('show');
+  document.getElementById('btnStartVideo').style.display = 'none';
+  document.getElementById('btnStopVideo').style.display = 'flex';
+
+  _vidTranscript = '';
+  _vidFrames = [];
+  document.getElementById('recTranscript').textContent = '🎙 Sprechen Sie: „Das ist das Schlafzimmer, 4 mal 5 Meter…"';
+
+  // Start SpeechRecognition continuous
+  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR) {
+    _vidSR = new SR();
+    _vidSR.lang = T('srLang');
+    _vidSR.continuous = true;
+    _vidSR.interimResults = true;
+    _vidSR.onresult = e => {
+      let final='', interim='';
+      for(let i=e.resultIndex;i<e.results.length;i++) {
+        if(e.results[i].isFinal) final += e.results[i][0].transcript+' ';
+        else interim += e.results[i][0].transcript;
+      }
+      _vidTranscript += final;
+      document.getElementById('recTranscript').textContent = (_vidTranscript+interim).slice(-200);
+    };
+    _vidSR.onerror = ()=>{};
+    // Re-start SR if it stops (Android quirk)
+    _vidSR.onend = ()=>{ if(_vidStream) { try{_vidSR.start();}catch(e){} } };
+    try { _vidSR.start(); } catch(e){}
+  }
+
+  // Capture frame every 4s (max 5 frames)
+  _vidFrameTimer = setInterval(()=>{
+    if(_vidFrames.length >= 5) return;
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = vidEl.videoWidth||640; canvas.height = vidEl.videoHeight||480;
+      canvas.getContext('2d').drawImage(vidEl,0,0);
+      const b64 = canvas.toDataURL('image/jpeg',0.55).split(',')[1];
+      if(b64) _vidFrames.push(b64);
+    } catch(e){}
+  }, 4000);
+}
+
+async function stopVideoScan() {
+  clearInterval(_vidFrameTimer);
+  if(_vidSR) { try{_vidSR.stop();}catch(e){} _vidSR=null; }
+  if(_vidStream) { _vidStream.getTracks().forEach(t=>t.stop()); _vidStream=null; }
+
+  document.getElementById('videoPreviewWrap').classList.remove('show');
+  document.getElementById('btnStopVideo').style.display = 'none';
+  document.getElementById('btnStartVideo').style.display = 'flex';
+
+  if(!_vidTranscript.trim() && !_vidFrames.length) {
+    toast('Keine Aufnahme vorhanden.','error'); return;
+  }
+
+  // Show loading
+  const resDiv = document.getElementById('videoResult');
+  resDiv.classList.add('show');
+  document.getElementById('videoStatus').style.display = 'flex';
+  document.getElementById('videoResultTxt').textContent = '';
+
+  try {
+    // Build message: frames + transcript
+    const content = [];
+    _vidFrames.slice(0,5).forEach(f => {
+      content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:f}});
+    });
+    const lang = state.lang||'de';
+    const prompt = lang==='de'
+      ? 'Ich habe eine Wohnung gefilmt und dabei gesprochen. Mein Transkript: "'+_vidTranscript.trim()+'"\n\nAnalysiere Transkript und Fotos gemeinsam. Extrahiere ALLE Räume als JSON-Array. Jeder Raum:\n{"name":"Schlafzimmer","l":4.0,"b":5.0,"h":2.5,"analysis":"kurze Beschreibung","elements":{"windows":[{"wall":"N","pos":0.5,"width":1.2}],"doors":[{"wall":"S","pos":0.3,"width":0.9,"side":"inside"}],"features":[]}}\n\nNur das JSON-Array, kein Markdown, kein weiterer Text.'
+      : lang==='it'
+      ? 'Ho filmato un appartamento mentre parlavo. Trascrizione: "'+_vidTranscript.trim()+'"\n\nAnalizza trascrizione e foto. Estrai TUTTI i locali come array JSON: [{"name":"Camera","l":4.0,"b":5.0,"h":2.5,"analysis":"descrizione","elements":{"windows":[],"doors":[],"features":[]}},...]\nSolo JSON, senza testo aggiuntivo.'
+      : 'I filmed an apartment while narrating. Transcript: "'+_vidTranscript.trim()+'"\n\nAnalyse transcript and photos together. Extract ALL rooms as JSON array: [{"name":"Bedroom","l":4.0,"b":5.0,"h":2.5,"analysis":"description","elements":{"windows":[],"doors":[],"features":[]}},...]\nOnly JSON array, no markdown.';
+    content.push({type:'text',text:prompt});
+
+    const res = await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,
+        messages:[{role:'user',content}]})});
+    const d = await res.json();
+    let raw = (d.content&&d.content[0]&&d.content[0].text)||'[]';
+    raw = raw.replace(/```json|```/g,'').trim();
+    // Find JSON array
+    const arrStart = raw.indexOf('['), arrEnd = raw.lastIndexOf(']');
+    if(arrStart>=0&&arrEnd>arrStart) raw = raw.slice(arrStart,arrEnd+1);
+    const rooms = JSON.parse(raw);
+
+    if(!Array.isArray(rooms)||!rooms.length) { toast('Keine Räume erkannt.','error'); return; }
+
+    // Add rooms to state
+    rooms.forEach(rm => {
+      state.rooms.push({
+        name: rm.name||'Raum',
+        l: rm.l||0, b: rm.b||0, h: rm.h||0,
+        photos: [], activePhoto: 0,
+        analysis: rm.analysis||'',
+        elements: rm.elements||null,
+        furniture: null
+      });
+    });
+    renderRooms();
+    drawFloorPlan();
+    document.getElementById('mainPanel').style.display='block';
+    document.getElementById('exportBar').style.display='flex';
+
+    // Summary text
+    const summary = rooms.map(r=>roomIcon(r.name)+' '+r.name+(r.l&&r.b?' — '+r.l+'×'+r.b+'m':'')).join('\n');
+    document.getElementById('videoResultTxt').textContent = '✓ '+rooms.length+' Räume erkannt:\n'+summary;
+    document.getElementById('videoStatus').style.display = 'none';
+
+    // Vorlesen
+    const tts = rooms.map(r=>(r.name||'')+(r.l&&r.b?' '+r.l+' mal '+r.b+' Meter':'')).join(', ');
+    speak(tts);
+
+    toast('✓ '+rooms.length+' Räume importiert!','ok',4000);
+  } catch(err) {
+    document.getElementById('videoStatus').innerHTML = '⚠️ Analyse fehlgeschlagen: '+err.message;
+    toast('⚠️ Video-Auswertung fehlgeschlagen','error',6000);
+  }
+}
 
 /* ══════════════════════════════════════
    FURNITURE
