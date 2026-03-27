@@ -1302,7 +1302,7 @@ async function rsHandleImage(input) {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+          model: 'claude-sonnet-4-5',
           max_tokens: 600,
           messages: [{
             role: 'user',
@@ -2361,23 +2361,7 @@ function _vaStartListening() {
     }
   };
 
-  // Android Chrome: getUserMedia pre-request vor SpeechRecognition.start()
-  const _startRecog = () => {
-    try { _vaRecog.start(); }
-    catch(e) {
-      _vaListening = false; _vaMicState('idle');
-      _vaShowLine(lang==='en' ? 'Microphone start failed.'
-        : lang==='it' ? 'Avvio microfono fallito.'
-        : 'Mikrofon-Start fehlgeschlagen.', 'agent');
-    }
-  };
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => { stream.getTracks().forEach(t => t.stop()); _startRecog(); })
-      .catch(() => _startRecog());
-  } else {
-    _startRecog();
-  }
+  _vaRecog.start();
 }
 
 // ── Send to Claude API and speak reply ──
@@ -2404,13 +2388,20 @@ async function _vaAskAI(question) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5',
         max_tokens: 200,
         system: systemPrompt,
         messages: _VA_HISTORY
       })
     });
     const data = await res.json();
+    // Show actual API error if present
+    if (data.error) {
+      const errMsg = 'API-Fehler: ' + (data.error.message || JSON.stringify(data.error));
+      _vaShowLine(errMsg, 'agent');
+      _vaMicState('idle');
+      return;
+    }
     const reply = (data.content && data.content[0] && data.content[0].text)
       || (lang==='en' ? 'Sorry, no connection at the moment.'
           : lang==='it' ? 'Spiacente, nessuna connessione.'
