@@ -919,7 +919,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);pa
         <div class="va-status" id="vaStatus">● Bereit</div>
       </div>
       <button onclick="testVoice()" title="Stimme" style="background:none;border:none;color:rgba(0,180,216,.5);cursor:pointer;font-size:.85rem;padding:.2rem">🔈</button>
-      <button onclick="document.getElementById('vaPanel').classList.remove('open')" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:1rem;padding:.2rem .2rem .2rem .5rem">✕</button>
+      <button onclick="showApiKeyPrompt(true)" title="API Key" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:.8rem;padding:.2rem .4rem">🔑</button><button onclick="document.getElementById('vaPanel').classList.remove('open')" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:1rem;padding:.2rem .2rem .2rem .5rem">✕</button>
     </div>
 
     <!-- WAVEFORM -->
@@ -993,6 +993,33 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);pa
 // ── BLUE LAGUNE — main.js ──
 const TEL = '00393774128760';
 let currentLang = 'de';
+
+/* ── API KEY HELPER ── */
+function getApiKey() {
+  return localStorage.getItem('bl_api_key') || '';
+}
+function getApiHeaders() {
+  const key = getApiKey();
+  const h = {'Content-Type':'application/json'};
+  if (key) h['x-api-key'] = key;
+  return h;
+}
+function showApiKeyPrompt(forceShow) {
+  const existing = getApiKey();
+  if (existing && !forceShow) return;
+  const key = prompt(
+    '🔑 Anthropic API Key eingeben:
+(wird lokal gespeichert, nie übertragen außer zum Proxy)',
+    existing || 'sk-ant-...'
+  );
+  if (key && key.startsWith('sk-')) {
+    localStorage.setItem('bl_api_key', key.trim());
+    alert('✓ API Key gespeichert. Seite neu laden.');
+    location.reload();
+  } else if (key !== null) {
+    alert('❌ Ungültiger Key (muss mit sk- beginnen)');
+  }
+}
 
 // Property images resolved after DOM load (see window.onload below)
 const properties = [
@@ -1300,7 +1327,7 @@ async function rsHandleImage(input) {
     try {
       const res = await fetch('https://blue-lagune-proxy.friesh.workers.dev', {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
+        headers: getApiHeaders(),
         body: JSON.stringify({
           model: 'claude-sonnet-4-5',
           max_tokens: 600,
@@ -2395,11 +2422,16 @@ async function _vaAskAI(question) {
       })
     });
     const data = await res.json();
-    // Show actual API error if present
     if (data.error) {
-      const errMsg = 'API-Fehler: ' + (data.error.message || JSON.stringify(data.error));
-      _vaShowLine(errMsg, 'agent');
-      _vaMicState('idle');
+      const errMsg = data.error.message || JSON.stringify(data.error);
+      if (errMsg.toLowerCase().includes('api_key') || errMsg.toLowerCase().includes('auth')) {
+        _vaShowLine('🔑 API Key ungültig — tippe hier zum Korrigieren.', 'agent');
+        _vaMicState('idle');
+        setTimeout(() => showApiKeyPrompt(true), 1200);
+      } else {
+        _vaShowLine('API-Fehler: ' + errMsg, 'agent');
+        _vaMicState('idle');
+      }
       return;
     }
     const reply = (data.content && data.content[0] && data.content[0].text)
