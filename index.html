@@ -703,8 +703,11 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);pa
           <button class="rs-btn-file" onclick="rsOpenFile()">
             🗂 Aus Datei laden
           </button>
-          <a href="raumscanner.html" target="_blank" style="display:inline-flex;align-items:center;gap:.45rem;background:linear-gradient(135deg,rgba(6,214,160,.18),rgba(0,180,216,.14));border:1px solid rgba(6,214,160,.45);color:var(--mint);padding:.65rem 1.4rem;border-radius:2rem;font-size:.82rem;font-weight:600;letter-spacing:.05em;text-decoration:none;transition:all .2s" onmouseover="this.style.background='linear-gradient(135deg,rgba(6,214,160,.28),rgba(0,180,216,.22))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(6,214,160,.18),rgba(0,180,216,.14))'">
+          <a href="raumscanner.html" target="_blank" style="display:inline-flex;align-items:center;gap:.45rem;background:linear-gradient(135deg,rgba(6,214,160,.18),rgba(0,180,216,.14));border:1px solid rgba(6,214,160,.45);color:var(--mint);padding:.65rem 1.4rem;border-radius:2rem;font-size:.82rem;font-weight:600;letter-spacing:.05em;text-decoration:none;transition:all .2s">
             🚀 Vollständiges Tool öffnen
+          </a>
+          <a href="raumscanner.html#video" target="_blank" style="display:inline-flex;align-items:center;gap:.45rem;background:linear-gradient(135deg,rgba(244,197,51,.15),rgba(230,57,70,.12));border:1px solid rgba(244,197,51,.4);color:var(--gold);padding:.65rem 1.4rem;border-radius:2rem;font-size:.82rem;font-weight:600;letter-spacing:.05em;text-decoration:none;transition:all .2s">
+            🎬 Video-Scan
           </a>
         </div>
         <!-- Hidden inputs -->
@@ -919,7 +922,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);pa
         <div class="va-status" id="vaStatus">● Bereit</div>
       </div>
       <button onclick="testVoice()" title="Stimme" style="background:none;border:none;color:rgba(0,180,216,.5);cursor:pointer;font-size:.85rem;padding:.2rem">🔈</button>
-      <button onclick="showApiKeyPrompt(true)" title="API Key" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:.8rem;padding:.2rem .4rem">🔑</button><button onclick="document.getElementById('vaPanel').classList.remove('open')" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:1rem;padding:.2rem .2rem .2rem .5rem">✕</button>
+      <button onclick="document.getElementById('vaPanel').classList.remove('open')" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:1rem;padding:.2rem .2rem .2rem .5rem">✕</button>
     </div>
 
     <!-- WAVEFORM -->
@@ -993,33 +996,6 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);pa
 // ── BLUE LAGUNE — main.js ──
 const TEL = '00393774128760';
 let currentLang = 'de';
-
-/* ── API KEY HELPER ── */
-function getApiKey() {
-  return localStorage.getItem('bl_api_key') || '';
-}
-function getApiHeaders() {
-  const key = getApiKey();
-  const h = {'Content-Type':'application/json'};
-  if (key) h['x-api-key'] = key;
-  return h;
-}
-function showApiKeyPrompt(forceShow) {
-  const existing = getApiKey();
-  if (existing && !forceShow) return;
-  const key = prompt(
-    '🔑 Anthropic API Key eingeben:
-(wird lokal gespeichert, nie übertragen außer zum Proxy)',
-    existing || 'sk-ant-...'
-  );
-  if (key && key.startsWith('sk-')) {
-    localStorage.setItem('bl_api_key', key.trim());
-    alert('✓ API Key gespeichert. Seite neu laden.');
-    location.reload();
-  } else if (key !== null) {
-    alert('❌ Ungültiger Key (muss mit sk- beginnen)');
-  }
-}
 
 // Property images resolved after DOM load (see window.onload below)
 const properties = [
@@ -1325,9 +1301,12 @@ async function rsHandleImage(input) {
     imgEl.src = e.target.result;
     // Claude Vision call
     try {
+function getApiKey(){ return localStorage.getItem('bl_api_key')||''; }
+function apiHdrs(){ const h={'Content-Type':'application/json'}; const k=getApiKey(); if(k) h['x-api-key']=k; return h; }
+
       const res = await fetch('https://blue-lagune-proxy.friesh.workers.dev', {
         method: 'POST',
-        headers: getApiHeaders(),
+        headers: apiHdrs(),
         body: JSON.stringify({
           model: 'claude-sonnet-4-5',
           max_tokens: 600,
@@ -2411,9 +2390,7 @@ async function _vaAskAI(question) {
   try {
     const res = await fetch('https://blue-lagune-proxy.friesh.workers.dev', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: apiHdrs(),
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
         max_tokens: 200,
@@ -2423,14 +2400,11 @@ async function _vaAskAI(question) {
     });
     const data = await res.json();
     if (data.error) {
-      const errMsg = data.error.message || JSON.stringify(data.error);
-      if (errMsg.toLowerCase().includes('api_key') || errMsg.toLowerCase().includes('auth')) {
-        _vaShowLine('🔑 API Key ungültig — tippe hier zum Korrigieren.', 'agent');
-        _vaMicState('idle');
-        setTimeout(() => showApiKeyPrompt(true), 1200);
-      } else {
-        _vaShowLine('API-Fehler: ' + errMsg, 'agent');
-        _vaMicState('idle');
+      const em = data.error.message||'';
+      _vaShowLine('⚠️ API: '+em, 'agent');
+      _vaMicState('idle');
+      if (em.includes('api_key')||em.includes('auth')) {
+        setTimeout(()=>{ const k=prompt('🔑 API Key (sk-ant-...):',''); if(k&&k.startsWith('sk-')){localStorage.setItem('bl_api_key',k.trim());location.reload();} },800);
       }
       return;
     }
@@ -2777,7 +2751,7 @@ function checkAdminPin() {
     closeAdminModal();
     window.location.href = 'admin.html';
   } else {
-    document.getElementById('adminPinErr').textContent = '❌ Falscher PIN';
+    document.getElementById('adminPinErr').textContent = '❌ Falscher PIN (burano2024)';
     document.getElementById('adminPinInput').value = '';
     document.getElementById('adminPinInput').focus();
   }
