@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Richtstrahl – Stimmen nach Richtung filtern</title>
+<link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<meta name="theme-color" content="#0f1a20">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1a20; --panel:#172730; --panel2:#1f333e; --line:#2b4552;
+  --ink:#e6eef1; --ink2:#8fa9b3; --amber:#f2b441; --amber2:#ffd27a; --red:#e0563f; --ok:#5cc8a6;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#eef3f5; --panel:#ffffff; --panel2:#f2f6f8; --line:#d3dee3;
+    --ink:#12232b; --ink2:#597580; --amber:#c98a12; --amber2:#e6a422; --red:#c7452f; --ok:#2a9c79;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1a20; --panel:#172730; --panel2:#1f333e; --line:#2b4552;
+  --ink:#e6eef1; --ink2:#8fa9b3; --amber:#f2b441; --amber2:#ffd27a; --red:#e0563f; --ok:#5cc8a6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+body{padding:max(12px,env(safe-area-inset-top)) 14px max(90px,env(safe-area-inset-bottom));max-width:560px;margin:0 auto}
+h1{font-size:1.35rem;font-weight:800;letter-spacing:-.01em;margin:6px 0 2px}
+.sub{color:var(--ink2);font-size:.9rem;margin:0 0 12px;line-height:1.45}
+.dial{position:relative;width:min(78vw,300px);aspect-ratio:1;margin:8px auto 12px}
+.dial svg{width:100%;height:100%;display:block}
+.dial .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.dial .big{font-size:2.2rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.dial .small{font-size:.8rem;color:var(--ink2);margin-top:4px}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px;margin:0 0 12px}
+.seg button{border:0;background:transparent;color:var(--ink2);font:inherit;font-weight:600;font-size:.85rem;padding:10px 4px;border-radius:10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--amber);color:#1a1300}
+.seg button:focus-visible{outline:2px solid var(--amber2);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.panel h2{font-size:1rem;margin:0 0 4px;font-weight:800}
+.panel p{margin:0 0 10px;color:var(--ink2);font-size:.88rem;line-height:1.45}
+.row{display:flex;align-items:center;gap:10px;margin:10px 0}
+.row label{flex:1;font-size:.9rem}
+.row output{min-width:58px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink2);font-size:.85rem}
+input[type=range]{flex:2;accent-color:var(--amber);min-width:0}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--amber)}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:inherit;font-weight:600;font-size:.9rem;padding:11px 14px;border-radius:12px;cursor:pointer;touch-action:manipulation}
+.btn.amber{background:var(--amber);border-color:var(--amber);color:#1a1300}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:focus-visible{outline:2px solid var(--amber2);outline-offset:2px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns .btn{flex:1}
+.people{list-style:none;padding:0;margin:8px 0 0}
+.people li{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:.9rem}
+.people li .hd{color:var(--ink2);font-variant-numeric:tabular-nums;min-width:48px}
+.people li input{flex:1;background:transparent;border:0;color:var(--ink);font:inherit;min-width:0}
+.people li button{background:none;border:0;color:var(--ink2);font-size:1.1rem;cursor:pointer;padding:4px 8px}
+.meters{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;font-size:.8rem;color:var(--ink2)}
+.bar{height:8px;background:var(--panel2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width 60ms linear}
+canvas{width:100%;height:80px;display:block;margin-top:10px;border-radius:8px;background:var(--panel2)}
+.notice{font-size:.85rem;line-height:1.4;padding:10px 12px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);margin-bottom:12px}
+.notice.warn{border-color:var(--amber)}
+.notice.err{border-color:var(--red)}
+.fab{position:fixed;left:0;right:0;bottom:0;padding:10px 14px max(12px,env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 40%);display:flex;justify-content:center}
+.fab .btn{width:min(100%,532px);padding:15px;font-size:1rem;border-radius:14px}
+.hidden{display:none!important}
+.status{display:flex;gap:8px;align-items:center;font-size:.8rem;color:var(--ink2);margin:0 0 10px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ink2)}
+.dot.on{background:var(--ok)}
+.lrn{display:inline-block;width:100%;height:4px;background:var(--panel2);border-radius:2px;overflow:hidden;margin-top:6px}
+.lrn i{display:block;height:100%;width:0;background:var(--amber)}
+.seg button.locked{opacity:.5}
+.row.locked{opacity:.5}
+.row.locked select,.row.locked input{pointer-events:none}
+.lockbtn{opacity:.5;position:relative}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+
+<h1 data-i18n="title">Richtstrahl</h1>
+<p class="sub" data-i18n="subtitle">Halte das Handy auf die Person, deren Stimme du hören willst. Vier Verfahren, umschaltbar im Betrieb. Kopfhörer verwenden, sonst pfeift es.</p>
+
+<div class="status"><span class="dot" id="dotMic"></span><span data-i18n="statusMic">Mikrofon</span> <span class="dot" id="dotOri"></span><span data-i18n="statusCompass">Kompass</span> <span id="chan"></span> <span id="planBadge" style="margin-left:auto;font-weight:800;color:var(--amber)"></span></div>
+<div id="msg" class="notice hidden"></div>
+<div class="panel" style="padding:12px 14px;margin-bottom:12px">
+  <div class="row" style="margin:0"><label for="licCode" data-i18n="licCodeLabel">Kundencode</label><input id="licCode" class="btn" style="flex:2;min-width:0" placeholder="—"><button class="btn amber" id="licActivate" data-i18n="licActivateBtn" style="flex:0 0 auto">Aktivieren</button></div>
+  <div id="licStatus" style="font-size:.8rem;color:var(--ink2);margin-top:8px"></div>
+</div>
+<div class="row" style="margin:0 0 10px"><label for="uiLang" data-i18n="uiLangLabel">Sprache</label>
+  <select id="uiLang" class="btn" style="flex:2;min-width:0"><option value="de">Deutsch</option><option value="en">English</option><option value="it">Italiano</option></select></div>
+<div class="row" style="margin:0 0 10px"><label for="micSel" data-i18n="micLabel">Mikrofon</label>
+  <select id="micSel" class="btn" style="flex:2;min-width:0"><option value="" data-i18n="micAuto">Automatisch</option></select></div>
+
+<div class="dial">
+  <svg viewBox="-110 -110 220 220" aria-label="Kompass mit markierten Personen" id="dialSvg">
+    <circle r="100" fill="var(--panel)" stroke="var(--line)"/>
+    <path id="beam" d="" fill="var(--amber)" opacity=".22"/>
+    <g id="ring"></g>
+    <g id="marks"></g>
+    <polygon points="0,-104 -7,-90 7,-90" fill="var(--ink)"/>
+    <circle r="62" fill="var(--bg)" stroke="var(--line)"/>
+  </svg>
+  <div class="center"><div class="big" id="hdg">–</div><div class="small" id="gateTxt"></div></div>
+</div>
+
+<div class="seg" role="tablist" aria-label="Verfahren" id="segTabs">
+  <button role="tab" data-v="gate" aria-pressed="true" data-i18n="tabGate">Gate</button>
+  <button role="tab" data-v="beam" aria-pressed="false" data-i18n="tabBeam">Beam</button>
+  <button role="tab" data-v="profile" aria-pressed="false" data-i18n="tabProfile">Profil</button>
+  <button role="tab" data-v="subtract" aria-pressed="false" data-i18n="tabSubtract">Subtraktion</button>
+</div>
+
+<!-- 1 GATE -->
+<section class="panel" data-panel="gate">
+  <h2 data-i18n="gateH2">Richtungs-Gate</h2>
+  <p data-i18n="gateP">Du markierst jede Person, indem du auf sie zielst und tippst. Zeigt das Handy in eine markierte Richtung, ist der Ton offen, sonst wird er abgesenkt. Funktioniert mit jedem Mikrofon.</p>
+  <div class="btns"><button class="btn amber" id="addPerson" data-i18n="addPersonBtn">Person markieren</button></div>
+  <ul class="people" id="people"></ul>
+  <div class="row"><label for="beamW" data-i18n="beamWLabel">Öffnungswinkel</label><input type="range" id="beamW" min="20" max="120" value="50"><output id="beamWo">50°</output></div>
+  <div class="row"><label for="floor" data-i18n="floorLabel">Absenkung außerhalb</label><input type="range" id="floor" min="-60" max="0" value="-36"><output id="flooro">−36 dB</output></div>
+  <div class="row"><label for="speech" data-i18n="speechLabel">Nur Sprachband (100 Hz – 4 kHz)</label><input type="checkbox" id="speech" checked></div>
+</section>
+
+<!-- 2 BEAM -->
+<section class="panel hidden" data-panel="beam">
+  <h2 data-i18n="beamH2">Stereo-Beam</h2>
+  <p data-i18n="beamP">Nutzt zwei Mikrofone (oben/unten). Das Zielen ist die Ausrichtung: Der Strahl zeigt immer nach vorn, du drehst ihn mit dem Handy. „Kardioide“ löscht Schall von hinten aus, „Summe“ verstärkt nur nach vorn.</p>
+  <div id="beamNote" class="notice warn hidden" data-i18n="beamNoteText">Der Browser liefert nur einen Mikrofonkanal. Diese Variante wirkt dann wie Durchleitung. Chrome auf Android liefert meist Stereo, wenn kein Bluetooth-Headset als Mikro aktiv ist.</div>
+  <div class="row"><label data-i18n="beamKindLabel">Verfahren</label>
+    <select id="beamKind" class="btn"><option value="diff" data-i18n="beamKindDiff">Kardioide (Differenz)</option><option value="sum" data-i18n="beamKindSum">Summe (Delay-and-Sum)</option></select></div>
+  <div class="row"><label for="micDist" data-i18n="micDistLabel">Mikrofonabstand</label><input type="range" id="micDist" min="6" max="18" value="14"><output id="micDisto">14 cm</output></div>
+  <div class="row"><label for="flip" data-i18n="flipLabel">Kanäle tauschen (Strahl zeigt nach hinten?)</label><input type="checkbox" id="flip"></div>
+  <div class="row"><label for="gateB" data-i18n="gateBLabel">Richtungs-Gate zusätzlich</label><input type="checkbox" id="gateB"></div>
+</section>
+
+<!-- 3 PROFIL -->
+<section class="panel hidden" data-panel="profile">
+  <h2 data-i18n="profileH2">Stimmprofil</h2>
+  <p data-i18n="profileP">Ziele auf die Person und lerne 3 Sekunden ihre Klangfarbe, dann einmal die Umgebung. Danach lässt ein Spektralfilter nur Frequenzen durch, die zur Stimme passen.</p>
+  <div class="btns"><button class="btn amber" id="learnT" data-i18n="learnTBtn">Stimme lernen</button><button class="btn" id="learnB" data-i18n="learnBBtn">Umgebung lernen</button></div>
+  <div class="lrn"><i id="lrnBar"></i></div>
+  <div class="row"><label for="strength" data-i18n="strengthLabel">Stärke</label><input type="range" id="strength" min="0" max="100" value="60"><output id="strengtho">60 %</output></div>
+  <div class="row"><label for="pfloor" data-i18n="pfloorLabel">Restpegel</label><input type="range" id="pfloor" min="-40" max="0" value="-24"><output id="pflooro">−24 dB</output></div>
+  <div class="row"><label for="gateP" data-i18n="gatePLabel">Richtungs-Gate zusätzlich</label><input type="checkbox" id="gateP"></div>
+  <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+  <h2 data-i18n="voiceFolderH2" style="font-size:.95rem">Stimmenordner</h2>
+  <p data-i18n="voiceFolderP" style="font-size:.82rem">Speichere eine gelernte Stimme unter einem Namen. Sag den Namen später einfach ins Mikrofon, um sofort auf diese Stimme umzuschalten – ganz ohne erneut zu lernen.</p>
+  <div class="row"><label for="voiceSaveName" data-i18n="voiceFolderSaveLabel">Name für zuletzt gelernte Stimme</label><input id="voiceSaveName" class="btn" style="flex:2;min-width:0" placeholder="z. B. Petra"><button class="btn" id="voiceSaveBtn" data-i18n="voiceFolderSaveBtn" style="flex:0 0 auto">Speichern</button></div>
+  <ul class="people" id="voiceFolder"></ul>
+</section>
+
+<!-- 4 SUBTRAKTION -->
+<section class="panel hidden" data-panel="subtract">
+  <h2 data-i18n="subtractH2">Spektrale Subtraktion</h2>
+  <p data-i18n="subtractP">Ziele weg von der Person und lerne 3 Sekunden das Störgeräusch. Danach wird dieses Geräuschspektrum laufend aus dem Signal herausgerechnet (Wiener-Gewichtung).</p>
+  <div class="btns"><button class="btn amber" id="learnN" data-i18n="learnNBtn">Störgeräusch lernen</button><button class="btn" id="autoN">Laufend nachführen: aus</button></div>
+  <div class="lrn"><i id="lrnBar2"></i></div>
+  <div class="row"><label for="over" data-i18n="overLabel">Übersubtraktion</label><input type="range" id="over" min="50" max="400" value="150"><output id="overo">1,5×</output></div>
+  <div class="row"><label for="sfloor" data-i18n="sfloorLabel">Restpegel</label><input type="range" id="sfloor" min="-40" max="0" value="-20"><output id="sflooro">−20 dB</output></div>
+  <div class="row"><label for="gateS" data-i18n="gateSLabel">Richtungs-Gate zusätzlich</label><input type="checkbox" id="gateS"></div>
+</section>
+
+<section class="panel">
+  <div class="meters">
+    <span data-i18n="metersIn">Eingang</span><div class="bar"><i id="mIn"></i></div>
+    <span data-i18n="metersOut">Ausgang</span><div class="bar"><i id="mOut"></i></div>
+  </div>
+  <canvas id="spec" width="520" height="80"></canvas>
+  <div class="row"><label for="monitor" data-i18n="monitorLabel">Mithören über Kopfhörer</label><input type="checkbox" id="monitor" checked></div>
+  <div class="row"><label for="vol" data-i18n="volLabel">Lautstärke</label><input type="range" id="vol" min="30" max="150" step="5" value="100"><output id="volo">100 %</output></div>
+</section>
+
+<section class="panel">
+  <h2 data-i18n="transcriptH2">Mitschrift</h2>
+  <p data-i18n="transcriptP">Zeigt das Gesagte als Text. „Browser“ ist sofort da, nutzt aber das rohe Mikrofon. „Whisper“ schickt alle 5 Sekunden das gefilterte Signal an deinen Worker.</p>
+  <div class="row"><label data-i18n="sttLabel">Quelle</label>
+    <select id="stt" class="btn"><option value="off" data-i18n="sttOff">Aus</option><option value="browser" data-i18n="sttBrowser">Browser (live)</option><option value="whisper" id="sttWhisperOpt" data-i18n="sttWhisper">Whisper über Worker</option></select></div>
+  <div class="row" id="epRow"><label for="ep" data-i18n="epLabel">Worker-URL</label><input id="ep" class="btn" style="flex:2;min-width:0" value="https://blue-lagune-proxy.friesh.workers.dev/transcribe"></div>
+  <div id="transcript" style="min-height:90px;max-height:220px;overflow:auto;background:var(--panel2);border-radius:10px;padding:10px;font-size:.95rem;line-height:1.5;white-space:pre-wrap" aria-live="polite"></div>
+  <div id="interim" style="color:var(--ink2);font-size:.9rem;min-height:1.4em;padding:4px 2px"></div>
+  <div class="btns"><button class="btn" id="copyT" data-i18n="copyBtn">Text kopieren</button><button class="btn" id="clearT" data-i18n="clearBtn">Leeren</button></div>
+</section>
+
+<section class="panel">
+  <h2 data-i18n="voiceCtrlH2">Sprachsteuerung</h2>
+  <p data-i18n="voiceCtrlP">Aktiviert Sprachbefehle über das Mikrofon. Erkannte Befehle werden ausgeführt und in der Mitschrift bestätigt; alles andere wird normal transkribiert. Benötigt die Quelle „Browser (live)“.</p>
+  <div class="row" id="voiceCtrlRow"><label for="voiceCtrl" data-i18n="voiceCtrlLabel">Sprachbefehle aktiv</label><input type="checkbox" id="voiceCtrl"></div>
+  <ul class="people" id="cmdList" style="font-size:.85rem"></ul>
+</section>
+
+<div class="fab"><button class="btn amber" id="start">Start</button></div>
+
+<script>
+/* ---------- AudioWorklet: STFT-Prozessor für Profil-Maske und Subtraktion ---------- */
+const WORKLET = `
+class Spec extends AudioWorkletProcessor{
+  constructor(){
+    super();
+    this.N=1024; this.H=256; const N=this.N;
+    this.win=new Float32Array(N); for(let n=0;n<N;n++) this.win[n]=0.5-0.5*Math.cos(2*Math.PI*n/N);
+    this.norm=(N/this.H)*0.375;
+    this.ring=new Float32Array(N); this.out=new Float32Array(N); this.wp=0; this.rp=0; this.cnt=0;
+    this.re=new Float32Array(N); this.im=new Float32Array(N);
+    const K=N/2+1; this.K=K;
+    this.mag=new Float32Array(K); this.g=new Float32Array(K).fill(1);
+    this.T=null; this.B=null; this.NZ=null;
+    this.acc=new Float32Array(K); this.accN=0; this.learn=null; this.learnFrames=0;
+    this.mode='pass'; this.strength=.6; this.floor=.06; this.over=1.5; this.autoN=false;
+    this.port.onmessage=e=>{const d=e.data;
+      if(d.cmd==='mode') this.mode=d.mode;
+      else if(d.cmd==='param'){ this[d.name]=d.value; }
+      else if(d.cmd==='learn'){ this.learn=d.which; this.acc.fill(0); this.accN=0; this.learnFrames=Math.round(d.ms/1000*sampleRate/this.H); }
+      else if(d.cmd==='setT'){ this.T=new Float32Array(d.data); }
+      else if(d.cmd==='reset'){ this.T=this.B=this.NZ=null; }
+    };
+  }
+  fft(re,im,inv){const n=re.length;
+    for(let i=1,j=0;i<n;i++){let bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}
+    for(let len=2;len<=n;len<<=1){const ang=2*Math.PI/len*(inv?1:-1);const wr=Math.cos(ang),wi=Math.sin(ang);
+      for(let i=0;i<n;i+=len){let cr=1,ci=0;for(let j=0;j<len/2;j++){const a=i+j,b=a+len/2;
+        const tr=re[b]*cr-im[b]*ci,ti=re[b]*ci+im[b]*cr;re[b]=re[a]-tr;im[b]=im[a]-ti;re[a]+=tr;im[a]+=ti;
+        const ncr=cr*wr-ci*wi;ci=cr*wi+ci*wr;cr=ncr;}}}
+    if(inv){for(let i=0;i<n;i++){re[i]/=n;im[i]/=n;}}
+  }
+  frame(){
+    const N=this.N,K=this.K,re=this.re,im=this.im;
+    for(let n=0;n<N;n++){re[n]=this.ring[(this.wp+n)%N]*this.win[n];im[n]=0;}
+    this.fft(re,im,false);
+    for(let k=0;k<K;k++) this.mag[k]=Math.hypot(re[k],im[k]);
+    if(this.learn){ for(let k=0;k<K;k++) this.acc[k]+=this.mag[k]; this.accN++;
+      if(this.accN>=this.learnFrames){ const p=new Float32Array(K); for(let k=0;k<K;k++) p[k]=this.acc[k]/this.accN;
+        if(this.learn==='T') this.T=p; else if(this.learn==='B') this.B=p; else this.NZ=p;
+        this.port.postMessage({type:'learned',which:this.learn,data:Array.from(p)}); this.learn=null; }
+      else this.port.postMessage({type:'progress',v:this.accN/this.learnFrames});
+    }
+    const g=this.g; let apply=false;
+    if(this.mode==='profile' && this.T){
+      apply=true; const T=this.T,B=this.B; const s=this.strength*4+0.01;
+      let mT=0,mB=0; for(let k=0;k<K;k++){mT+=T[k]; if(B) mB+=B[k];} mT/=K; mB=B?mB/K:1;
+      for(let k=0;k<K;k++){ const t=T[k]/mT, b=B?B[k]/mB:0.6; const w=(t*t)/(t*t+s*b*b+1e-6);
+        const gk=Math.max(this.floor, Math.pow(w, 0.5+this.strength*1.5)); g[k]=0.8*g[k]+0.2*gk; }
+    } else if(this.mode==='subtract' && this.NZ){
+      apply=true; const NZ=this.NZ;
+      if(this.autoN){ for(let k=0;k<K;k++){ if(this.mag[k]<NZ[k]*1.5) NZ[k]=0.98*NZ[k]+0.02*this.mag[k]; } }
+      for(let k=0;k<K;k++){ const y2=this.mag[k]*this.mag[k]+1e-9, n2=NZ[k]*NZ[k]*this.over;
+        const gk=Math.max(this.floor, 1-n2/y2); g[k]=0.6*g[k]+0.4*gk; }
+    }
+    if(apply){ for(let k=0;k<K;k++){ re[k]*=g[k]; im[k]*=g[k]; if(k>0&&k<N/2){ re[N-k]*=g[k]; im[N-k]*=g[k]; } } }
+    this.fft(re,im,true);
+    for(let n=0;n<N;n++) this.out[(this.rp+n)%N]+=re[n]*this.win[n]/this.norm;
+  }
+  process(inputs,outputs){
+    const inp=inputs[0][0], out=outputs[0][0]; if(!out) return true;
+    for(let i=0;i<out.length;i++){
+      this.ring[this.wp]=inp?inp[i]:0; this.wp=(this.wp+1)%this.N;
+      out[i]=this.out[this.rp]; this.out[this.rp]=0; this.rp=(this.rp+1)%this.N;
+      if(++this.cnt===this.H){ this.cnt=0; this.frame(); }
+    }
+    return true;
+  }
+}
+registerProcessor('spec',Spec);`;
+
+/* ---------- State ---------- */
+const $=s=>document.querySelector(s);
+let ctx, src, worklet, gate, hp, lp, master, anIn, anOut, splitter, merger, delayA, delayB, gA, gB, shelf, stream;
+let running=false, variant='gate', heading=null, headingOk=false, stereo=false;
+let people=[]; try{ people=JSON.parse(localStorage.getItem('richtstrahl_people')||'[]'); }catch(e){ people=[]; }
+const savePeople=()=>{ try{ localStorage.setItem('richtstrahl_people',JSON.stringify(people)); }catch(e){} };
+
+/* ---------- i18n ---------- */
+const I18N = {
+de:{
+  title:'Richtstrahl', subtitle:'Halte das Handy auf die Person, deren Stimme du hören willst. Vier Verfahren, umschaltbar im Betrieb. Kopfhörer verwenden, sonst pfeift es.',
+  statusMic:'Mikrofon', statusCompass:'Kompass', uiLangLabel:'Sprache', micLabel:'Mikrofon', micAuto:'Automatisch',
+  tabGate:'Gate', tabBeam:'Beam', tabProfile:'Profil', tabSubtract:'Subtraktion',
+  gateH2:'Richtungs-Gate', gateP:'Du markierst jede Person, indem du auf sie zielst und tippst. Zeigt das Handy in eine markierte Richtung, ist der Ton offen, sonst wird er abgesenkt. Funktioniert mit jedem Mikrofon.',
+  addPersonBtn:'Person markieren', beamWLabel:'Öffnungswinkel', floorLabel:'Absenkung außerhalb', speechLabel:'Nur Sprachband (100 Hz – 4 kHz)',
+  beamH2:'Stereo-Beam', beamP:'Nutzt zwei Mikrofone (oben/unten). Das Zielen ist die Ausrichtung: Der Strahl zeigt immer nach vorn, du drehst ihn mit dem Handy. „Kardioide“ löscht Schall von hinten aus, „Summe“ verstärkt nur nach vorn.',
+  beamNoteText:'Der Browser liefert nur einen Mikrofonkanal. Diese Variante wirkt dann wie Durchleitung. Chrome auf Android liefert meist Stereo, wenn kein Bluetooth-Headset als Mikro aktiv ist.',
+  beamKindLabel:'Verfahren', beamKindDiff:'Kardioide (Differenz)', beamKindSum:'Summe (Delay-and-Sum)',
+  micDistLabel:'Mikrofonabstand', flipLabel:'Kanäle tauschen (Strahl zeigt nach hinten?)', gateBLabel:'Richtungs-Gate zusätzlich',
+  profileH2:'Stimmprofil', profileP:'Ziele auf die Person und lerne 3 Sekunden ihre Klangfarbe, dann einmal die Umgebung. Danach lässt ein Spektralfilter nur Frequenzen durch, die zur Stimme passen.',
+  learnTBtn:'Stimme lernen', learnBBtn:'Umgebung lernen', strengthLabel:'Stärke', pfloorLabel:'Restpegel', gatePLabel:'Richtungs-Gate zusätzlich',
+  subtractH2:'Spektrale Subtraktion', subtractP:'Ziele weg von der Person und lerne 3 Sekunden das Störgeräusch. Danach wird dieses Geräuschspektrum laufend aus dem Signal herausgerechnet (Wiener-Gewichtung).',
+  learnNBtn:'Störgeräusch lernen', autoNOff:'Laufend nachführen: aus', autoNOn:'Laufend nachführen: an',
+  overLabel:'Übersubtraktion', sfloorLabel:'Restpegel', gateSLabel:'Richtungs-Gate zusätzlich',
+  metersIn:'Eingang', metersOut:'Ausgang', monitorLabel:'Mithören über Kopfhörer',
+  transcriptH2:'Mitschrift', transcriptP:'Zeigt das Gesagte als Text. „Browser“ ist sofort da, nutzt aber das rohe Mikrofon. „Whisper“ schickt alle 5 Sekunden das gefilterte Signal an deinen Worker.',
+  sttLabel:'Quelle', sttOff:'Aus', sttBrowser:'Browser (live)', sttWhisper:'Whisper über Worker', epLabel:'Worker-URL', copyBtn:'Text kopieren', clearBtn:'Leeren',
+  startBtn:'Start', stopBtn:'Stopp',
+  compassOff:'Kompass aus', compassReady:'bereit', gateOpenTxt:'offen', gateClosedTxt:'geschlossen', gateEdgePrefix:'Rand ', gateEdgeSuffix:' dB', gateOffTxt:'Gate aus', beamForwardTxt:'Beam nach vorn', beamMonoTxt:'Mono – kein Beam',
+  chanStereo:'· 2 Kanäle', chanMono:'· 1 Kanal', micListUnavailable:' · Mikrofonwahl nicht verfügbar',
+  personNamePrefix:'Person', peopleEmpty:'Noch niemand markiert – Gate ist offen.', nameAria:'Name', removeAria:'Entfernen',
+  msgCompassUnavailable:'Kompass nicht verfügbar – das Richtungs-Gate bleibt offen. Die anderen Verfahren laufen trotzdem.',
+  msgEmbedded:' Die Seite läuft eingebettet – bitte in einem eigenen Browser-Tab öffnen (oder auf GitHub Pages), dort fragt der Browser regulär nach dem Mikrofon.',
+  msgBlocked:' Freigabe wurde blockiert: im Browser über das Schloss-Symbol neben der Adresse die Mikrofon-Berechtigung zurücksetzen.',
+  msgNotFound:' Es wurde kein Mikrofon gefunden.', msgHttps:' Die Seite braucht HTTPS.',
+  msgMicFail:'Mikrofon konnte nicht gestartet werden', msgHeadingNotReady:'Kompass liefert noch keine Richtung. Erst Start tippen, dann das Handy kurz in einer Acht bewegen.',
+  msgTapStartFirst:'Erst Start tippen.', msgNoSTT:'Dieser Browser hat keine Spracherkennung – Whisper wählen.', msgSTTNotAllowed:'Spracherkennung wurde nicht erlaubt.',
+  msgLearnedT:'Stimme gelernt. Jetzt optional die Umgebung lernen.', msgLearnedB:'Umgebung gelernt – Profilfilter aktiv.', msgLearnedN:'Störgeräusch gelernt – Subtraktion aktiv.',
+  msgUploading:'… wird übertragen', msgWorkerError:'Worker-Fehler: ', msgMicSwitched:'Mikrofon gewechselt: ', msgMicSwitchFail:'Dieses Mikrofon lässt sich nicht wählen (', msgMicSwitchFailSuffix:'). Auf iOS entscheidet das System selbst.',
+  msgCopySuccess:'Text kopiert.', msgCopyFail:'Kopieren nicht möglich – Text markieren und manuell kopieren.',
+  ariaVerfahren:'Verfahren', ariaKompass:'Kompass mit markierten Personen',
+  voiceCtrlH2:'Sprachsteuerung', voiceCtrlP:'Aktiviert Sprachbefehle über das Mikrofon. Erkannte Befehle werden ausgeführt und in der Mitschrift bestätigt; alles andere wird normal transkribiert. Benötigt die Quelle „Browser (live)“.',
+  voiceCtrlLabel:'Sprachbefehle aktiv', volLabel:'Lautstärke',
+  cmdVolUp:'Lauter', cmdVolDown:'Leiser', cmdMonitorOn:'Mithören ein', cmdMonitorOff:'Mithören aus', cmdConfirmed:'✓ ',
+  licCodeLabel:'Kundencode', licActivateBtn:'Aktivieren', licTest:'TEST', licPremiumUntil:'PREMIUM bis ', licChecking:'Prüfe…',
+  licNoConnection:'Keine Verbindung zum Lizenzserver – Testversion aktiv.', licInvalid:'Code ungültig oder abgelaufen – Testversion aktiv.',
+  licTestInfo:'Testversion: Richtungs-Gate mit 1 Person und Live-Mitschrift sind frei. Beam, Profil, Subtraktion, Whisper und Sprachsteuerung benötigen Premium.',
+  licLockedMsg:'Premium-Funktion. Kundencode oben eingeben, um freizuschalten.', licPersonLimitMsg:'In der Testversion ist nur 1 markierte Person möglich. Mit Premium beliebig viele.',
+  voiceFolderH2:'Stimmenordner', voiceFolderP:'Speichere eine gelernte Stimme unter einem Namen. Sag den Namen später einfach ins Mikrofon, um sofort auf diese Stimme umzuschalten – ganz ohne erneut zu lernen.',
+  voiceFolderSaveLabel:'Name für zuletzt gelernte Stimme', voiceFolderSaveBtn:'Speichern', voiceFolderEmpty:'Noch keine Stimmen gespeichert.',
+  voiceFolderUseBtn:'Verwenden', voiceFolderNeedLearn:'Bitte zuerst „Stimme lernen“ ausführen und einen Namen eingeben.'
+},
+en:{
+  title:'Beamcast', subtitle:'Point your phone at the person whose voice you want to hear. Four methods, switchable on the fly. Use headphones or it will squeal.',
+  statusMic:'Microphone', statusCompass:'Compass', uiLangLabel:'Language', micLabel:'Microphone', micAuto:'Automatic',
+  tabGate:'Gate', tabBeam:'Beam', tabProfile:'Profile', tabSubtract:'Subtraction',
+  gateH2:'Direction Gate', gateP:'Mark each person by aiming at them and tapping. When the phone points at a marked direction the sound is open, otherwise it is attenuated. Works with any microphone.',
+  addPersonBtn:'Mark person', beamWLabel:'Beam width', floorLabel:'Attenuation outside', speechLabel:'Speech band only (100 Hz – 4 kHz)',
+  beamH2:'Stereo Beam', beamP:'Uses two microphones (top/bottom). Aiming the phone sets the direction: the beam always points forward. "Cardioid" cancels sound from behind, "Sum" boosts only what is ahead.',
+  beamNoteText:'The browser is only delivering one microphone channel. This mode then behaves like pass-through. Chrome on Android usually delivers stereo when no Bluetooth headset mic is active.',
+  beamKindLabel:'Method', beamKindDiff:'Cardioid (difference)', beamKindSum:'Sum (delay-and-sum)',
+  micDistLabel:'Microphone spacing', flipLabel:'Swap channels (beam pointing backward?)', gateBLabel:'Also apply direction gate',
+  profileH2:'Voice Profile', profileP:'Aim at the person and learn their timbre for 3 seconds, then once for the surroundings. A spectral filter then only passes frequencies that match the voice.',
+  learnTBtn:'Learn voice', learnBBtn:'Learn surroundings', strengthLabel:'Strength', pfloorLabel:'Residual level', gatePLabel:'Also apply direction gate',
+  subtractH2:'Spectral Subtraction', subtractP:'Aim away from the person and learn the noise for 3 seconds. This noise spectrum is then continuously subtracted from the signal (Wiener weighting).',
+  learnNBtn:'Learn noise', autoNOff:'Continuous update: off', autoNOn:'Continuous update: on',
+  overLabel:'Over-subtraction', sfloorLabel:'Residual level', gateSLabel:'Also apply direction gate',
+  metersIn:'Input', metersOut:'Output', monitorLabel:'Monitor over headphones',
+  transcriptH2:'Transcript', transcriptP:'Shows what is said as text. "Browser" is instant but uses the raw microphone. "Whisper" sends the filtered signal to your worker every 5 seconds.',
+  sttLabel:'Source', sttOff:'Off', sttBrowser:'Browser (live)', sttWhisper:'Whisper via worker', epLabel:'Worker URL', copyBtn:'Copy text', clearBtn:'Clear',
+  startBtn:'Start', stopBtn:'Stop',
+  compassOff:'Compass off', compassReady:'ready', gateOpenTxt:'open', gateClosedTxt:'closed', gateEdgePrefix:'Edge ', gateEdgeSuffix:' dB', gateOffTxt:'Gate off', beamForwardTxt:'Beam forward', beamMonoTxt:'Mono – no beam',
+  chanStereo:'· 2 channels', chanMono:'· 1 channel', micListUnavailable:' · Microphone selection unavailable',
+  personNamePrefix:'Person', peopleEmpty:'Nobody marked yet – gate is open.', nameAria:'Name', removeAria:'Remove',
+  msgCompassUnavailable:'Compass unavailable – the direction gate stays open. The other methods still work.',
+  msgEmbedded:' The page is running embedded – please open it in its own browser tab (or on GitHub Pages), there the browser will ask for the microphone properly.',
+  msgBlocked:' Permission was blocked: reset the microphone permission via the lock icon next to the address in your browser.',
+  msgNotFound:' No microphone was found.', msgHttps:' The page needs HTTPS.',
+  msgMicFail:'Microphone could not be started', msgHeadingNotReady:'Compass has no direction yet. Tap Start first, then move the phone briefly in a figure eight.',
+  msgTapStartFirst:'Tap Start first.', msgNoSTT:'This browser has no speech recognition – choose Whisper instead.', msgSTTNotAllowed:'Speech recognition was not permitted.',
+  msgLearnedT:'Voice learned. You can now optionally learn the surroundings.', msgLearnedB:'Surroundings learned – profile filter active.', msgLearnedN:'Noise learned – subtraction active.',
+  msgUploading:'… uploading', msgWorkerError:'Worker error: ', msgMicSwitched:'Microphone switched: ', msgMicSwitchFail:'This microphone cannot be selected (', msgMicSwitchFailSuffix:'). On iOS the system decides.',
+  msgCopySuccess:'Text copied.', msgCopyFail:'Could not copy – select the text and copy it manually.',
+  ariaVerfahren:'Method', ariaKompass:'Compass with marked people',
+  voiceCtrlH2:'Voice Control', voiceCtrlP:'Enables voice commands via the microphone. Recognized commands are executed and confirmed in the transcript; everything else is transcribed normally. Requires the source "Browser (live)".',
+  voiceCtrlLabel:'Voice commands active', volLabel:'Volume',
+  cmdVolUp:'Louder', cmdVolDown:'Quieter', cmdMonitorOn:'Monitor on', cmdMonitorOff:'Monitor off', cmdConfirmed:'✓ ',
+  licCodeLabel:'Customer code', licActivateBtn:'Activate', licTest:'TEST', licPremiumUntil:'PREMIUM until ', licChecking:'Checking…',
+  licNoConnection:'No connection to the license server – trial version active.', licInvalid:'Code invalid or expired – trial version active.',
+  licTestInfo:'Trial version: direction gate with 1 person and live transcript are free. Beam, profile, subtraction, Whisper and voice control require Premium.',
+  licLockedMsg:'Premium feature. Enter a customer code above to unlock.', licPersonLimitMsg:'The trial version allows only 1 marked person. Premium allows any number.',
+  voiceFolderH2:'Voice Folder', voiceFolderP:'Save a learned voice under a name. Later, just say the name into the microphone to switch to that voice instantly – no relearning needed.',
+  voiceFolderSaveLabel:'Name for the last learned voice', voiceFolderSaveBtn:'Save', voiceFolderEmpty:'No voices saved yet.',
+  voiceFolderUseBtn:'Use', voiceFolderNeedLearn:'Please run "Learn voice" first and enter a name.'
+},
+it:{
+  title:'Raggio Direzionale', subtitle:'Punta il telefono verso la persona di cui vuoi sentire la voce. Quattro metodi, commutabili durante l\'uso. Usa le cuffie, altrimenti fischia.',
+  statusMic:'Microfono', statusCompass:'Bussola', uiLangLabel:'Lingua', micLabel:'Microfono', micAuto:'Automatico',
+  tabGate:'Gate', tabBeam:'Beam', tabProfile:'Profilo', tabSubtract:'Sottrazione',
+  gateH2:'Gate Direzionale', gateP:'Segna ogni persona puntando verso di lei e toccando. Quando il telefono punta verso una direzione segnata il suono è aperto, altrimenti viene attenuato. Funziona con qualsiasi microfono.',
+  addPersonBtn:'Segna persona', beamWLabel:'Apertura angolare', floorLabel:'Attenuazione esterna', speechLabel:'Solo banda vocale (100 Hz – 4 kHz)',
+  beamH2:'Beam Stereo', beamP:'Usa due microfoni (sopra/sotto). Puntare il telefono imposta la direzione: il raggio punta sempre in avanti. "Cardioide" elimina il suono da dietro, "Somma" amplifica solo davanti.',
+  beamNoteText:'Il browser fornisce un solo canale microfono. Questa modalità funziona quindi come passaggio diretto. Chrome su Android di solito fornisce lo stereo se nessuna cuffia Bluetooth è attiva come microfono.',
+  beamKindLabel:'Metodo', beamKindDiff:'Cardioide (differenza)', beamKindSum:'Somma (delay-and-sum)',
+  micDistLabel:'Distanza microfoni', flipLabel:'Scambia i canali (il raggio punta indietro?)', gateBLabel:'Applica anche il gate direzionale',
+  profileH2:'Profilo Vocale', profileP:'Punta verso la persona e apprendi il suo timbro per 3 secondi, poi una volta l\'ambiente. Un filtro spettrale lascia passare solo le frequenze che corrispondono alla voce.',
+  learnTBtn:'Apprendi voce', learnBBtn:'Apprendi ambiente', strengthLabel:'Intensità', pfloorLabel:'Livello residuo', gatePLabel:'Applica anche il gate direzionale',
+  subtractH2:'Sottrazione Spettrale', subtractP:'Punta lontano dalla persona e apprendi il rumore per 3 secondi. Questo spettro di rumore viene poi sottratto continuamente dal segnale (ponderazione di Wiener).',
+  learnNBtn:'Apprendi rumore', autoNOff:'Aggiornamento continuo: off', autoNOn:'Aggiornamento continuo: on',
+  overLabel:'Sovra-sottrazione', sfloorLabel:'Livello residuo', gateSLabel:'Applica anche il gate direzionale',
+  metersIn:'Ingresso', metersOut:'Uscita', monitorLabel:'Ascolto in cuffia',
+  transcriptH2:'Trascrizione', transcriptP:'Mostra il parlato come testo. "Browser" è immediato ma usa il microfono grezzo. "Whisper" invia il segnale filtrato al tuo worker ogni 5 secondi.',
+  sttLabel:'Fonte', sttOff:'Off', sttBrowser:'Browser (live)', sttWhisper:'Whisper via worker', epLabel:'URL del worker', copyBtn:'Copia testo', clearBtn:'Svuota',
+  startBtn:'Avvia', stopBtn:'Ferma',
+  compassOff:'Bussola spenta', compassReady:'pronto', gateOpenTxt:'aperto', gateClosedTxt:'chiuso', gateEdgePrefix:'Margine ', gateEdgeSuffix:' dB', gateOffTxt:'Gate spento', beamForwardTxt:'Beam in avanti', beamMonoTxt:'Mono – nessun beam',
+  chanStereo:'· 2 canali', chanMono:'· 1 canale', micListUnavailable:' · Selezione microfono non disponibile',
+  personNamePrefix:'Persona', peopleEmpty:'Nessuno ancora segnato – il gate è aperto.', nameAria:'Nome', removeAria:'Rimuovi',
+  msgCompassUnavailable:'Bussola non disponibile – il gate direzionale resta aperto. Gli altri metodi funzionano comunque.',
+  msgEmbedded:' La pagina è incorporata – aprila in una scheda del browser a sé stante (o su GitHub Pages), lì il browser chiederà il microfono correttamente.',
+  msgBlocked:' Il permesso è stato bloccato: reimposta il permesso del microfono tramite l\'icona del lucchetto accanto all\'indirizzo nel browser.',
+  msgNotFound:' Non è stato trovato alcun microfono.', msgHttps:' La pagina richiede HTTPS.',
+  msgMicFail:'Impossibile avviare il microfono', msgHeadingNotReady:'La bussola non fornisce ancora una direzione. Tocca prima Avvia, poi muovi brevemente il telefono a forma di otto.',
+  msgTapStartFirst:'Tocca prima Avvia.', msgNoSTT:'Questo browser non ha il riconoscimento vocale – scegli Whisper.', msgSTTNotAllowed:'Il riconoscimento vocale non è stato consentito.',
+  msgLearnedT:'Voce appresa. Ora puoi opzionalmente apprendere l\'ambiente.', msgLearnedB:'Ambiente appreso – filtro profilo attivo.', msgLearnedN:'Rumore appreso – sottrazione attiva.',
+  msgUploading:'… caricamento in corso', msgWorkerError:'Errore worker: ', msgMicSwitched:'Microfono cambiato: ', msgMicSwitchFail:'Questo microfono non è selezionabile (', msgMicSwitchFailSuffix:'). Su iOS decide il sistema.',
+  msgCopySuccess:'Testo copiato.', msgCopyFail:'Impossibile copiare – seleziona il testo e copialo manualmente.',
+  ariaVerfahren:'Metodo', ariaKompass:'Bussola con persone segnate',
+  voiceCtrlH2:'Comandi Vocali', voiceCtrlP:'Attiva i comandi vocali tramite il microfono. I comandi riconosciuti vengono eseguiti e confermati nella trascrizione; tutto il resto viene trascritto normalmente. Richiede la fonte "Browser (live)".',
+  voiceCtrlLabel:'Comandi vocali attivi', volLabel:'Volume',
+  cmdVolUp:'Più forte', cmdVolDown:'Più piano', cmdMonitorOn:'Ascolto acceso', cmdMonitorOff:'Ascolto spento', cmdConfirmed:'✓ ',
+  licCodeLabel:'Codice cliente', licActivateBtn:'Attiva', licTest:'TEST', licPremiumUntil:'PREMIUM fino al ', licChecking:'Verifica…',
+  licNoConnection:'Nessuna connessione al server delle licenze – versione di prova attiva.', licInvalid:'Codice non valido o scaduto – versione di prova attiva.',
+  licTestInfo:'Versione di prova: gate direzionale con 1 persona e trascrizione live sono gratuiti. Beam, profilo, sottrazione, Whisper e comandi vocali richiedono Premium.',
+  licLockedMsg:'Funzione Premium. Inserisci sopra un codice cliente per sbloccarla.', licPersonLimitMsg:'La versione di prova consente solo 1 persona segnata. Premium ne consente quante vuoi.',
+  voiceFolderH2:'Cartella Voci', voiceFolderP:'Salva una voce appresa con un nome. Più tardi basta dire il nome nel microfono per passare subito a quella voce – senza doverla riapprendere.',
+  voiceFolderSaveLabel:'Nome per l\'ultima voce appresa', voiceFolderSaveBtn:'Salva', voiceFolderEmpty:'Nessuna voce salvata finora.',
+  voiceFolderUseBtn:'Usa', voiceFolderNeedLearn:'Esegui prima "Apprendi voce" e inserisci un nome.'
+}
+};
+const LOCALE = {de:'de-DE', en:'en-US', it:'it-IT'};
+let uiLang = 'de';
+try{
+  const saved = localStorage.getItem('richtstrahl_lang');
+  if(saved && I18N[saved]) uiLang = saved;
+}catch(e){}
+const t = k => (I18N[uiLang]&&I18N[uiLang][k]) || I18N.de[k] || k;
+function applyI18n(){
+  document.documentElement.lang = uiLang;
+  document.title = t('title')+' – '+t('subtitle').split('.')[0];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+  $('#dialSvg').setAttribute('aria-label', t('ariaKompass'));
+  $('#segTabs').setAttribute('aria-label', t('ariaVerfahren'));
+  $('#start').textContent = running ? t('stopBtn') : t('startBtn');
+  $('#autoN').textContent = autoN ? t('autoNOn') : t('autoNOff');
+  renderPeople();
+  if(typeof renderCmdList==='function') renderCmdList();
+  if(typeof renderPlanBadge==='function') renderPlanBadge();
+  if(typeof applyLicenseGating==='function') applyLicenseGating();
+  if(typeof renderVoiceFolder==='function') renderVoiceFolder();
+  if(!running) $('#gateTxt').textContent = headingOk ? t('compassReady') : t('compassOff');
+  if(ctx) $('#chan').textContent = (stereo ? t('chanStereo') : t('chanMono'));
+}
+$('#uiLang').value = uiLang;
+$('#uiLang').addEventListener('change', ()=>{ uiLang=$('#uiLang').value; try{ localStorage.setItem('richtstrahl_lang',uiLang); }catch(e){} applyI18n(); if($('#stt').value==='browser'&&running) applySTT(); });
+
+function msg(text,kind){ const m=$('#msg'); if(!text){m.className='notice hidden';return;} m.textContent=text; m.className='notice '+(kind||''); }
+
+/* ---------- Lizenz (Test/Premium) ---------- */
+const LICENSE_ENDPOINT = 'https://blue-lagune-proxy.friesh.workers.dev/license-rs';
+let plan = 'test', planUntil = null;
+function loadLicenseCache(){ try{ return JSON.parse(localStorage.getItem('richtstrahl_license')||'null'); }catch(e){ return null; } }
+function saveLicenseCache(v){ try{ localStorage.setItem('richtstrahl_license', JSON.stringify(v)); }catch(e){} }
+function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString(LOCALE[uiLang]||'de-DE'); }catch(e){ return iso; } }
+function renderPlanBadge(){
+  const b=$('#planBadge'); if(!b) return;
+  b.textContent = plan==='premium' ? (t('licPremiumUntil')+fmtDate(planUntil)) : t('licTest');
+  b.style.color = plan==='premium' ? 'var(--ok)' : 'var(--amber)';
+}
+async function checkLicense(force){
+  const code=($('#licCode').value||'').trim();
+  const cache=loadLicenseCache();
+  if(!force && cache && cache.code===code && (Date.now()-cache.checkedAt)<6*3600*1000){
+    plan=cache.plan; planUntil=cache.until; renderPlanBadge(); applyLicenseGating(); return;
+  }
+  if(!code){ plan='test'; planUntil=null; saveLicenseCache({code:'',plan:'test',until:null,checkedAt:Date.now()}); renderPlanBadge(); applyLicenseGating(); return; }
+  $('#licStatus').textContent=t('licChecking');
+  try{
+    const r=await fetch(LICENSE_ENDPOINT+'?code='+encodeURIComponent(code));
+    const j=await r.json();
+    if(j && j.plan==='premium' && j.until && new Date(j.until)>new Date()){ plan='premium'; planUntil=j.until; $('#licStatus').textContent=''; }
+    else { plan='test'; planUntil=null; $('#licStatus').textContent=t('licInvalid'); }
+  }catch(e){ plan='test'; planUntil=null; $('#licStatus').textContent=t('licNoConnection'); }
+  saveLicenseCache({code,plan,until:planUntil,checkedAt:Date.now()});
+  renderPlanBadge(); applyLicenseGating();
+}
+function applyLicenseGating(){
+  const isTest = plan!=='premium';
+  ['beam','profile','subtract'].forEach(v=>{
+    const b=document.querySelector('.seg button[data-v="'+v+'"]'); if(!b) return;
+    b.classList.toggle('locked', isTest); b.dataset.locked = isTest?'1':'';
+  });
+  $('#voiceCtrlRow').classList.toggle('locked', isTest);
+  $('#voiceCtrl').disabled = isTest; if(isTest) $('#voiceCtrl').checked=false;
+  const wOpt=$('#sttWhisperOpt'); if(wOpt) wOpt.disabled = isTest;
+  if(isTest && $('#stt').value==='whisper'){ $('#stt').value='browser'; applySTT&&applySTT(); }
+  $('#licStatus').textContent = isTest ? t('licTestInfo') : '';
+  if(isTest && people.length>1){ people=people.slice(0,1); savePeople(); }
+  renderPeople();
+}
+$('#licActivate').addEventListener('click',()=>checkLicense(true));
+try{ const c=loadLicenseCache(); if(c && c.code) $('#licCode').value=c.code; }catch(e){}
+
+/* ---------- Stimmenordner ---------- */
+let lastLearnedT=null;
+let voices=[]; try{ voices=JSON.parse(localStorage.getItem('richtstrahl_voices')||'[]'); }catch(e){ voices=[]; }
+const saveVoices=()=>{ try{ localStorage.setItem('richtstrahl_voices',JSON.stringify(voices)); }catch(e){} };
+function normVoiceName(s){ return s.toLowerCase().trim().replace(/[.,!?;:„"“”]/g,''); }
+function renderVoiceFolder(){
+  const ul=$('#voiceFolder'); if(!ul) return; ul.innerHTML='';
+  if(!voices.length){ const li=document.createElement('li'); li.style.color='var(--ink2)'; li.textContent=t('voiceFolderEmpty'); ul.appendChild(li); return; }
+  voices.forEach((v,i)=>{ const li=document.createElement('li');
+    const inp=document.createElement('input'); inp.value=v.name; inp.setAttribute('aria-label',t('nameAria'));
+    const use=document.createElement('button'); use.textContent='▶'; use.title=t('voiceFolderUseBtn'); use.style.color='var(--ok)';
+    const rm=document.createElement('button'); rm.setAttribute('aria-label',t('removeAria')); rm.textContent='×';
+    li.append(inp,use,rm);
+    inp.addEventListener('input',e=>{v.name=e.target.value; saveVoices();});
+    use.addEventListener('click',()=>activateVoice(v));
+    rm.addEventListener('click',()=>{voices.splice(i,1); saveVoices(); renderVoiceFolder();});
+    ul.appendChild(li); });
+}
+$('#voiceSaveBtn').addEventListener('click',()=>{
+  if(!lastLearnedT){ msg(t('voiceFolderNeedLearn'),'warn'); return; }
+  const name=($('#voiceSaveName').value||'').trim(); if(!name){ msg(t('voiceFolderNeedLearn'),'warn'); return; }
+  voices.push({name,data:lastLearnedT}); saveVoices(); renderVoiceFolder();
+  $('#voiceSaveName').value=''; msg(t('cmdConfirmed')+name); setTimeout(()=>msg(''),2000);
+});
+function activateVoice(v){
+  selectVariant('profile'); if(variant!=='profile') return;
+  if(!worklet){ msg(t('msgTapStartFirst'),'warn'); return; }
+  worklet.port.postMessage({cmd:'setT',data:v.data});
+  document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v==='profile'));
+}
+function matchVoiceProfile(text){
+  const n=normVoiceName(text);
+  return voices.find(v=>normVoiceName(v.name)===n) || null;
+}
+
+/* ---------- Kompass ---------- */
+let hx=0,hy=0;
+function onOri(e){
+  let h=null;
+  if(e.webkitCompassHeading!=null) h=e.webkitCompassHeading;
+  else if(e.alpha!=null) h=(360-e.alpha)%360;
+  if(h==null) return;
+  const r=h*Math.PI/180; hx=0.8*hx+0.2*Math.cos(r); hy=0.8*hy+0.2*Math.sin(r);
+  heading=(Math.atan2(hy,hx)*180/Math.PI+360)%360;
+  if(!headingOk){ headingOk=true; $('#dotOri').classList.add('on'); }
+}
+async function startCompass(){
+  try{
+    if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){
+      const r=await DeviceOrientationEvent.requestPermission(); if(r!=='granted') throw new Error('abgelehnt');
+    }
+    if('ondeviceorientationabsolute' in window) window.addEventListener('deviceorientationabsolute',onOri);
+    else window.addEventListener('deviceorientation',onOri);
+  }catch(e){ msg(t('msgCompassUnavailable'),'warn'); }
+}
+const angDiff=(a,b)=>{ let d=Math.abs(a-b)%360; return d>180?360-d:d; };
+
+/* ---------- Gate-Berechnung ---------- */
+function gateGain(){
+  if(!headingOk || heading==null) return 1;
+  if(!people.length) return 1;
+  const w=+$('#beamW').value/2, fl=Math.pow(10,+$('#floor').value/20);
+  let best=fl;
+  for(const p of people){ const d=angDiff(heading,p.h);
+    const g = d<=w ? 1 : Math.max(fl, 1-(d-w)/w); if(g>best) best=g; }
+  return best;
+}
+function gateActive(){
+  if(variant==='gate') return true;
+  return $({beam:'#gateB',profile:'#gateP',subtract:'#gateS'}[variant]).checked;
+}
+
+/* ---------- Audio-Graph ---------- */
+async function startAudio(){
+  ctx=new (window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});
+  const micId=$('#micSel').value;
+  const audio={echoCancellation:false,noiseSuppression:false,autoGainControl:false,channelCount:{ideal:2}};
+  if(micId) audio.deviceId={exact:micId};
+  stream=await navigator.mediaDevices.getUserMedia({audio});
+  const tr=stream.getAudioTracks()[0]; const st=tr.getSettings(); stereo=(st.channelCount||1)>=2;
+  await listMics(st.deviceId);
+  $('#chan').textContent=stereo?t('chanStereo'):t('chanMono'); $('#beamNote').classList.toggle('hidden',stereo);
+  $('#dotMic').classList.add('on');
+  await ctx.audioWorklet.addModule(URL.createObjectURL(new Blob([WORKLET],{type:'application/javascript'})));
+
+  src=ctx.createMediaStreamSource(stream);
+  anIn=ctx.createAnalyser(); anIn.fftSize=1024; src.connect(anIn);
+
+  // Beam-Stufe: Splitter → Delay → gewichtete Summe (mono)
+  splitter=ctx.createChannelSplitter(2);
+  delayA=ctx.createDelay(0.01); delayB=ctx.createDelay(0.01);
+  gA=ctx.createGain(); gB=ctx.createGain();
+  merger=ctx.createGain(); // mono-Summe
+  src.connect(splitter);
+  splitter.connect(delayA,0); splitter.connect(delayB,1);
+  delayA.connect(gA); delayB.connect(gB); gA.connect(merger); gB.connect(merger);
+  shelf=ctx.createBiquadFilter(); shelf.type='lowshelf'; shelf.frequency.value=400; shelf.gain.value=0;
+  merger.connect(shelf);
+
+  worklet=new AudioWorkletNode(ctx,'spec',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
+  worklet.port.onmessage=e=>{ const d=e.data;
+    if(d.type==='progress'){ const v=(d.v*100)+'%'; $('#lrnBar').style.width=v; $('#lrnBar2').style.width=v; }
+    if(d.type==='learned'){ $('#lrnBar').style.width='0'; $('#lrnBar2').style.width='0';
+      if(d.which==='T') lastLearnedT=d.data;
+      msg({T:t('msgLearnedT'),B:t('msgLearnedB'),N:t('msgLearnedN')}[d.which]); setTimeout(()=>msg(''),3000); }
+  };
+  shelf.connect(worklet);
+  hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=100; hp.Q.value=.7;
+  lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=4000; lp.Q.value=.7;
+  gate=ctx.createGain(); master=ctx.createGain();
+  anOut=ctx.createAnalyser(); anOut.fftSize=1024;
+  worklet.connect(hp); hp.connect(lp); lp.connect(gate); gate.connect(anOut); anOut.connect(master); master.connect(ctx.destination);
+  applyVariant(); applyParams();
+}
+function stopAudio(){
+  if(stream) stream.getTracks().forEach(t=>t.stop());
+  if(ctx) ctx.close(); ctx=null; $('#dotMic').classList.remove('on'); $('#chan').textContent='';
+}
+
+function applyVariant(){
+  if(!ctx) return;
+  const beamOn = variant==='beam' && stereo;
+  const kind=$('#beamKind').value, d=+$('#micDist').value/100, tau=d/343;
+  const flip=$('#flip').checked;
+  const front=flip?delayB:delayA, rear=flip?delayA:delayB, gFront=flip?gB:gA, gRear=flip?gA:gB;
+  const t=ctx.currentTime;
+  if(!beamOn){ // beide Kanäle unverzögert, halbe Summe (bei Mono liegt Kanal 1 leer → volle Gewichtung)
+    delayA.delayTime.setTargetAtTime(0,t,.02); delayB.delayTime.setTargetAtTime(0,t,.02);
+    gA.gain.setTargetAtTime(stereo?.5:1,t,.02); gB.gain.setTargetAtTime(stereo?.5:0,t,.02);
+    shelf.gain.setTargetAtTime(0,t,.05);
+  } else if(kind==='sum'){ // Delay-and-Sum endfire: vorderes Mikro um Laufzeit verzögern
+    front.delayTime.setTargetAtTime(tau,t,.02); rear.delayTime.setTargetAtTime(0,t,.02);
+    gFront.gain.setTargetAtTime(.5,t,.02); gRear.gain.setTargetAtTime(.5,t,.02);
+    shelf.gain.setTargetAtTime(0,t,.05);
+  } else { // Differenz (Kardioide): vorne minus hinten-verzögert, Tiefenverlust per Lowshelf ausgleichen
+    front.delayTime.setTargetAtTime(0,t,.02); rear.delayTime.setTargetAtTime(tau,t,.02);
+    gFront.gain.setTargetAtTime(1,t,.02); gRear.gain.setTargetAtTime(-1,t,.02);
+    shelf.gain.setTargetAtTime(9,t,.05);
+  }
+  worklet.port.postMessage({cmd:'mode',mode: variant==='profile'?'profile': variant==='subtract'?'subtract':'pass'});
+}
+function applyParams(){
+  if(!ctx) return;
+  const sp=$('#speech').checked && variant==='gate';
+  hp.frequency.setTargetAtTime(sp?100:20,ctx.currentTime,.05); lp.frequency.setTargetAtTime(sp?4000:20000,ctx.currentTime,.05);
+  master.gain.setTargetAtTime($('#monitor').checked?(+$('#vol').value/100):0,ctx.currentTime,.05);
+  worklet.port.postMessage({cmd:'param',name:'strength',value:+$('#strength').value/100});
+  worklet.port.postMessage({cmd:'param',name:'floor',value:Math.pow(10,(variant==='subtract'?+$('#sfloor').value:+$('#pfloor').value)/20)});
+  worklet.port.postMessage({cmd:'param',name:'over',value:+$('#over').value/100});
+}
+
+/* ---------- UI ---------- */
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{
+  if(b.classList.contains('locked')){ msg(t('licLockedMsg'),'warn'); return; }
+  variant=b.dataset.v;
+  document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==variant));
+  applyVariant(); applyParams();
+}));
+const fmt={beamW:v=>v+'°',floor:v=>(v<0?'−':'')+Math.abs(v)+' dB',micDist:v=>v+' cm',strength:v=>v+' %',pfloor:v=>(v<0?'−':'')+Math.abs(v)+' dB',over:v=>(v/100).toFixed(1).replace('.',',')+'×',sfloor:v=>(v<0?'−':'')+Math.abs(v)+' dB',vol:v=>v+' %'};
+for(const id in fmt){ const el=$('#'+id); const o=$('#'+id+'o'); const upd=()=>{o.textContent=fmt[id](+el.value);}; el.addEventListener('input',()=>{upd(); applyParams(); if(id==='micDist') applyVariant();}); upd(); }
+['#speech','#monitor','#gateB','#gateP','#gateS'].forEach(s=>$(s).addEventListener('change',applyParams));
+['#beamKind','#flip'].forEach(s=>$(s).addEventListener('change',applyVariant));
+
+function renderPeople(){
+  const ul=$('#people'); ul.innerHTML='';
+  if(!people.length){ const li=document.createElement('li'); li.style.color='var(--ink2)'; li.textContent=t('peopleEmpty'); ul.appendChild(li); }
+  people.forEach((p,i)=>{ const li=document.createElement('li');
+    const hd=document.createElement('span'); hd.className='hd'; hd.textContent=Math.round(p.h)+'°';
+    const inp=document.createElement('input'); inp.value=p.name; inp.setAttribute('aria-label',t('nameAria'));
+    const rm=document.createElement('button'); rm.setAttribute('aria-label',t('removeAria')); rm.textContent='×';
+    li.append(hd,inp,rm);
+    inp.addEventListener('input',e=>{p.name=e.target.value; savePeople();});
+    rm.addEventListener('click',()=>{people.splice(i,1); savePeople(); renderPeople();});
+    ul.appendChild(li); });
+  drawMarks();
+}
+$('#addPerson').addEventListener('click',()=>{
+  if(!headingOk){ msg(t('msgHeadingNotReady'),'warn'); return; }
+  if(plan!=='premium' && people.length>=1){ msg(t('licPersonLimitMsg'),'warn'); return; }
+  people.push({name:t('personNamePrefix')+' '+(people.length+1),h:heading}); savePeople(); renderPeople();
+});
+function learn(which,ms){ if(!worklet){ msg(t('msgTapStartFirst'),'warn'); return; } worklet.port.postMessage({cmd:'learn',which,ms}); }
+$('#learnT').addEventListener('click',()=>learn('T',3000));
+$('#learnB').addEventListener('click',()=>learn('B',3000));
+$('#learnN').addEventListener('click',()=>learn('N',3000));
+let autoN=false; $('#autoN').addEventListener('click',()=>{ autoN=!autoN; $('#autoN').textContent=autoN?t('autoNOn'):t('autoNOff'); if(worklet) worklet.port.postMessage({cmd:'param',name:'autoN',value:autoN}); });
+
+$('#start').addEventListener('click',async()=>{
+  if(running){ running=false; stopBrowserSTT(); stopWhisper(); stopAudio(); $('#start').textContent=t('startBtn'); $('#start').className='btn amber'; return; }
+  msg('');
+  try{ await startCompass(); await startAudio(); running=true; $('#start').textContent=t('stopBtn'); $('#start').className='btn red'; applySTT(); }
+  catch(e){
+    let hint='';
+    if(window.self!==window.top) hint=t('msgEmbedded');
+    else if(e.name==='NotAllowedError') hint=t('msgBlocked');
+    else if(e.name==='NotFoundError') hint=t('msgNotFound');
+    else if(location.protocol!=='https:'&&location.hostname!=='localhost') hint=t('msgHttps');
+    msg(t('msgMicFail')+' ('+(e.name||e.message||e)+').'+hint,'err'); stopAudio(); }
+});
+
+/* ---------- Zeichnen ---------- */
+const ringG=$('#ring');
+(function(){ let s=''; for(let a=0;a<360;a+=10){ const r=a%90===0?86:a%30===0?90:94;
+  s+=`<line x1="0" y1="-100" x2="0" y2="-${r}" stroke="${a%90===0?'var(--ink)':'var(--ink2)'}" stroke-width="${a%90===0?2:1}" transform="rotate(${a})"/>`; }
+  ['N','O','S','W'].forEach((l,i)=>{ const a=i*90*Math.PI/180; s+=`<text x="${(74*Math.sin(a)).toFixed(1)}" y="${(-74*Math.cos(a)+4).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--ink2)">${l}</text>`; });
+  ringG.innerHTML=s; })();
+function drawMarks(){
+  const h=heading||0; let s='';
+  for(const p of people){ const a=(p.h-h)*Math.PI/180; s+=`<circle cx="${(100*Math.sin(a)).toFixed(1)}" cy="${(-100*Math.cos(a)).toFixed(1)}" r="7" fill="var(--amber)"/>`; }
+  $('#marks').innerHTML=s;
+}
+function drawBeam(){
+  const w=variant==='beam'? ( $('#beamKind').value==='diff'?130:90 ) : +$('#beamW').value;
+  const on = variant==='beam' ? stereo : (gateActive() && people.length>0);
+  if(!on){ $('#beam').setAttribute('d',''); return; }
+  const a=w/2*Math.PI/180, R=100;
+  $('#beam').setAttribute('d',`M0,0 L${(-R*Math.sin(a)).toFixed(1)},${(-R*Math.cos(a)).toFixed(1)} A${R},${R} 0 ${w>180?1:0},1 ${(R*Math.sin(a)).toFixed(1)},${(-R*Math.cos(a)).toFixed(1)} Z`);
+}
+const cv=$('#spec'), cx2=cv.getContext('2d');
+const buf=new Uint8Array(512), tbuf=new Float32Array(1024);
+function rms(an){ an.getFloatTimeDomainData(tbuf); let s=0; for(let i=0;i<tbuf.length;i++) s+=tbuf[i]*tbuf[i]; return Math.sqrt(s/tbuf.length); }
+const toPct=r=>Math.min(100,Math.max(0,(20*Math.log10(r+1e-6)+60)/60*100));
+function tick(){
+  requestAnimationFrame(tick);
+  ringG.setAttribute('transform',`rotate(${-(heading||0)})`);
+  $('#hdg').textContent=headingOk?Math.round(heading)+'°':'–';
+  drawMarks(); drawBeam();
+  if(ctx && running){
+    const g=gateActive()?gateGain():1;
+    gate.gain.setTargetAtTime(g,ctx.currentTime,.08);
+    $('#gateTxt').textContent = variant==='beam' ? (stereo?t('beamForwardTxt'):t('beamMonoTxt')) : gateActive()? (g>=.99?t('gateOpenTxt'):g<=.05?t('gateClosedTxt'):t('gateEdgePrefix')+Math.round(20*Math.log10(g))+t('gateEdgeSuffix')) : t('gateOffTxt');
+    $('#mIn').style.width=toPct(rms(anIn))+'%'; $('#mOut').style.width=toPct(rms(anOut))+'%';
+    anOut.getByteFrequencyData(buf);
+    const W=cv.width,Hh=cv.height; cx2.clearRect(0,0,W,Hh);
+    const style=getComputedStyle(document.documentElement); cx2.fillStyle=style.getPropertyValue('--amber').trim()||'#f2b441';
+    const n=180; for(let i=0;i<n;i++){ const v=buf[i]/255; cx2.fillRect(i*(W/n),Hh-v*Hh,W/n-1,v*Hh); }
+  } else { $('#gateTxt').textContent=headingOk?t('compassReady'):t('compassOff'); }
+}
+/* ---------- Mitschrift ---------- */
+let rec=null, recActive=false, mr=null, mrDest=null, mrTimer=null;
+const tEl=$('#transcript'), iEl=$('#interim');
+
+/* ---------- Sprachbefehle ---------- */
+function selectVariant(v){ const b=document.querySelector('.seg button[data-v="'+v+'"]'); if(b) b.click(); }
+function adjustVolume(delta){ const el=$('#vol'); let v=Math.max(30,Math.min(150,+el.value+delta)); el.value=v; el.dispatchEvent(new Event('input')); }
+function setMonitor(on){ $('#monitor').checked=on; applyParams(); }
+const CMD_DEFS=[
+  {id:'start', run:()=>{ if(!running) $('#start').click(); }, de:['start','starte','los'], en:['start','go'], it:['avvia','via']},
+  {id:'stop', run:()=>{ if(running) $('#start').click(); }, de:['stopp','stop','halt'], en:['stop','halt'], it:['ferma','stop']},
+  {id:'gate', run:()=>selectVariant('gate'), de:['gate'], en:['gate'], it:['gate']},
+  {id:'beam', run:()=>selectVariant('beam'), de:['beam'], en:['beam'], it:['beam']},
+  {id:'profile', run:()=>selectVariant('profile'), de:['profil'], en:['profile'], it:['profilo']},
+  {id:'subtract', run:()=>selectVariant('subtract'), de:['subtraktion'], en:['subtraction'], it:['sottrazione']},
+  {id:'addPerson', run:()=>$('#addPerson').click(), de:['person markieren','person hinzufügen'], en:['mark person','add person'], it:['segna persona','aggiungi persona']},
+  {id:'learnVoice', run:()=>$('#learnT').click(), de:['stimme lernen'], en:['learn voice'], it:['apprendi voce']},
+  {id:'learnRoom', run:()=>$('#learnB').click(), de:['umgebung lernen'], en:['learn surroundings','learn room'], it:['apprendi ambiente']},
+  {id:'learnNoise', run:()=>$('#learnN').click(), de:['störgeräusch lernen','stoergeraeusch lernen'], en:['learn noise'], it:['apprendi rumore']},
+  {id:'volUp', run:()=>adjustVolume(15), de:['lauter'], en:['louder'], it:['più forte','piu forte']},
+  {id:'volDown', run:()=>adjustVolume(-15), de:['leiser'], en:['quieter','softer'], it:['più piano','piu piano']},
+  {id:'monitorOn', run:()=>setMonitor(true), de:['mithören ein','mithören an'], en:['monitor on'], it:['ascolto acceso']},
+  {id:'monitorOff', run:()=>setMonitor(false), de:['mithören aus'], en:['monitor off'], it:['ascolto spento']},
+  {id:'copyText', run:()=>$('#copyT').click(), de:['text kopieren'], en:['copy text'], it:['copia testo']},
+  {id:'clearText', run:()=>$('#clearT').click(), de:['text löschen','leeren'], en:['clear text','clear'], it:['svuota testo','svuota']}
+];
+const CMD_DESC_KEY={start:'startBtn',stop:'stopBtn',gate:'tabGate',beam:'tabBeam',profile:'tabProfile',subtract:'tabSubtract',addPerson:'addPersonBtn',learnVoice:'learnTBtn',learnRoom:'learnBBtn',learnNoise:'learnNBtn',volUp:'cmdVolUp',volDown:'cmdVolDown',monitorOn:'cmdMonitorOn',monitorOff:'cmdMonitorOff',copyText:'copyBtn',clearText:'clearBtn'};
+function normCmd(s){ return s.toLowerCase().trim().replace(/[.,!?;:„"“”]/g,'').replace(/\s+/g,' '); }
+function matchCommand(text){
+  const n=normCmd(text);
+  for(const c of CMD_DEFS){ const phrases=c[uiLang]||c.de; if(phrases.some(p=>n===p)) return c; }
+  return null;
+}
+function renderCmdList(){
+  const ul=$('#cmdList'); if(!ul) return; ul.innerHTML='';
+  CMD_DEFS.forEach(c=>{ const phrase=(c[uiLang]||c.de)[0]; const li=document.createElement('li');
+    const a=document.createElement('span'); a.className='hd'; a.textContent='„'+phrase+'“';
+    const b=document.createElement('span'); b.textContent=t(CMD_DESC_KEY[c.id]);
+    li.append(a,b); ul.appendChild(li); });
+}
+
+function speakerName(){
+  if(!headingOk||!people.length) return '';
+  let best=null,bd=999; for(const p of people){const d=angDiff(heading,p.h); if(d<bd){bd=d;best=p;}}
+  return bd<=+$('#beamW').value/2 ? best.name+': ' : '';
+}
+function addLine(text){ if(!text.trim()) return; const d=document.createElement('div'); d.textContent=speakerName()+text.trim(); tEl.appendChild(d); tEl.scrollTop=tEl.scrollHeight; }
+function startBrowserSTT(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ msg(t('msgNoSTT'),'warn'); return; }
+  rec=new SR(); rec.lang=LOCALE[uiLang]||'de-DE'; rec.continuous=true; rec.interimResults=true; recActive=true;
+  rec.onresult=e=>{ let interim=''; for(let i=e.resultIndex;i<e.results.length;i++){ const r=e.results[i];
+    if(r.isFinal){
+      const raw=r[0].transcript;
+      const c=$('#voiceCtrl').checked ? matchCommand(raw) : null;
+      const v=(!c && plan==='premium') ? matchVoiceProfile(raw) : null;
+      if(c){ c.run(); addLine(t('cmdConfirmed')+t(CMD_DESC_KEY[c.id])); }
+      else if(v){ activateVoice(v); addLine(t('cmdConfirmed')+v.name); }
+      else addLine(raw);
+    } else interim+=r[0].transcript; }
+    iEl.textContent=interim; };
+  rec.onerror=e=>{ if(e.error==='not-allowed'){ msg(t('msgSTTNotAllowed'),'err'); recActive=false; } };
+  rec.onend=()=>{ if(recActive){ try{rec.start();}catch(e){} } };
+  try{ rec.start(); }catch(e){}
+}
+function stopBrowserSTT(){ recActive=false; if(rec){ try{rec.stop();}catch(e){} rec=null; } iEl.textContent=''; }
+async function uploadChunk(blob){
+  const ep=$('#ep').value.trim(); if(!ep||blob.size<2000) return;
+  iEl.textContent=t('msgUploading');
+  try{
+    const fd=new FormData(); fd.append('audio',blob,'chunk.webm'); fd.append('lang',(LOCALE[uiLang]||'de-DE').slice(0,2));
+    let key=''; try{ key=localStorage.getItem('bl_api_key')||''; }catch(e){}
+    const r=await fetch(ep,{method:'POST',body:fd,headers:key?{'Authorization':'Bearer '+key}:{}});
+    const ct=r.headers.get('content-type')||''; let text='';
+    if(ct.includes('json')){ const j=await r.json(); text=j.text||j.result?.text||j.transcription||JSON.stringify(j); } else text=await r.text();
+    if(!r.ok) throw new Error(text.slice(0,120));
+    addLine(text); iEl.textContent='';
+  }catch(e){ iEl.textContent=t('msgWorkerError')+(e.message||e); }
+}
+function startWhisper(){
+  if(!ctx){ msg(t('msgTapStartFirst'),'warn'); return; }
+  mrDest=ctx.createMediaStreamDestination(); anOut.connect(mrDest);
+  const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4'].find(m=>MediaRecorder.isTypeSupported(m))||'';
+  const cycle=()=>{ if(!mrDest) return;
+    let quiet=true; mr=new MediaRecorder(mrDest.stream,mime?{mimeType:mime}:{});
+    const probe=setInterval(()=>{ if(anOut && rms(anOut)>0.01) quiet=false; },200);
+    mr.ondataavailable=e=>{ clearInterval(probe); if(!quiet) uploadChunk(e.data); if(mrDest) cycle(); };
+    mr.start(); mrTimer=setTimeout(()=>{ if(mr.state==='recording') mr.stop(); },5000); };
+  cycle();
+}
+function stopWhisper(){ clearTimeout(mrTimer); if(mr&&mr.state==='recording'){ const m=mr; mr=null; mrDest=null; try{m.stop();}catch(e){} } mrDest=null; mr=null; }
+function applySTT(){
+  stopBrowserSTT(); stopWhisper();
+  const v=$('#stt').value; $('#epRow').style.display=v==='whisper'?'':'none';
+  if(!running) return;
+  if(v==='browser') startBrowserSTT(); else if(v==='whisper') startWhisper();
+}
+$('#stt').addEventListener('change',applySTT);
+$('#voiceCtrl').addEventListener('change',()=>{
+  if($('#voiceCtrl').checked && $('#stt').value!=='browser'){ $('#stt').value='browser'; if(running) applySTT(); }
+});
+$('#clearT').addEventListener('click',()=>{ tEl.innerHTML=''; iEl.textContent=''; });
+$('#copyT').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(tEl.innerText); msg(t('msgCopySuccess')); setTimeout(()=>msg(''),1500);}catch(e){ msg(t('msgCopyFail'),'warn'); } });
+$('#epRow').style.display='none';
+
+/* ---------- Mikrofonwahl ---------- */
+async function listMics(activeId){
+  try{
+    const devs=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='audioinput');
+    const sel=$('#micSel'); const cur=sel.value; sel.innerHTML=''; const optAuto=document.createElement('option'); optAuto.value=''; optAuto.textContent=t('micAuto'); sel.appendChild(optAuto);
+    devs.forEach((d,i)=>{ const o=document.createElement('option'); o.value=d.deviceId;
+      let n=d.label||(t('micLabel')+' '+(i+1));
+      if(/bluetooth|headset|hands|sco/i.test(n)) n+=' (Headset)'; else if(/built|intern|phone|handy|default/i.test(n)) n+=' ('+t('micLabel')+')';
+      o.textContent=n; sel.appendChild(o); });
+    sel.value = cur && [...sel.options].some(o=>o.value===cur) ? cur : (activeId&&[...sel.options].some(o=>o.value===activeId)?activeId:'');
+    if(devs.length<=1 && !devs[0]?.label) $('#chan').textContent+=t('micListUnavailable');
+  }catch(e){}
+}
+async function switchMic(){
+  if(!running||!ctx) return;
+  const micId=$('#micSel').value;
+  const audio={echoCancellation:false,noiseSuppression:false,autoGainControl:false,channelCount:{ideal:2}};
+  if(micId) audio.deviceId={exact:micId};
+  try{
+    const ns=await navigator.mediaDevices.getUserMedia({audio});
+    if(stream) stream.getTracks().forEach(t=>t.stop());
+    src.disconnect(); stream=ns; src=ctx.createMediaStreamSource(stream);
+    src.connect(anIn); src.connect(splitter);
+    const st=stream.getAudioTracks()[0].getSettings(); stereo=(st.channelCount||1)>=2;
+    $('#chan').textContent=stereo?t('chanStereo'):t('chanMono'); $('#beamNote').classList.toggle('hidden',stereo);
+    applyVariant(); if($('#stt').value==='whisper') applySTT();
+    msg(t('msgMicSwitched')+$('#micSel').selectedOptions[0].textContent); setTimeout(()=>msg(''),2500);
+  }catch(e){ msg(t('msgMicSwitchFail')+(e.name||e)+t('msgMicSwitchFailSuffix'),'warn'); }
+}
+$('#micSel').addEventListener('change',switchMic);
+if(navigator.mediaDevices?.addEventListener) navigator.mediaDevices.addEventListener('devicechange',()=>{ if(running) listMics(); });
+listMics();
+
+renderPeople(); tick(); applyI18n(); checkLicense(false);
+</script>
+</body>
+</html>
