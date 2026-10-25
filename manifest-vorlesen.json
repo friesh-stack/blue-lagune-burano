@@ -1,0 +1,17 @@
+{
+  "id": "vorlesen",
+  "name": "Vorlese-App",
+  "short_name": "Vorlesen",
+  "start_url": "Vorlesen.html",
+  "display": "standalone",
+  "background_color": "#6d4c41",
+  "theme_color": "#6d4c41",
+  "icons": [
+    {
+      "src": "icon-vorlesen-512.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
