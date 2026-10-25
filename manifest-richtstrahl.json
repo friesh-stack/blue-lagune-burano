@@ -1,0 +1,17 @@
+{
+  "id": "richtstrahl",
+  "name": "Richtstrahl",
+  "short_name": "Richt",
+  "start_url": "richtstrahl.html",
+  "display": "standalone",
+  "background_color": "#00838f",
+  "theme_color": "#00838f",
+  "icons": [
+    {
+      "src": "icon-richtstrahl-512.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
