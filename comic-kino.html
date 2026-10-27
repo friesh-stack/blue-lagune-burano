@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1C1A3E">
+<title>Comic-Kino – Dein Film, deine Helden</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1C1A3E; --ink-2:#27245A; --ink-3:#332F73;
+  --paper:#FFF6E5; --paper-dim:#C9C3D9;
+  --sun:#FFC63A; --berry:#FF6E8A; --mint:#5EE6BE; --sky:#6DB8FF;
+  --r:22px; --r-s:14px;
+  --font-h:"Baloo 2",system-ui,sans-serif; --font-b:"Nunito",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink);color:var(--paper);font-family:var(--font-b);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+body{padding-bottom:120px}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+h1,h2,h3{font-family:var(--font-h);line-height:1.15}
+
+/* header */
+header{position:sticky;top:0;z-index:20;background:linear-gradient(var(--ink) 80%,transparent);padding:18px 20px 12px;display:flex;align-items:center;gap:12px}
+header h1{font-size:26px;font-weight:800;letter-spacing:-.01em}
+header h1 span{color:var(--sun)}
+header .gear{margin-left:auto;width:40px;height:40px;border-radius:50%;background:var(--ink-2);display:grid;place-items:center;font-size:18px}
+.tabs{display:flex;gap:6px;padding:0 20px 10px}
+.tabs button{flex:1;padding:9px;border-radius:999px;background:var(--ink-2);color:var(--paper-dim);font-weight:700;font-size:14px}
+.tabs button.on{background:var(--paper);color:var(--ink)}
+
+main{padding:0 20px;display:grid;gap:26px}
+section h2{font-size:21px;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+section h2 .ico{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-size:18px;background:var(--ink-2)}
+section h2 .opt{margin-left:auto;font:600 12px var(--font-b);color:var(--paper-dim);background:var(--ink-2);padding:3px 10px;border-radius:999px}
+.hint{color:var(--paper-dim);font-size:14px;margin-bottom:10px}
+
+/* source cards */
+.src{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.src label{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:118px;border-radius:var(--r);border:2px dashed var(--ink-3);background:var(--ink-2);text-align:center;padding:14px;cursor:pointer;overflow:hidden}
+.src label.has{border-style:solid;border-color:var(--mint)}
+.src label b{font-family:var(--font-h);font-size:17px}
+.src label small{color:var(--paper-dim);font-size:12px}
+.src label .big{font-size:30px}
+.src input{display:none}
+.src img,.src video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9}
+.src .tag{position:absolute;bottom:8px;left:8px;background:var(--ink);padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700}
+.src .del{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:var(--ink);font-size:14px}
+
+/* prompt */
+.box{background:var(--ink-2);border-radius:var(--r);padding:14px}
+textarea{width:100%;min-height:120px;background:transparent;border:0;resize:vertical;outline:none;color:var(--paper)}
+textarea::placeholder,input::placeholder{color:#8B86AA}
+.counter{text-align:right;font-size:13px;color:var(--paper-dim)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ghost{padding:8px 14px;border-radius:999px;background:var(--ink-3);font-weight:700;font-size:14px}
+.ghost.rec{background:var(--berry);color:var(--ink)}
+.ghost:disabled{opacity:.5}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:9px 14px;border-radius:999px;background:var(--ink-2);color:var(--paper-dim);font-weight:700;font-size:14px;border:2px solid transparent;display:flex;gap:6px;align-items:center}
+.chip.on{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.chip.on.sun{background:var(--sun)} .chip.on.mint{background:var(--mint)} .chip.on.sky{background:var(--sky)} .chip.on.berry{background:var(--berry)}
+
+/* heroes */
+.hero{display:grid;grid-template-columns:44px 1fr 1fr 32px;gap:8px;align-items:center;margin-bottom:8px}
+.hero .av{width:44px;height:44px;border-radius:14px;background:var(--ink-3);display:grid;place-items:center;font-size:22px;overflow:hidden}
+.hero .av img{width:100%;height:100%;object-fit:cover}
+.hero input,.hero select{width:100%;padding:10px 12px;border-radius:var(--r-s);background:var(--ink-2);border:2px solid transparent;outline:none}
+.hero input:focus{border-color:var(--sun)}
+.hero select{appearance:none;-webkit-appearance:none}
+.hero select option{background:var(--ink)}
+.hero .x{font-size:18px;color:var(--paper-dim);text-align:center}
+.add{width:100%;padding:12px;border-radius:var(--r-s);border:2px dashed var(--ink-3);color:var(--paper-dim);font-weight:700}
+
+/* goals */
+.goal{display:grid;gap:8px}
+.goal h3{font-size:15px;color:var(--paper-dim);font-weight:600;font-family:var(--font-b);margin-top:6px}
+.age{display:flex;gap:6px}
+.age button{flex:1;padding:10px;border-radius:var(--r-s);background:var(--ink-2);font-weight:700}
+.age button.on{background:var(--sky);color:var(--ink)}
+
+/* slider */
+.slide{display:flex;align-items:center;gap:14px;background:var(--ink-2);border-radius:var(--r);padding:14px 16px}
+.slide input{flex:1;accent-color:var(--sun);height:6px}
+.slide output{font-family:var(--font-h);font-size:22px;font-weight:800;min-width:52px;text-align:right}
+.cost{font-size:13px;color:var(--paper-dim);margin-top:6px}
+
+/* preview prompt */
+pre.prompt{white-space:pre-wrap;font:14px/1.5 var(--font-b);color:var(--paper);background:var(--ink-2);border-radius:var(--r);padding:14px;max-height:260px;overflow:auto}
+.copy{margin-top:8px}
+
+/* cta */
+.cta{position:fixed;left:0;right:0;bottom:0;padding:14px 20px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--ink) 40%);z-index:20}
+.cta button{width:100%;padding:18px;border-radius:999px;background:var(--sun);color:var(--ink);font:800 19px var(--font-h);box-shadow:0 8px 24px rgba(255,198,58,.35);transition:transform .15s}
+.cta button:active{transform:scale(.97)}
+.cta button:disabled{background:var(--ink-3);color:var(--paper-dim);box-shadow:none}
+
+/* gallery */
+.card{background:var(--ink-2);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.card video{width:100%;aspect-ratio:9/16;max-height:60vh;background:#000;display:block}
+.card .meta{padding:12px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card .meta b{font-family:var(--font-h);font-size:16px;flex:1 0 100%}
+.card .meta small{color:var(--paper-dim)}
+.card .status{display:flex;align-items:center;gap:10px;padding:20px 14px}
+.spin{width:22px;height:22px;border:3px solid var(--ink-3);border-top-color:var(--sun);border-radius:50%;animation:s 1s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:50px 20px;color:var(--paper-dim)}
+.empty .big{font-size:48px;margin-bottom:8px}
+
+/* settings dialog */
+dialog{border:0;border-radius:var(--r);background:var(--ink-2);color:var(--paper);padding:20px;width:min(92vw,420px);margin:auto}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog label{display:block;font-size:13px;color:var(--paper-dim);margin:12px 0 4px}
+dialog input,dialog select{width:100%;padding:10px 12px;border-radius:var(--r-s);background:var(--ink);border:2px solid var(--ink-3);outline:none}
+dialog select option{background:var(--ink)}
+dialog .row{justify-content:flex-end}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--paper);color:var(--ink);padding:10px 18px;border-radius:999px;font-weight:700;z-index:50;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Comic<span>-</span>Kino</h1>
+  <button class="gear" id="btnSettings" aria-label="Einstellungen">⚙️</button>
+</header>
+<div class="tabs">
+  <button class="on" data-tab="create">Neuer Film</button>
+  <button data-tab="gallery">Meine Filme <span id="galCount"></span></button>
+</div>
+
+<main id="tab-create">
+
+  <!-- 1 Vorlage -->
+  <section>
+    <h2><span class="ico">📷</span>Womit fangen wir an?</h2>
+    <p class="hint">Ein Foto wird zum Comic-Startbild. Ein kurzes Video (bis 10 s) wird verlängert und weitererzählt.</p>
+    <div class="src">
+      <label id="lblPhoto"><input type="file" id="inPhoto" accept="image/*" capture="environment">
+        <span class="big">🖼️</span><b>Foto</b><small>von euch oder deiner Familie</small></label>
+      <label id="lblVideo"><input type="file" id="inVideo" accept="video/*">
+        <span class="big">🎬</span><b>Video</b><small>bis 10 Sekunden</small></label>
+    </div>
+  </section>
+
+  <!-- 2 Beschreibung / Prompt -->
+  <section>
+    <h2><span class="ico">📖</span>Was passiert im Film?</h2>
+    <p class="hint">Erzähl die Geschichte oder sag, wie das Video weitergehen soll. Du kannst auch einfach sprechen.</p>
+    <div class="box">
+      <textarea id="story" maxlength="2000" placeholder="Zum Beispiel: Mia und Ben finden im Garten eine Schatzkarte. Auf dem Weg zum Schatz müssen sie drei Rätsel lösen…"></textarea>
+      <div class="counter"><span id="storyLen">0</span>/2000</div>
+    </div>
+    <div class="row">
+      <button class="ghost" id="btnMic">🎤 Einsprechen</button>
+      <button class="ghost" id="btnIdea">✨ Idee vorschlagen</button>
+    </div>
+  </section>
+
+  <!-- 3 Stil -->
+  <section>
+    <h2><span class="ico">🎨</span>Comic-Stil</h2>
+    <div class="chips" id="styles">
+      <button class="chip on sun" data-v="Bunter Kinder-Cartoon">🌈 Bunter Cartoon</button>
+      <button class="chip mint" data-v="Weicher Bilderbuch-Look">📚 Bilderbuch</button>
+      <button class="chip sky" data-v="Klassischer Comic mit Sprechblasen">💬 Comic-Heft</button>
+      <button class="chip berry" data-v="Knetfiguren-Stop-Motion">🧶 Knetfiguren</button>
+      <button class="chip sun" data-v="Pixel-Art wie ein Retro-Spiel">👾 Pixel-Art</button>
+      <button class="chip mint" data-v="Anime-Stil, freundlich und hell">🌸 Anime</button>
+    </div>
+  </section>
+
+  <!-- 4 Helden -->
+  <section>
+    <h2><span class="ico">🦸</span>Wer spielt mit?</h2>
+    <p class="hint">Die Namen tauchen im Film auf – gesprochen und als Text im Bild.</p>
+    <div id="heroes"></div>
+    <button class="add" id="btnAddHero">+ Noch jemand</button>
+  </section>
+
+  <!-- 5 Lernziele -->
+  <section>
+    <h2><span class="ico">🧠</span>Was soll gelernt werden? <span class="opt">Optional</span></h2>
+    <div class="goal">
+      <h3>Alter</h3>
+      <div class="age" id="ages">
+        <button data-v="3–5">3–5</button><button class="on" data-v="6–8">6–8</button><button data-v="9–11">9–11</button>
+      </div>
+      <h3>Lesen</h3>
+      <div class="chips" id="goalsRead">
+        <button class="chip sky" data-v="Anlaute und Buchstaben erkennen">🔤 Buchstaben</button>
+        <button class="chip sky" data-v="Reimwörter finden">🎵 Reime</button>
+        <button class="chip sky" data-v="Wörter erscheinen groß im Bild und werden vorgelesen">📝 Wörter im Bild</button>
+        <button class="chip sky" data-v="Silben klatschen">👏 Silben</button>
+        <button class="chip sky" data-v="Kurze Sätze mitlesen (Untertitel)">🗨️ Mitlesen</button>
+      </div>
+      <h3>Rechnen</h3>
+      <div class="chips" id="goalsMath">
+        <button class="chip mint" data-v="Zählen bis 10">🔢 Zählen</button>
+        <button class="chip mint" data-v="Plus und Minus bis 20">➕ Plus &amp; Minus</button>
+        <button class="chip mint" data-v="Formen und Farben unterscheiden">🔺 Formen</button>
+        <button class="chip mint" data-v="Mengen vergleichen (mehr/weniger)">⚖️ Mehr oder weniger</button>
+        <button class="chip mint" data-v="Uhrzeit und Reihenfolge">⏰ Uhr &amp; Reihenfolge</button>
+      </div>
+      <h3>Wie wird gelernt?</h3>
+      <div class="chips" id="goalsHow">
+        <button class="chip on berry" data-v="Am Ende stellt eine Figur eine Frage an die Zuschauer und wartet kurz auf die Antwort">❓ Frage am Ende</button>
+        <button class="chip berry" data-v="Die Aufgabe ist Teil der Geschichte (z. B. Tür öffnet sich nur mit richtiger Zahl)">🚪 Rätsel in der Story</button>
+        <button class="chip berry" data-v="Wiederholung: Das Gelernte wird am Ende noch einmal gemeinsam gesagt">🔁 Gemeinsam wiederholen</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 Länge -->
+  <section>
+    <h2><span class="ico">⏱️</span>Wie lang?</h2>
+    <div class="slide">
+      <input type="range" id="len" min="10" max="60" step="5" value="20">
+      <output id="lenOut">20 s</output>
+    </div>
+    <p class="cost" id="cost"></p>
+  </section>
+
+  <!-- 7 Prompt-Vorschau -->
+  <section>
+    <h2><span class="ico">🪄</span>Prompt fürs Video</h2>
+    <p class="hint">Daraus wird der Film gebaut. Du kannst ihn ansehen, ändern oder kopieren.</p>
+    <pre class="prompt" id="promptView" contenteditable="true" spellcheck="false"></pre>
+    <div class="row">
+      <button class="ghost" id="btnPromptRefresh">🔄 Neu aus Eingaben</button>
+      <button class="ghost" id="btnPromptAI">✨ Von KI verfeinern</button>
+      <button class="ghost" id="btnCopy">📋 Kopieren</button>
+    </div>
+  </section>
+</main>
+
+<main id="tab-gallery" hidden>
+  <div id="gallery"></div>
+</main>
+
+<div class="cta" id="cta">
+  <button id="btnGo">Film drehen 🎬</button>
+</div>
+
+<dialog id="dlg">
+  <h2 style="font-size:20px">Einstellungen</h2>
+  <label>Proxy-URL (Cloudflare Worker)</label>
+  <input id="sProxy" placeholder="https://blue-lagune-proxy.friesh.workers.dev">
+  <label>API-Schlüssel (bl_api_key)</label>
+  <input id="sKey" type="password" placeholder="•••••">
+  <label>Foto → Video (Modell)</label>
+  <select id="sImgModel">
+    <option value="fal-ai/ltx-2.5/image-to-video">LTX-2.5 (günstig)</option>
+    <option value="fal-ai/kling-video/v2/standard/image-to-video">Kling 2 Standard</option>
+  </select>
+  <label>Video verlängern (Modell)</label>
+  <select id="sVidModel">
+    <option value="fal-ai/ltx-2.5/extend-video">LTX-2.5 Extend</option>
+    <option value="decart/lucy-edit/video">Lucy Edit (Decart)</option>
+  </select>
+  <label>Sprache der Erzählstimme (TTS)</label>
+  <select id="sVoice"><option>Deutsch</option><option>Italiano</option><option>English</option></select>
+  <div class="row">
+    <button class="ghost" id="sCancel">Abbrechen</button>
+    <button class="ghost" style="background:var(--sun);color:var(--ink)" id="sSave">Speichern</button>
+  </div>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- State ---------- */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const LS='comickino_v1';
+const state={photo:null,video:null,story:'',style:'Bunter Kinder-Cartoon',heroes:[],age:'6–8',read:[],math:[],how:['Am Ende stellt eine Figur eine Frage an die Zuschauer und wartet kurz auf die Antwort'],len:20,prompt:''};
+const cfg=Object.assign({proxy:'https://blue-lagune-proxy.friesh.workers.dev',key:localStorage.getItem('bl_api_key')||'',imgModel:'fal-ai/ltx-2.5/image-to-video',vidModel:'fal-ai/ltx-2.5/extend-video',voice:'Deutsch'},JSON.parse(localStorage.getItem(LS+'_cfg')||'{}'));
+let films=JSON.parse(localStorage.getItem(LS+'_films')||'[]');
+
+const ROLES=['Held/in','Freund/in','Haustier','Papa','Mama','Oma','Opa','Lehrer/in','Schurke (lieb)','Erzähler/in'];
+const EMO=['🧒','👧','🐶','👨','👩','👵','👴','🧑‍🏫','🦊','🎙️'];
+
+/* ---------- Helpers ---------- */
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)};
+const save=()=>{localStorage.setItem(LS+'_films',JSON.stringify(films));$('#galCount').textContent=films.length?`(${films.length})`:''};
+const fileToDataURL=f=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)});
+
+/* ---------- Tabs ---------- */
+$$('.tabs button').forEach(b=>b.onclick=()=>{
+  $$('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  const g=b.dataset.tab==='gallery';
+  $('#tab-create').hidden=g;$('#tab-gallery').hidden=!g;$('#cta').hidden=g;
+  if(g)renderGallery();
+});
+
+/* ---------- Source upload ---------- */
+async function setSource(kind,file){
+  if(!file)return;
+  if(kind==='video'){
+    const url=URL.createObjectURL(file);
+    const v=document.createElement('video');v.src=url;
+    await new Promise(r=>v.onloadedmetadata=r);
+    if(v.duration>10.5){toast('Video ist länger als 10 s – bitte kürzen');return}
+    state.video={file,url,duration:v.duration};state.photo=null;
+  }else{
+    state.photo={file,url:URL.createObjectURL(file),data:await fileToDataURL(file)};state.video=null;
+  }
+  renderSources();buildPrompt();
+}
+function renderSources(){
+  const lp=$('#lblPhoto'),lv=$('#lblVideo');
+  [lp,lv].forEach(l=>{l.classList.remove('has');l.querySelectorAll('img,video,.tag,.del').forEach(e=>e.remove())});
+  if(state.photo){lp.classList.add('has');lp.insertAdjacentHTML('beforeend',`<img src="${state.photo.url}"><span class="tag">Startbild</span><button class="del" type="button">✕</button>`)}
+  if(state.video){lv.classList.add('has');lv.insertAdjacentHTML('beforeend',`<video src="${state.video.url}" muted loop autoplay playsinline></video><span class="tag">${state.video.duration.toFixed(1)} s</span><button class="del" type="button">✕</button>`)}
+  $$('.src .del').forEach(d=>d.onclick=e=>{e.preventDefault();state.photo=null;state.video=null;renderSources();buildPrompt()});
+}
+$('#inPhoto').onchange=e=>setSource('photo',e.target.files[0]);
+$('#inVideo').onchange=e=>setSource('video',e.target.files[0]);
+
+/* ---------- Story ---------- */
+$('#story').oninput=e=>{state.story=e.target.value;$('#storyLen').textContent=state.story.length;buildPrompt()};
+
+/* Spracheingabe: Web Speech API, sonst Whisper über Proxy */
+$('#btnMic').onclick=async()=>{
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){const r=new SR();r.lang='de-DE';r.interimResults=false;r.onresult=e=>{$('#story').value+=(state.story?' ':'')+e.results[0][0].transcript;$('#story').dispatchEvent(new Event('input'))};r.onerror=()=>toast('Mikrofon nicht verfügbar');r.start();toast('Sprich jetzt…');return}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const rec=new MediaRecorder(stream);const chunks=[];rec.ondataavailable=e=>chunks.push(e.data);
+    rec.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());const fd=new FormData();fd.append('file',new Blob(chunks,{type:'audio/webm'}),'a.webm');
+      const res=await fetch(cfg.proxy+'/transcribe',{method:'POST',headers:{'x-api-key':cfg.key},body:fd});const j=await res.json();
+      $('#story').value+=(state.story?' ':'')+(j.text||'');$('#story').dispatchEvent(new Event('input'))};
+    rec.start();toast('Aufnahme läuft – 6 s');setTimeout(()=>rec.stop(),6000);
+  }catch{toast('Mikrofon nicht verfügbar')}
+};
+
+const IDEAS=['{H} findet einen sprechenden Stift, der nur Wörter schreibt, die man ihm vorliest.','Im Zoo sind alle Käfigschilder durcheinander – {H} muss die Tiere zählen und die Schilder richtig sortieren.','{H} backt eine Torte für Oma, aber im Rezept fehlen die Zahlen. Wer hilft beim Rechnen?','Ein kleiner Drache kann nur mit Reimwörtern Feuer spucken. {H} bringt ihm neue Reime bei.','Die Buchstaben sind aus dem Bücherregal geflohen und verstecken sich im Haus. {H} sammelt sie ein und bildet ein Wort.','{H} bekommt eine Schatzkarte: An jeder Station wartet eine kleine Plus-Aufgabe, die die nächste Richtung verrät.'];
+$('#btnIdea').onclick=()=>{const h=state.heroes.filter(x=>x.name)[0]?.name||'Unser Held';$('#story').value=IDEAS[Math.floor(Math.random()*IDEAS.length)].replace('{H}',h);$('#story').dispatchEvent(new Event('input'))};
+
+/* ---------- Chips ---------- */
+function chipGroup(sel,key,multi){
+  $$(sel+' .chip').forEach(c=>c.onclick=()=>{
+    if(multi){c.classList.toggle('on');state[key]=$$(sel+' .chip.on').map(x=>x.dataset.v)}
+    else{$$(sel+' .chip').forEach(x=>x.classList.toggle('on',x===c));state[key]=c.dataset.v}
+    buildPrompt();
+  });
+}
+chipGroup('#styles','style',false);chipGroup('#goalsRead','read',true);chipGroup('#goalsMath','math',true);chipGroup('#goalsHow','how',true);
+$$('#ages button').forEach(b=>b.onclick=()=>{$$('#ages button').forEach(x=>x.classList.toggle('on',x===b));state.age=b.dataset.v;buildPrompt()});
+
+/* ---------- Heroes ---------- */
+function addHero(h={name:'',role:'Held/in',face:null}){state.heroes.push(h);renderHeroes()}
+function renderHeroes(){
+  $('#heroes').innerHTML=state.heroes.map((h,i)=>`<div class="hero" data-i="${i}">
+    <label class="av" title="Foto der Person (optional)">${h.face?`<img src="${h.face}">`:EMO[ROLES.indexOf(h.role)]||'🙂'}<input type="file" accept="image/*" hidden></label>
+    <input placeholder="Name" value="${h.name}">
+    <select>${ROLES.map(r=>`<option ${r===h.role?'selected':''}>${r}</option>`).join('')}</select>
+    <button class="x" aria-label="Entfernen">✕</button></div>`).join('');
+  $$('#heroes .hero').forEach(el=>{
+    const i=+el.dataset.i;
+    el.querySelector('input[placeholder]').oninput=e=>{state.heroes[i].name=e.target.value;buildPrompt()};
+    el.querySelector('select').onchange=e=>{state.heroes[i].role=e.target.value;renderHeroes();buildPrompt()};
+    el.querySelector('.x').onclick=()=>{state.heroes.splice(i,1);renderHeroes();buildPrompt()};
+    el.querySelector('input[type=file]').onchange=async e=>{state.heroes[i].face=await fileToDataURL(e.target.files[0]);renderHeroes()};
+  });
+}
+$('#btnAddHero').onclick=()=>addHero();
+addHero({name:'',role:'Held/in'});addHero({name:'',role:'Freund/in'});
+
+/* ---------- Länge & Kosten ---------- */
+$('#len').oninput=e=>{state.len=+e.target.value;$('#lenOut').textContent=state.len+' s';const c=(state.len*0.04).toFixed(2).replace('.',',');$('#cost').textContent=`≈ ${c} € Rechenkosten (LTX-2.5, grob geschätzt) · ${Math.ceil(state.len/5)} Szenen`;buildPrompt()};
+$('#len').dispatchEvent(new Event('input'));
+
+/* ---------- Prompt-Builder ---------- */
+function buildPrompt(){
+  const heroes=state.heroes.filter(h=>h.name.trim());
+  const cast=heroes.length?heroes.map(h=>`${h.name} (${h.role})`).join(', '):'zwei Kinder';
+  const first=heroes[0]?.name||'die Hauptfigur';
+  const scenes=Math.ceil(state.len/5);
+  const goals=[...state.read,...state.math];
+  const lines=[];
+  lines.push(`KINDERFILM · ${state.len} Sekunden · Hochformat 9:16 · Zielgruppe ${state.age} Jahre`);
+  lines.push(`Stil: ${state.style}. Freundliche, helle Farben, klare große Formen, ruhige Kamera, keine schnellen Schnitte, keine gruseligen Elemente.`);
+  if(state.photo)lines.push(`Vorlage: Das hochgeladene Foto ist das Startbild. Die Personen darauf werden im gewählten Comic-Stil nachgezeichnet und bleiben in allen Szenen wiedererkennbar (Gesicht, Haare, Kleidung).`);
+  if(state.video)lines.push(`Vorlage: Das hochgeladene Video (${state.video.duration.toFixed(0)} s) ist der Anfang. Der Film setzt nahtlos an der letzten Einstellung an – gleiche Figuren, gleicher Ort, gleiches Licht – und erzählt die Geschichte weiter.`);
+  lines.push(`Figuren: ${cast}. Jeder Name wird beim ersten Auftritt groß und gut lesbar als Schriftzug im Bild eingeblendet und von der Erzählstimme gesprochen.`);
+  lines.push(`Geschichte: ${state.story.trim()||`${first} erlebt ein kleines Abenteuer mit einem klaren Anfang, einer Aufgabe in der Mitte und einem fröhlichen Ende.`}`);
+  lines.push(`Aufbau: ${scenes} Szenen à etwa 5 Sekunden. Szene 1 stellt die Figuren vor, die mittleren Szenen erzählen die Aufgabe, die letzte Szene löst sie auf.`);
+  if(goals.length){
+    lines.push(`Lernziel: ${goals.join('; ')}. Das Lernziel ist Teil der Handlung, kein Unterrichtsvortrag – die Figuren lösen es selbst und zeigen es im Bild (Zahlen, Buchstaben oder Wörter erscheinen groß und bunt).`);
+    if(state.how.length)lines.push(`Lernform: ${state.how.join('. ')}.`);
+  }
+  lines.push(`Ton: Deutsche Erzählstimme (${cfg.voice}), langsam und deutlich, kurze Sätze. Untertitel in großer Schrift, maximal 6 Wörter pro Zeile. Leichte fröhliche Musik im Hintergrund.`);
+  lines.push(`Schluss: Alle Figuren winken in die Kamera, Text im Bild: „Bis zum nächsten Mal, ${first}!“`);
+  state.prompt=lines.join('\n\n');
+  $('#promptView').textContent=state.prompt;
+}
+$('#promptView').oninput=e=>{state.prompt=e.target.textContent};
+$('#btnPromptRefresh').onclick=()=>{buildPrompt();toast('Prompt neu gebaut')};
+$('#btnCopy').onclick=()=>{navigator.clipboard.writeText(state.prompt);toast('Kopiert')};
+
+/* KI verfeinert den Prompt (Claude über Proxy) */
+$('#btnPromptAI').onclick=async()=>{
+  const b=$('#btnPromptAI');b.disabled=true;b.textContent='✨ Denkt nach…';
+  try{
+    const res=await fetch(cfg.proxy+'/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':cfg.key},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1200,system:'Du bist Drehbuchautor für kurze Kinder-Comicfilme, die von einem Text-zu-Video-Modell (LTX-2.5) erzeugt werden. Schreibe aus dem gegebenen Prompt ein präzises Shot-by-Shot-Skript auf Deutsch: pro Szene 1–2 Sätze Bildbeschreibung (Ort, Figuren, Aktion, Kamera) plus der gesprochene Satz der Erzählstimme in Anführungszeichen. Behalte Namen, Stil, Länge und Lernziel exakt bei. Keine Einleitung, nur das Skript.',
+      messages:[{role:'user',content:state.prompt}]})});
+    const j=await res.json();const t=(j.content||[]).map(c=>c.text||'').join('\n').trim();
+    if(!t)throw 0;state.prompt=t;$('#promptView').textContent=t;toast('Prompt verfeinert');
+  }catch{toast('KI nicht erreichbar – Proxy/Key in ⚙️ prüfen')}
+  b.disabled=false;b.textContent='✨ Von KI verfeinern';
+};
+
+/* ---------- Film drehen ---------- */
+$('#btnGo').onclick=async()=>{
+  if(!state.photo&&!state.video){toast('Bitte zuerst ein Foto oder Video wählen');return}
+  if(!cfg.key){$('#dlg').showModal();return}
+  const film={id:Date.now(),title:state.heroes.filter(h=>h.name)[0]?.name?`Der Film von ${state.heroes.filter(h=>h.name).map(h=>h.name).join(' & ')}`:'Neuer Comic-Film',
+    prompt:state.prompt,len:state.len,style:state.style,status:'running',url:null,created:new Date().toISOString(),thumb:state.photo?.data||null};
+  films.unshift(film);save();
+  $$('.tabs button')[1].click();
+  try{
+    const fd=new FormData();
+    fd.append('model',state.video?cfg.vidModel:cfg.imgModel);
+    fd.append('prompt',state.prompt);
+    fd.append('duration',state.len);
+    fd.append('aspect_ratio','9:16');
+    fd.append('file',state.video?state.video.file:state.photo.file);
+    state.heroes.filter(h=>h.face).forEach((h,i)=>fd.append('face_'+i,h.face));
+    const res=await fetch(cfg.proxy+'/video',{method:'POST',headers:{'x-api-key':cfg.key},body:fd});
+    if(!res.ok)throw new Error(await res.text());
+    const j=await res.json();
+    /* erwartet {video_url} direkt oder {request_id} zum Pollen */
+    let url=j.video_url||j.video?.url;
+    if(!url&&j.request_id){
+      for(let i=0;i<90&&!url;i++){await new Promise(r=>setTimeout(r,5000));
+        const p=await (await fetch(cfg.proxy+'/video/'+j.request_id,{headers:{'x-api-key':cfg.key}})).json();
+        url=p.video_url||p.video?.url;if(p.status==='FAILED')throw new Error('Erzeugung fehlgeschlagen')}
+    }
+    if(!url)throw new Error('Kein Video erhalten');
+    film.status='done';film.url=url;
+  }catch(e){film.status='error';film.error=e.message||'Fehler'}
+  save();renderGallery();
+};
+
+/* ---------- Galerie ---------- */
+function renderGallery(){
+  const g=$('#gallery');
+  if(!films.length){g.innerHTML=`<div class="empty"><div class="big">🎞️</div>Noch kein Film. Tipp oben auf „Neuer Film“.</div>`;return}
+  g.innerHTML=films.map(f=>`<div class="card">
+    ${f.status==='done'?`<video src="${f.url}" controls playsinline poster="${f.thumb||''}"></video>`:
+      f.status==='running'?`<div class="status"><div class="spin"></div>Wird gedreht… das dauert 1–3 Minuten.</div>`:
+      `<div class="status">⚠️ ${f.error}</div>`}
+    <div class="meta"><b>${f.title}</b><small>${f.len} s · ${f.style} · ${new Date(f.created).toLocaleDateString('de-DE')}</small>
+      ${f.status==='done'?`<button class="ghost" onclick="shareFilm(${f.id})">Teilen</button>`:''}
+      <button class="ghost" onclick="reuse(${f.id})">Prompt laden</button>
+      <button class="ghost" onclick="delFilm(${f.id})">Löschen</button></div></div>`).join('');
+}
+window.shareFilm=async id=>{const f=films.find(x=>x.id===id);if(navigator.share)navigator.share({title:f.title,url:f.url});else{navigator.clipboard.writeText(f.url);toast('Link kopiert')}};
+window.reuse=id=>{const f=films.find(x=>x.id===id);state.prompt=f.prompt;$('#promptView').textContent=f.prompt;$$('.tabs button')[0].click();toast('Prompt geladen')};
+window.delFilm=id=>{films=films.filter(x=>x.id!==id);save();renderGallery()};
+
+/* ---------- Settings ---------- */
+$('#btnSettings').onclick=()=>{$('#sProxy').value=cfg.proxy;$('#sKey').value=cfg.key;$('#sImgModel').value=cfg.imgModel;$('#sVidModel').value=cfg.vidModel;$('#sVoice').value=cfg.voice;$('#dlg').showModal()};
+$('#sCancel').onclick=()=>$('#dlg').close();
+$('#sSave').onclick=()=>{cfg.proxy=$('#sProxy').value.trim().replace(/\/$/,'');cfg.key=$('#sKey').value.trim();cfg.imgModel=$('#sImgModel').value;cfg.vidModel=$('#sVidModel').value;cfg.voice=$('#sVoice').value;
+  localStorage.setItem(LS+'_cfg',JSON.stringify(cfg));localStorage.setItem('bl_api_key',cfg.key);$('#dlg').close();buildPrompt();toast('Gespeichert')};
+
+save();buildPrompt();
+</script>
+</body>
+</html>
