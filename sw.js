@@ -1,6 +1,6 @@
 // Service Worker der Vorlese-App: Offline-Start der Seite und Annahme von „Teilen“ aus WhatsApp
-const APP = 'Vorlese_App_mit_Spracheingabe.html';
-const CACHE = 'vorlese-app-v1';
+const APP = 'Vorlesen.html';
+const CACHE = 'vorlese-app-v2';
 const SHARE = 'vorlese-share';
 const FILES = [APP, 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
