@@ -145,6 +145,20 @@ footer a{color:#bff0e8}
 .trtoast{position:fixed;top:66px;left:50%;transform:translateX(-50%);z-index:70;background:var(--navy);color:#fff;border-radius:999px;padding:8px 16px;font-size:.9rem;box-shadow:0 6px 18px rgba(0,0,0,.25);display:none}
 .vlinks{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 8px}.vlinks a{background:var(--navy);color:#fff;text-decoration:none;border-radius:999px;padding:5px 12px;font-size:.85rem}
 </style>
+<script>
+/* AUTO:news-quelle – Aktuelles kommt vom Worker (/news) ODER aus content/news-moenchgut.json im Repo.
+   Gezeigt wird die jeweils neuere Fassung. Die JSON-Datei füllt die tägliche Aufgabe „Website-Inhalte täglich“. */
+function newsFetch(workerUrl){
+  var j=function(u){return fetch(u,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null})};
+  var repo=(location.protocol==="file:"?"https://myburano.com/":"")+"content/news-moenchgut.json?v="+Date.now();
+  var ok=function(n){return n&&!n.error&&(n.tipp&&n.tipp.titel||(n.meldungen||[]).length)};
+  var t=function(n){var x=Date.parse(n&&n.stand);return isNaN(x)?0:x};
+  return Promise.all([workerUrl?j(workerUrl):Promise.resolve(null),j(repo)]).then(function(a){
+    var w=ok(a[0])?a[0]:null,r=ok(a[1])?a[1]:null,b=w&&r?(t(r)>t(w)?r:w):(w||r);
+    return b?{ok:true,json:function(){return Promise.resolve(b)}}:{ok:false,status:204};
+  });
+}
+</script>
 </head>
 <body>
 <nav><div class="wrap">
@@ -501,7 +515,7 @@ const I18N={cur:"de",dict:{},pending:{},
 })();
 
 /* Aktuelles (gleiche Quelle wie die Einzelseiten) */
-fetch(NEWS_URL).then(r=>r.ok?r.json():Promise.reject()).then(n=>{
+newsFetch(NEWS_URL).then(r=>r.ok?r.json():Promise.reject()).then(n=>{
  window.NEWS=n;const ms=(n&&n.meldungen)||[];if(!ms.length)return;
  if(n.titel){$("akTitel").textContent=n.titel;$("heroNewsT").textContent=n.titel;$("heroNews").style.display="inline-flex"}
  $("akSub").textContent=n.untertitel||"";

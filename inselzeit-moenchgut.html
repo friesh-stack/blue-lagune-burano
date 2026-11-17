@@ -311,6 +311,20 @@ html[data-season="winter"] .hero::after{background:linear-gradient(180deg,rgba(1
 .vfab{display:none!important}.vpanel{top:70px;bottom:auto}@media(min-width:600px){.vpanel{top:76px;bottom:auto;left:auto;right:20px}}
 @media(max-width:420px){.navr a.btn[href="#anfrage"]{display:none}}
 </style>
+<script>
+/* AUTO:news-quelle – Aktuelles kommt vom Worker (/news) ODER aus content/news-moenchgut.json im Repo.
+   Gezeigt wird die jeweils neuere Fassung. Die JSON-Datei füllt die tägliche Aufgabe „Website-Inhalte täglich“. */
+function newsFetch(workerUrl){
+  var j=function(u){return fetch(u,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null})};
+  var repo=(location.protocol==="file:"?"https://myburano.com/":"")+"content/news-moenchgut.json?v="+Date.now();
+  var ok=function(n){return n&&!n.error&&(n.tipp&&n.tipp.titel||(n.meldungen||[]).length)};
+  var t=function(n){var x=Date.parse(n&&n.stand);return isNaN(x)?0:x};
+  return Promise.all([workerUrl?j(workerUrl):Promise.resolve(null),j(repo)]).then(function(a){
+    var w=ok(a[0])?a[0]:null,r=ok(a[1])?a[1]:null,b=w&&r?(t(r)>t(w)?r:w):(w||r);
+    return b?{ok:true,json:function(){return Promise.resolve(b)}}:{ok:false,status:204};
+  });
+}
+</script>
 </head>
 <body>
 
@@ -1086,7 +1100,7 @@ function buildKB(){
   const fmtD=x=>{try{return new Date(x+"T12:00").toLocaleDateString("de-DE",{day:"numeric",month:"long"})}catch(_){return ""}};
   const staleStatic=()=>{if(d>new Date(2026,10,30)){const l=$("nowList");if(l)l.style.display="none";$("nowT").textContent=SN[season]+" an der Küste";$("nowP").textContent="Aktuelle Veranstaltungen und Tipps erfahren Sie bei der Kurverwaltung Mönchgut."}};
   if(!VOICE.endpoint){staleStatic();return}
-  fetch(VOICE.endpoint.replace(/\/live$/,"/news")).then(r=>r.ok?r.json():Promise.reject(r.status)).then(n=>{
+  newsFetch(VOICE.endpoint.replace(/\/live$/,"/news")).then(r=>r.ok?r.json():Promise.reject(r.status)).then(n=>{
     if(!n||n.error)throw 0;
     window.NEWS=n;
     $("akSeason").textContent=SN[n.saison||season]+" auf Mönchgut · aktuell";

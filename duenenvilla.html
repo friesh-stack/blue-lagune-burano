@@ -329,6 +329,20 @@ footer h4{color:#fff;font-family:Fraunces,serif;margin:0 0 10px;font-size:1.1rem
 @media(max-width:420px){.navmic span{display:none}.navmic{padding:8px 11px}}
 .va-fab{display:none!important}.va-panel{top:70px;bottom:auto}@media(min-width:600px){.va-panel{left:auto;right:20px}}
 </style>
+<script>
+/* AUTO:news-quelle – Aktuelles kommt vom Worker (/news) ODER aus content/news-moenchgut.json im Repo.
+   Gezeigt wird die jeweils neuere Fassung. Die JSON-Datei füllt die tägliche Aufgabe „Website-Inhalte täglich“. */
+function newsFetch(workerUrl){
+  var j=function(u){return fetch(u,{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).catch(function(){return null})};
+  var repo=(location.protocol==="file:"?"https://myburano.com/":"")+"content/news-moenchgut.json?v="+Date.now();
+  var ok=function(n){return n&&!n.error&&(n.tipp&&n.tipp.titel||(n.meldungen||[]).length)};
+  var t=function(n){var x=Date.parse(n&&n.stand);return isNaN(x)?0:x};
+  return Promise.all([workerUrl?j(workerUrl):Promise.resolve(null),j(repo)]).then(function(a){
+    var w=ok(a[0])?a[0]:null,r=ok(a[1])?a[1]:null,b=w&&r?(t(r)>t(w)?r:w):(w||r);
+    return b?{ok:true,json:function(){return Promise.resolve(b)}}:{ok:false,status:204};
+  });
+}
+</script>
 </head>
 <body>
 
@@ -1640,7 +1654,7 @@ function klPush(){
   var e=function(t){return String(t||"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
   var fd=function(x){try{return parse(x).toLocaleDateString("de-DE",{day:"numeric",month:"long"})}catch(_){return""}};
   var SN={winter:"Winter",fruehling:"Frühling",sommer:"Sommer",herbst:"Herbst"};
-  fetch(KL_BASE+"/news").then(function(r){return r.ok?r.json():Promise.reject(r.status)}).then(function(n){
+  newsFetch(KL_BASE+"/news").then(function(r){return r.ok?r.json():Promise.reject(r.status)}).then(function(n){
     if(!n||n.error)throw 0;
     window.NEWS=n;
     var ms=n.meldungen||[];
