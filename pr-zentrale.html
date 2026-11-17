@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0F17">
+<title>PR-Zentrale · friesh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#111827;--brand-2:#F5F5F4;--accent:#FF6A3D;--bg:#0B0F17;--card:#141B27;--card2:#1B2433;--line:#263247;--ink:#F5F5F4;--muted:#9AA4B8;--ok:#3FB27F;--warn:#E7B43C;--bad:#E5534B;--r:14px}
+@media (prefers-color-scheme:light){:root{--bg:#F5F5F4;--card:#FFFFFF;--card2:#F0F0EE;--line:#E1E1DD;--ink:#111827;--muted:#5B6476}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:"Playfair Display",Georgia,serif;margin:0 0 .5em;line-height:1.2}
+h1{font-size:1.45rem}h2{font-size:1.2rem}h3{font-size:1.02rem}
+a{color:var(--accent)}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 16px calc(10px);display:flex;align-items:center;gap:10px}
+header .logo{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;font-weight:800;color:#fff;font-family:"Playfair Display",serif}
+header .t{flex:1}
+header small{display:block;color:var(--muted);font-size:.75rem}
+main{max-width:860px;margin:0 auto;padding:14px 14px 110px}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav.tabs button{flex:1;background:none;border:0;color:var(--muted);font:600 .68rem Inter;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer}
+nav.tabs button span{font-size:1.25rem;line-height:1}
+nav.tabs button.on{color:var(--accent)}
+section.view{display:none}section.view.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 4px 18px rgba(0,0,0,.12)}
+label{display:block;font-size:.8rem;color:var(--muted);font-weight:600;margin:10px 0 4px}
+input,select,textarea{width:100%;background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 11px;font:inherit}
+textarea{resize:vertical;min-height:90px}
+input[type=checkbox]{width:auto}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:140px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:10px;padding:9px 13px;font:600 .88rem Inter;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.s{padding:6px 9px;font-size:.78rem}
+.btn.ghost{background:none}
+.btn:disabled{opacity:.5}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chip{border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:999px;padding:5px 10px;font-size:.78rem;cursor:pointer}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.muted{color:var(--muted)}.small{font-size:.8rem}
+.pill{display:inline-block;border-radius:999px;padding:2px 8px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.st-idee{background:#3a4255;color:#cfd6e6}.st-entwurf{background:#5b4a17;color:#ffe08a}.st-freigegeben{background:#173f5b;color:#9fd4ff}.st-gepostet{background:#174a33;color:#9ff0c6}
+.chan{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;background:var(--card2)}
+.chan .hd{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ico{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:.8rem;color:#fff;flex:none}
+.cnt{margin-left:auto;font-size:.72rem;color:var(--muted)}.cnt.over{color:var(--bad);font-weight:700}
+.post{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.post:first-child{border-top:0}
+.post .b{flex:1;min-width:0}
+.post .pv{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-size:.82rem}
+.day{font-weight:700;margin:14px 0 2px;font-size:.85rem;color:var(--accent)}
+.bar{height:8px;background:var(--card2);border-radius:99px;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;border-radius:99px}
+.bar b{position:absolute;top:-3px;width:2px;height:14px;background:var(--ink)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi{background:var(--card2);border-radius:12px;padding:10px;text-align:center}
+.kpi b{display:block;font-size:1.3rem;font-family:"Playfair Display",serif}
+.kpi span{font-size:.7rem;color:var(--muted)}
+.warnbox{border-left:4px solid var(--warn);background:rgba(231,180,60,.1);padding:8px 10px;border-radius:8px;font-size:.82rem;margin-top:8px}
+.okbox{border-left:4px solid var(--ok);background:rgba(63,178,127,.1);padding:8px 10px;border-radius:8px;font-size:.82rem;margin-top:8px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.modal .in{background:var(--card);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom))}
+#toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:10px;font-weight:600;font-size:.85rem;z-index:60;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+video{width:100%;max-width:320px;border-radius:12px;background:#000;display:block;margin:10px auto}
+.prog{height:6px;background:var(--card2);border-radius:99px;overflow:hidden;margin-top:10px}.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.prod{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.prod:first-child{border-top:0}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}
+details summary{cursor:pointer;font-weight:600}
+code,pre{font-family:ui-monospace,Menlo,monospace;font-size:.78rem}
+pre{background:var(--card2);padding:10px;border-radius:10px;overflow:auto;white-space:pre-wrap}
+footer{text-align:center;color:var(--muted);font-size:.75rem;margin:24px 0 0}
+footer a{color:var(--muted)}
+@media (min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">PR</div>
+  <div class="t"><h1 style="margin:0;font-size:1.15rem">PR-Zentrale</h1><small>Buchungsportale &amp; friesh-Apps · alle Kanäle</small></div>
+  <button class="btn s ghost" onclick="go('auto')" title="Einstellungen">⚙︎</button>
+</header>
+
+<main>
+<!-- ============ START ============ -->
+<section class="view on" id="v-start">
+  <div class="card">
+    <h2>Diese Woche</h2>
+    <div class="kpis" id="kpis"></div>
+  </div>
+  <div class="card">
+    <div class="row" style="align-items:center"><h3 style="margin:0">Redaktionsmix</h3><span class="muted small" style="text-align:right">Soll-Strich · Ist-Balken</span></div>
+    <div id="mix"></div>
+    <div class="btns"><button class="btn p" onclick="fillWeek()">🗓 Nächste Woche automatisch planen</button></div>
+    <p class="muted small" style="margin:8px 0 0">Legt Themen-Slots nach dem Mix an (Rügen 35 %, Burano/Venedig 25 %, Apps 30 %, Chronicle 10 %). Mit „Ausarbeiten“ werden daraus fertige Posts.</p>
+  </div>
+  <div class="card">
+    <h3>Als Nächstes</h3>
+    <div id="next"></div>
+  </div>
+  <div class="card">
+    <h3>Beste Beiträge</h3>
+    <div id="top"><p class="muted small">Noch keine Zahlen eingetragen. Aufrufe/Likes/Klicks trägst du im Plan beim jeweiligen Beitrag ein.</p></div>
+  </div>
+</section>
+
+<!-- ============ ERSTELLEN ============ -->
+<section class="view" id="v-create">
+  <div class="card">
+    <h2>Beitrag erzeugen</h2>
+    <label>Produkt</label>
+    <select id="cProd" onchange="onProdChange()"></select>
+    <div id="cProdWarn"></div>
+    <label>Thema / Anlass</label>
+    <input id="cTopic" placeholder="z. B. Last-Minute im Dezember, neue Funktion, Herbst an der Ostsee">
+    <div class="chips" id="cTopicChips"></div>
+    <div id="cFreeWrap">
+      <label>Freie Termine (nur echte Termine aus D-Buchung)</label>
+      <textarea id="cFree" style="min-height:60px" placeholder="z. B. SV8a frei 05.12.–12.12."></textarea>
+      <div class="btns" style="margin-top:6px"><button class="btn s" onclick="loadFreeDates()">↻ Aus D-Buchung laden</button></div>
+    </div>
+    <div class="row">
+      <div><label>Sprache</label><select id="cLang"><option>Deutsch</option><option>Deutsch + Englisch</option><option>Englisch</option><option>Italienisch</option><option>Deutsch + Englisch + Italienisch</option></select></div>
+      <div><label>Ton</label><select id="cTone"><option>warm &amp; persönlich</option><option>locker &amp; kurz</option><option>sachlich &amp; informativ</option><option>verspielt mit Emojis</option></select></div>
+    </div>
+    <label>Kanäle</label>
+    <div class="chips" id="cChans"></div>
+    <div class="btns">
+      <button class="btn p" id="cGo" onclick="generate()">✨ Texte &amp; Videoskript erzeugen</button>
+      <button class="btn" onclick="generate(true)" title="ohne KI, aus Vorlagen">Vorlage</button>
+    </div>
+    <div class="prog" id="cProg" style="display:none"><i style="width:40%"></i></div>
+  </div>
+  <div id="cOut"></div>
+</section>
+
+<!-- ============ PLAN ============ -->
+<section class="view" id="v-plan">
+  <div class="card">
+    <div class="row" style="align-items:center"><h2 style="margin:0">Redaktionsplan</h2>
+      <select id="pFilter" onchange="renderPlan()" style="max-width:170px"><option value="">Alle Status</option><option value="idee">Ideen</option><option value="entwurf">Entwürfe</option><option value="freigegeben">Freigegeben</option><option value="gepostet">Gepostet</option></select></div>
+    <div class="btns"><button class="btn s" onclick="newPost()">＋ Beitrag</button><button class="btn s" onclick="fillWeek()">🗓 Woche planen</button><button class="btn s" onclick="pushQueue()">⇪ Automatik aktualisieren</button></div>
+    <div id="plan"></div>
+  </div>
+</section>
+
+<!-- ============ VIDEO ============ -->
+<section class="view" id="v-video">
+  <div class="card">
+    <h2>Werbevideo 9:16</h2>
+    <p class="muted small" style="margin-top:0">1080×1920 · Intro 0,8 s mit Marke · Untertitel im sicheren Bereich · Outro 1,5 s mit Web-Adresse. Wird nach „Erzeugen“ automatisch mit dem Videoskript befüllt.</p>
+    <label>Produkt</label><select id="vProd"></select>
+    <label>Haken (erste 2 Sekunden)</label><input id="vHook">
+    <label>Szene 1</label><input id="vS1">
+    <label>Szene 2</label><input id="vS2">
+    <label>Szene 3</label><input id="vS3">
+    <label>Call-to-Action</label><input id="vCta">
+    <label>Titelbild-Text</label><input id="vCover">
+    <label>Fotos / Screenshots (bis 6, Reihenfolge = Szenen)</label>
+    <input type="file" id="vImgs" accept="image/*" multiple>
+    <label>Musik (optional, nur lizenzfrei / eigene)</label>
+    <input type="file" id="vMusic" accept="audio/*">
+    <div class="btns">
+      <button class="btn p" id="vGo" onclick="renderVideo()">🎬 Video erstellen</button>
+      <button class="btn" onclick="makeCover()">🖼 Titelbild PNG</button>
+    </div>
+    <div class="prog" id="vProg" style="display:none"><i></i></div>
+    <p class="muted small" id="vInfo">Während der Aufnahme den Bildschirm anlassen und die App im Vordergrund lassen – das Video läuft in Echtzeit (ca. 20 s).</p>
+    <div id="vOut"></div>
+  </div>
+</section>
+
+<!-- ============ PRESSE ============ -->
+<section class="view" id="v-press">
+  <div class="card">
+    <h2>Pressemitteilung</h2>
+    <label>Produkt</label><select id="prProd"></select>
+    <label>Anlass</label><input id="prTopic" placeholder="z. B. Start der App, neue Saison, neues Portal">
+    <label>Zusätzliche Fakten (nur Belegbares)</label><textarea id="prFacts" style="min-height:70px" placeholder="Daten, Funktionen, Termine …"></textarea>
+    <div class="btns"><button class="btn p" id="prGo" onclick="genPress()">📰 Pressemitteilung schreiben</button><button class="btn" onclick="genPress(true)">Vorlage</button></div>
+    <label>Text</label><textarea id="prText" style="min-height:300px"></textarea>
+    <div class="btns"><button class="btn s" onclick="copy($('#prText').value)">⧉ Kopieren</button><button class="btn s" onclick="mailPress()">✉ An ausgewählte Kontakte</button><button class="btn s" onclick="dl('pressemitteilung.txt',$('#prText').value,'text/plain')">⤓ .txt</button></div>
+  </div>
+  <div class="card">
+    <h3>Presse- &amp; Blogger-Kontakte</h3>
+    <div id="contacts"></div>
+    <div class="row">
+      <div><label>Name</label><input id="ctName"></div>
+      <div><label>Medium</label><input id="ctMed" placeholder="Ostsee-Zeitung, Blog …"></div>
+    </div>
+    <div class="row">
+      <div><label>E-Mail</label><input id="ctMail" type="email"></div>
+      <div><label>Themen</label><select id="ctTopic"><option value="ruegen">Rügen / Reise</option><option value="burano">Venedig / Italien</option><option value="apps">Apps / Technik</option><option value="alle">alles</option></select></div>
+    </div>
+    <div class="btns"><button class="btn s" onclick="addContact()">＋ Kontakt</button></div>
+  </div>
+</section>
+
+<!-- ============ PRODUKTE ============ -->
+<section class="view" id="v-prod">
+  <div class="card">
+    <h2>Produkte &amp; Apps</h2>
+    <p class="muted small" style="margin-top:0">Diese Angaben sind die einzige Faktenquelle für alle Texte. Preise erst eintragen, wenn sie feststehen – leere Felder werden nie erfunden.</p>
+    <div id="prods"></div>
+    <div class="btns"><button class="btn s" onclick="editProd()">＋ Produkt / App</button></div>
+  </div>
+  <div class="card">
+    <h3>Deine Kanal-Profile</h3>
+    <p class="muted small" style="margin-top:0">Links zu deinen Profilen (für den Schnellzugriff beim Posten).</p>
+    <div id="accounts"></div>
+  </div>
+</section>
+
+<!-- ============ AUTOMATIK ============ -->
+<section class="view" id="v-auto">
+  <div class="card">
+    <h2>KI-Verbindung</h2>
+    <label>Worker-URL</label><input id="sWorker">
+    <div class="row"><div><label>Modell</label><input id="sModel"></div><div><label>API-Key (bl_api_key)</label><input id="sKey" type="password" placeholder="leer = Worker-Secret"></div></div>
+    <label>Freie Termine – Abruf-URL (D-Buchung, action=public)</label><input id="sFreeUrl" placeholder="https://…?action=public">
+    <div class="btns"><button class="btn p s" onclick="saveSettings()">Speichern</button><button class="btn s" onclick="testAI()">Verbindung testen</button></div>
+  </div>
+  <div class="card">
+    <h2>Automatisch posten (Modus B)</h2>
+    <p class="small muted" style="margin-top:0">Freigegebene Beiträge mit Haken „automatisch“ landen in <code>social/queue.json</code> im Repo. Eine GitHub Action prüft stündlich und veröffentlicht fällige Beiträge über die offiziellen Schnittstellen. Neue Serien erst 2 Wochen manuell (Modus A) laufen lassen.</p>
+    <div class="row"><div><label>Repo (owner/name)</label><input id="sRepo" placeholder="friesh-stack/blue-lagune-burano"></div><div><label>Branch</label><input id="sBranch" placeholder="main"></div></div>
+    <label>GitHub-Token (fine-grained, nur dieses Repo, Contents: Read &amp; Write)</label><input id="sGh" type="password">
+    <div class="btns"><button class="btn p s" onclick="saveSettings()">Speichern</button><button class="btn s" onclick="pushQueue()">⇪ Warteschlange ins Repo</button><button class="btn s" onclick="pullQueue()">⇩ Status vom Repo</button><button class="btn s" onclick="dl('queue.json',JSON.stringify(buildQueue(),null,2),'application/json')">⤓ queue.json</button></div>
+    <div id="qInfo" class="small muted" style="margin-top:8px"></div>
+    <details style="margin-top:12px"><summary>Einrichtung Schritt für Schritt</summary>
+      <ol class="small">
+        <li>Die Dateien <code>social-post.yml</code> nach <code>.github/workflows/</code> und <code>post.mjs</code> nach <code>scripts/</code> ins Repo legen.</li>
+        <li>Im Repo unter <b>Settings → Secrets and variables → Actions</b> nur die Secrets der Kanäle anlegen, die du nutzen willst (Kanäle ohne Secrets werden übersprungen):
+          <pre>YouTube:   YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN
+Instagram: IG_USER_ID, IG_ACCESS_TOKEN
+Facebook:  FB_PAGE_ID, FB_PAGE_TOKEN
+Threads:   THREADS_USER_ID, THREADS_TOKEN
+TikTok:    TIKTOK_CLIENT_KEY, TIKTOK_CLIENT_SECRET, TIKTOK_REFRESH_TOKEN
+LinkedIn:  LI_ACCESS_TOKEN, LI_AUTHOR_URN
+X:         X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_SECRET</pre></li>
+        <li>Videos für YouTube, Instagram und TikTok müssen öffentlich per URL erreichbar sein (z. B. Cloudflare R2). Die URL trägst du beim Beitrag unter „Video-URL“ ein.</li>
+        <li>Hinweise: YouTube-Uploads aus nicht geprüften Google-Projekten bleiben privat, bis Google das Projekt freigibt. TikTok legt Videos ohne App-Prüfung als Entwurf in deine TikTok-Inbox (dort mit einem Tipp veröffentlichen); die Video-Domain muss bei TikTok verifiziert sein. Instagram braucht ein Business-/Creator-Konto mit Facebook-Seite. Für die X-API braucht es einen Developer-Zugang mit Schreibrechten (je nach Stufe kostenpflichtig). Pinterest und WhatsApp bleiben manuell.</li>
+        <li>Der Token hier in der App wird nur im Browser gespeichert (localStorage) – nimm einen fine-grained Token nur für dieses eine Repo.</li>
+      </ol>
+    </details>
+  </div>
+  <div class="card">
+    <h2>Daten</h2>
+    <div class="btns"><button class="btn s" onclick="dl('pr-zentrale-backup.json',JSON.stringify(db,null,2),'application/json')">⤓ Backup</button><label class="btn s" style="margin:0">⤒ Backup laden<input type="file" accept=".json" style="display:none" onchange="importBackup(this)"></label><button class="btn s" onclick="resetAll()" style="color:var(--bad)">Alles zurücksetzen</button></div>
+  </div>
+</section>
+
+<footer>Ein friesh-stack Projekt · <a href="https://duenenvilla.de">Dünenvilla Rügen</a> · <a href="https://myburano.com">Burano</a> · <a href="https://friesh-stack.github.io/venezia">Venice Chronicle</a></footer>
+</main>
+
+<nav class="tabs">
+  <button data-v="start" class="on" onclick="go('start')"><span>⌂</span>Start</button>
+  <button data-v="create" onclick="go('create')"><span>✨</span>Erstellen</button>
+  <button data-v="plan" onclick="go('plan')"><span>🗓</span>Plan</button>
+  <button data-v="video" onclick="go('video')"><span>🎬</span>Video</button>
+  <button data-v="press" onclick="go('press')"><span>📰</span>Presse</button>
+  <button data-v="prod" onclick="go('prod')"><span>▦</span>Produkte</button>
+</nav>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="in" id="modalIn"></div></div>
+<div id="toast"></div>
+
+<script>
+/* ================= Grunddaten ================= */
+const KEY='pr_db';
+const BRANDS={
+  ruegen:{n:'Rügen / Ostsee',brand:'#1F4E6B',b2:'#E9DFC8',acc:'#6E8B5A',mix:35,verb:'buchen'},
+  burano:{n:'Burano / Venedig',brand:'#1B6CA8',b2:'#F4C542',acc:'#D9534F',mix:25,verb:'buchen'},
+  apps:{n:'friesh-Apps',brand:'#111827',b2:'#F5F5F4',acc:'#FF6A3D',mix:30,verb:'testen'},
+  chronicle:{n:'Venice Chronicle',brand:'#7A1F2B',b2:'#EADBC0',acc:'#B08D3C',mix:10,verb:'lesen'}
+};
+const CH={
+  youtube:{n:'YouTube Shorts',c:'#FF0000',i:'▶',lim:5000,title:70,video:1,open:'https://studio.youtube.com'},
+  instagram:{n:'Instagram',c:'#C13584',i:'◎',lim:2200,video:1,open:'https://www.instagram.com/'},
+  tiktok:{n:'TikTok',c:'#010101',i:'♪',lim:2200,video:1,open:'https://www.tiktok.com/upload'},
+  x:{n:'X',c:'#000',i:'𝕏',lim:280,share:(t)=>'https://twitter.com/intent/tweet?text='+E(t)},
+  linkedin:{n:'LinkedIn',c:'#0A66C2',i:'in',lim:3000,share:(t)=>'https://www.linkedin.com/feed/?shareActive=true&text='+E(t)},
+  facebook:{n:'Facebook',c:'#1877F2',i:'f',lim:5000,share:(t,u)=>u?'https://www.facebook.com/sharer/sharer.php?u='+E(u):null},
+  threads:{n:'Threads',c:'#333',i:'@',lim:500,share:(t)=>'https://www.threads.net/intent/post?text='+E(t)},
+  pinterest:{n:'Pinterest',c:'#E60023',i:'P',lim:500,title:100,share:(t,u)=>u?'https://pinterest.com/pin/create/button/?url='+E(u)+'&description='+E(t):null},
+  whatsapp:{n:'WhatsApp',c:'#25D366',i:'✆',lim:1000,share:(t)=>'https://wa.me/?text='+E(t)}
+};
+const TOPICS={
+  ruegen:['Freie Termine','Last-Minute','Jahreszeit an der Ostsee','Natur auf Mönchgut','Direkt buchen ohne Portalgebühr','Familienurlaub'],
+  burano:['Freie Termine','Burano abseits der Massen','Venedig in der Nebensaison','Miteigentum Casa Laguna','Lagunen-Inseln entdecken'],
+  apps:['App-Vorstellung','In 30 Sekunden erklärt','Neue Funktion','Anwendungsbeispiel','Vorher / Nachher'],
+  chronicle:['Geschichte des Tages','Ein Kapitel der Lagune','Wusstest du …?']
+};
+const DEF_PRODUCTS=[
+  {id:'ruegen-fewo',name:'Dünenvilla & Strandvilla Rügen',brand:'ruegen',url:'https://duenenvilla.de',nutzen:'Vier Ferienwohnungen in Thiessow auf Mönchgut (DV3, DV5, SV8a, SV8b) – direkt beim Vermieter buchen, ohne Portalgebühr.',fuer:'Familien, Paare und Ruhesuchende, die Ostsee und Natur auf Mönchgut erleben wollen.',angebot:'',tags:'#Rügen #Ostsee #Mönchgut #Thiessow #Ferienwohnung #Ostseeurlaub',free:true},
+  {id:'portal',name:'Buchungsportal Ostseebad Mönchgut',brand:'ruegen',url:'https://ostseebad-mönchgut.de',nutzen:'Das Ferienwohnungs-Portal für ganz Rügen: Gäste finden Unterkünfte und buchen direkt, Vermieter bekommen Website und Buchung aus einer Hand.',fuer:'Vermieter auf Rügen und Gäste, die direkt beim Gastgeber buchen wollen.',angebot:'',tags:'#Rügen #Ferienwohnung #Vermieter #Direktbuchung #Ostsee'},
+  {id:'dbuchung',name:'D-Buchung – Buchungssystem',brand:'apps',url:'',nutzen:'Buchungen, Saisonpreise, Rechnungen, Zahlungseingänge, Kurabgabe und Reinigungsplan in einer App – Anfragen aus E-Mails werden automatisch erfasst.',fuer:'Private Vermieter mit einigen Ferienwohnungen, die ohne teure Software auskommen wollen.',angebot:'',tags:'#Vermieter #Ferienwohnung #Buchungssystem #Digitalisierung'},
+  {id:'burano',name:'Blue Lagune Burano & Vista Laguna Venedig',brand:'burano',url:'https://myburano.com',nutzen:'Authentisch wohnen auf Burano und in Venedig – bunte Häuser, Lagune und Kanäle, direkt beim Eigentümer gebucht.',fuer:'Reisende, die Venedig und die Lagune abseits der Massen erleben wollen.',angebot:'',tags:'#Burano #Venedig #Venice #Lagune #Italien #Ferienwohnung',free:true},
+  {id:'myvenezia',name:'myVenezia – Lagunen-Inseln',brand:'burano',url:'https://myvenezia.com',nutzen:'Unterkünfte und Gastgeber auf den Lagunen-Inseln – Lido, Murano, Mazzorbo, Torcello und mehr.',fuer:'Gäste, die die Inseln der Lagune entdecken wollen, und Vermieter vor Ort.',angebot:'',tags:'#Venedig #Lagune #Murano #Lido #Torcello'},
+  {id:'nordsee',name:'NordseeBnB',brand:'ruegen',url:'https://nordseebnb.de',nutzen:'Ferienunterkünfte auf den Nordseeinseln – Sylt, Amrum, Föhr, Wangerooge und mehr – direkt beim Gastgeber.',fuer:'Gäste, die Nordsee-Urlaub ohne Portalgebühr buchen wollen, und Vermieter auf den Inseln.',angebot:'',tags:'#Nordsee #Sylt #Amrum #Föhr #Ferienwohnung'},
+  {id:'chronicle',name:'Venice Chronicle',brand:'chronicle',url:'https://friesh-stack.github.io/venezia',nutzen:'Die Geschichte Venedigs als Chronik – mehrsprachig, zum Lesen und Entdecken.',fuer:'Venedig-Liebhaber, Geschichtsinteressierte und alle, die eine Reise in die Lagune planen.',angebot:'',tags:'#Venedig #Geschichte #Venice #Lagune'},
+  {id:'storyreel',name:'StoryReel',brand:'apps',url:'',nutzen:'Aus Fotos und Kurzvideos wird automatisch ein Kurzfilm – mit Ken-Burns-Effekt und Sprecherstimme.',fuer:'Für alle, die Urlaubs-, Familien- oder Firmenmomente als Film für TikTok, Reels oder WhatsApp teilen wollen.',angebot:'',tags:'#StoryReel #Kurzfilm #Reels #TikTok #App'},
+  {id:'vorlese',name:'Vorlese-App',brand:'apps',url:'https://myburano.com/Vorlesen.html',nutzen:'Texte vorlesen lassen, selbst per Mikrofon diktieren, in Englisch, Spanisch, Französisch oder Italienisch übersetzen und per WhatsApp verschicken.',fuer:'Für alle, die lieber hören als lesen, schnell diktieren oder Texte übersetzen wollen.',angebot:'',tags:'#Vorlesen #Diktat #Übersetzen #App'},
+  {id:'pulsclip',name:'Pulsclip Studio',brand:'apps',url:'',nutzen:'Musikvideos im 9:16-Format aus Bild oder Kurzvideo und deinem Song – mit Puls, Balken, Titel und Liedtext.',fuer:'Musiker, Creator und alle, die ihre Songs auf TikTok, Reels und Shorts zeigen wollen.',angebot:'',tags:'#Musikvideo #Musiker #Reels #TikTok'},
+  {id:'richtstrahl',name:'Richtstrahl',brand:'apps',url:'',nutzen:'Handy auf eine Person richten – die App filtert deren Stimme heraus und zeigt die Mitschrift auf dem Bildschirm.',fuer:'Für alle, die in lauter Umgebung einem Gespräch besser folgen wollen.',angebot:'',tags:'#Mitschrift #Hören #App'},
+  {id:'kistudio',name:'KI-Studio',brand:'apps',url:'',nutzen:'Bilder und Videos per Text oder Stimme erzeugen und bearbeiten und zu einem 9:16-Film zusammenschneiden.',fuer:'Creator und Selbstständige, die schnell eigene Social-Media-Inhalte brauchen.',angebot:'',tags:'#KI #Video #Content #Reels'},
+  {id:'kurzfilm',name:'Kurzfilm-Studio (Comic-Kino)',brand:'apps',url:'',nutzen:'Personalisierte Kurzfilme aus einem Foto oder Kurzvideo – für Kinder als Comic mit Lernzielen, für Erwachsene mit den Namen der Akteure.',fuer:'Eltern, Großeltern und alle, die einen persönlichen Film verschenken wollen.',angebot:'',tags:'#Kurzfilm #Geschenk #Kinder #Comic'},
+  {id:'teilkasse',name:'Teilkasse',brand:'apps',url:'',nutzen:'Gemeinsame Ausgaben für bis zu 5 Personen aufteilen – mit Konten, Einkaufslisten und Salden per WhatsApp.',fuer:'WGs, Reisegruppen, Paare und Familien.',angebot:'',tags:'#Ausgaben #Reisekasse #WG #App'},
+  {id:'fotobuch',name:'Fotobuch-App',brand:'apps',url:'',nutzen:'60 Fotos werden zu einem quadratischen Fotobuch mit 25–28 Seiten – Beschriftung per Bilderkennung und GPS.',fuer:'Für alle, die ihre Reisefotos schnell zum Buch machen wollen.',angebot:'',tags:'#Fotobuch #Reisefotos #Erinnerungen'},
+  {id:'muenz',name:'Münzkabinett',brand:'apps',url:'',nutzen:'Die Münzsammlung katalogisieren, in Alben ordnen, den Wert im Blick behalten und eBay-Angebote verwalten.',fuer:'Münzsammler.',angebot:'',tags:'#Münzen #Numismatik #Sammler'},
+  {id:'biblio',name:'Handbibliothek',brand:'apps',url:'',nutzen:'Bücher per Foto-Stapelerfassung katalogisieren – sortiert nach Autoren, Themen und Standort.',fuer:'Leser und Sammler mit großer Bibliothek.',angebot:'',tags:'#Bücher #Bibliothek #Bücherliebe'},
+  {id:'haus3d',name:'Villa 3D Studio',brand:'apps',url:'',nutzen:'Häuser und Wohnungen in 3D – Grundriss, Rundgang, eigene Möbel und Stil-Transfer.',fuer:'Vermieter, Makler und Bauherren.',angebot:'',tags:'#3D #Wohnen #Grundriss #Immobilien'}
+];
+const DEF={v:1,products:DEF_PRODUCTS,posts:[],contacts:[],rot:{},accounts:{},
+  settings:{worker:'https://blue-lagune-proxy.friesh.workers.dev',model:'claude-sonnet-4-6',key:'',freeUrl:'',repo:'',branch:'main',gh:''},
+  last:null};
+
+let db;
+try{db=JSON.parse(localStorage.getItem(KEY))||null}catch(e){db=null}
+if(!db){db=JSON.parse(JSON.stringify(DEF));db.settings.key=localStorage.getItem('bl_api_key')||''}
+for(const k in DEF) if(db[k]===undefined) db[k]=JSON.parse(JSON.stringify(DEF[k]));
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){toast('Speicher voll – Backup ziehen!')}}
+
+/* ================= Helfer ================= */
+const $=s=>document.querySelector(s);
+const E=encodeURIComponent;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const prod=id=>db.products.find(p=>p.id===id);
+const pad=n=>String(n).padStart(2,'0');
+const isoLocal=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const fmtDay=s=>new Date(s).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'});
+const fmtTime=s=>new Date(s).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+const domain=u=>(u||'').replace(/^https?:\/\//,'').replace(/\/$/,'');
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),2400)}
+async function copy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}toast('Kopiert ✓')}
+function dl(name,data,type){const b=data instanceof Blob?data:new Blob([data],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
+function weekStart(d=new Date()){const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x}
+function fullText(p){return [p.title&&CH[p.channel]?.title&&p.channel!=='youtube'?p.title:'',p.text,p.hashtags].filter(Boolean).join('\n\n').trim()}
+
+function go(v){document.querySelectorAll('section.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));window.scrollTo(0,0);
+  if(v==='start')renderStart();if(v==='plan')renderPlan();if(v==='prod')renderProds();if(v==='press')renderContacts();if(v==='auto')loadSettings();}
+
+/* ================= KI ================= */
+async function claude(prompt,max=3500){
+  const s=db.settings;const h={'content-type':'application/json'};
+  const key=s.key||localStorage.getItem('bl_api_key')||'';if(key)h['x-api-key']=key;
+  const r=await fetch(s.worker,{method:'POST',headers:h,body:JSON.stringify({model:s.model,max_tokens:max,messages:[{role:'user',content:prompt}]})});
+  let j;try{j=await r.json()}catch(e){throw new Error('Worker-Antwort unlesbar (HTTP '+r.status+')')}
+  const t=(j.content||[]).map(c=>c.text||'').join('');
+  if(!t)throw new Error(j.error?.message||j.error||('HTTP '+r.status));
+  return t;
+}
+function parseJSON(t){const a=t.indexOf('{'),b=t.lastIndexOf('}');if(a<0||b<0)throw new Error('Kein JSON in der Antwort');return JSON.parse(t.slice(a,b+1))}
+async function testAI(){saveSettings(true);try{const t=await claude('Antworte nur mit: OK',20);toast('KI erreichbar: '+t.trim().slice(0,20))}catch(e){toast('Fehler: '+e.message)}}
+
+/* ================= ERSTELLEN ================= */
+let selChans=new Set(['youtube','instagram','tiktok','x','linkedin','facebook']);
+let pendingSlot=null;
+function fillProdSelects(){
+  const opts=Object.keys(BRANDS).map(b=>`<optgroup label="${esc(BRANDS[b].n)}">`+db.products.filter(p=>p.brand===b).map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')+'</optgroup>').join('');
+  ['#cProd','#vProd','#prProd'].forEach(s=>{const el=$(s),v=el.value;el.innerHTML=opts;if(v&&prod(v))el.value=v});
+}
+function renderChans(){
+  $('#cChans').innerHTML=Object.entries(CH).map(([k,c])=>`<button class="chip ${selChans.has(k)?'on':''}" onclick="toggleChan('${k}')">${c.i} ${c.n}</button>`).join('')+
+  `<button class="chip" onclick="selChans=new Set(Object.keys(CH));renderChans()">alle</button>`;
+}
+function toggleChan(k){selChans.has(k)?selChans.delete(k):selChans.add(k);renderChans()}
+function onProdChange(){
+  const p=prod($('#cProd').value);if(!p)return;
+  $('#cTopicChips').innerHTML=(TOPICS[p.brand]||[]).map(t=>`<button class="chip" onclick="$('#cTopic').value=this.textContent">${esc(t)}</button>`).join('');
+  $('#cFreeWrap').style.display=p.brand==='ruegen'||p.brand==='burano'?'block':'none';
+  $('#cProdWarn').innerHTML=p.url?'':`<div class="warnbox">Für <b>${esc(p.name)}</b> ist noch kein Link eingetragen – jeder Beitrag soll auf die eigene Seite verlinken. <a href="#" onclick="editProd('${p.id}');return false">Link eintragen</a></div>`;
+}
+async function loadFreeDates(){
+  const u=db.settings.freeUrl;if(!u){toast('Abruf-URL unter ⚙︎ eintragen');return}
+  try{const r=await fetch(u);const t=await r.text();let out=t;
+    try{const j=JSON.parse(t);const arr=Array.isArray(j)?j:(j.free||j.frei||j.data||j.items||[]);
+      if(Array.isArray(arr)&&arr.length)out=arr.map(x=>typeof x==='string'?x:[x.unit||x.wohnung||x.objekt||'',x.from||x.von||x.start||'',x.to||x.bis||x.end||''].filter(Boolean).join(' ')).join('\n');}catch(e){}
+    const limit=new Date();limit.setDate(limit.getDate()+42);
+    $('#cFree').value=out.slice(0,1500);toast('Termine geladen – bitte kurz prüfen');
+  }catch(e){toast('Abruf fehlgeschlagen: '+e.message)}
+}
+
+function tplGen(p,topic,chs){
+  const url=p.url||'',hook=topic?`${topic}: ${p.name}`:p.name,verb=BRANDS[p.brand].verb;
+  const free=$('#cFree')?.value.trim();const freeTxt=free&&(p.brand==='ruegen'||p.brand==='burano')?`\n\nFreie Termine:\n${free}`:'';
+  const out={};
+  chs.forEach(c=>{let t,tags=p.tags,title='';
+    if(c==='x'){t=`${hook} – ${p.nutzen}`;const room=275-(url?url.length+1:0);if(t.length>room)t=t.slice(0,room-1)+'…';if(url)t+='\n'+url;tags=''}
+    else if(c==='instagram'||c==='tiktok'){t=`${hook}\n\n${p.nutzen}\n\n${p.fuer}${p.angebot?'\n\n'+p.angebot:''}${freeTxt}\n\n👉 Link in Bio`}
+    else if(c==='linkedin'){t=`${hook}\n\n${p.nutzen}\n\nFür wen? ${p.fuer}${p.angebot?'\n\n'+p.angebot:''}${url?'\n\nMehr: '+url:''}`;tags=p.tags.split(/\s+/).slice(0,3).join(' ')}
+    else if(c==='whatsapp'){t=`${hook} 👋\n${p.nutzen}${freeTxt}${url?'\n'+url:''}`;tags=''}
+    else{t=`${hook}\n\n${p.nutzen}\n\n${p.fuer}${p.angebot?'\n\n'+p.angebot:''}${freeTxt}${url?'\n\n👉 Jetzt '+verb+': '+url:''}`}
+    if(c==='youtube'){title=hook.slice(0,70);tags=(tags+' #Shorts').trim()}
+    if(c==='pinterest')title=hook.slice(0,100);
+    out[c]={title,text:t,hashtags:tags};});
+  const sent=p.nutzen.split(/(?<=[.!?])\s+|\s+–\s+/).filter(Boolean);
+  return{channels:out,video:{hook:topic||p.name,scenes:[sent[0]||p.nutzen,sent[1]||p.fuer,p.angebot||p.fuer],cta:url?`Jetzt ${verb}: ${domain(url)}`:`Jetzt ${verb}`,cover:topic||p.name}};
+}
+
+async function generate(tplOnly){
+  const p=prod($('#cProd').value);const topic=$('#cTopic').value.trim();const chs=[...selChans];
+  if(!chs.length){toast('Mindestens einen Kanal wählen');return}
+  let res;$('#cGo').disabled=true;$('#cProg').style.display='block';
+  try{
+    if(tplOnly)res=tplGen(p,topic,chs);
+    else{
+      const free=$('#cFree').value.trim();
+      const prompt=`Du bist PR- und Social-Media-Redakteur für Hans Fries (friesh-stack). Schreibe Beiträge für die folgenden Kanäle.
+
+PRODUKT: ${p.name}
+Marke/Bereich: ${BRANDS[p.brand].n}
+Beschreibung: ${p.nutzen}
+Für wen: ${p.fuer}
+Angebot: ${p.angebot||'(keins angegeben – keine Preise oder Rabatte nennen)'}
+Link: ${p.url||'(kein Link – keinen erfinden)'}
+Hashtag-Vorschläge: ${p.tags}
+THEMA/ANLASS: ${topic||'allgemeine Vorstellung'}
+${free?'FREIE TERMINE (nur genau diese nennen): '+free:'Keine Termine nennen.'}
+SPRACHE: ${$('#cLang').value} (bei mehreren Sprachen: Abschnitte nacheinander im selben Text)
+TON: ${$('#cTone').value}
+
+KANÄLE UND REGELN:
+- youtube: "title" ≤ 70 Zeichen; "text" = Beschreibung 2–4 Sätze plus Link; Hashtags 3–5 inkl. #Shorts
+- instagram: Haken in der ersten Zeile, ≤ 1200 Zeichen, Absätze, am Ende „👉 Link in Bio“; 5–10 Hashtags
+- tiktok: ≤ 300 Zeichen, sehr direkt, „Link in Bio“; 3–5 Hashtags
+- x: "text" inkl. Link ≤ 250 Zeichen; Hashtags max. 2 (in "hashtags")
+- linkedin: sachlich-persönlich, 500–1100 Zeichen, Nutzen und Hintergrund, Link im Text; max. 3 Hashtags
+- facebook: freundlich, 2–4 Absätze, Link im Text; 2–4 Hashtags
+- threads: ≤ 400 Zeichen, gesprächig, Link im Text; max. 2 Hashtags
+- pinterest: "title" ≤ 100 Zeichen, "text" ≤ 450 Zeichen mit Suchbegriffen; keine Hashtags nötig
+- whatsapp: Status/Nachricht, ≤ 400 Zeichen, persönlich, Link im Text; keine Hashtags
+Nur diese Kanäle liefern: ${chs.join(', ')}
+
+STRENGE REGELN: Keine erfundenen Bewertungen, Gäste-Zitate, Preise, Rabatte, Auszeichnungen, Nutzerzahlen oder Entfernungen. Keine Superlative ohne Beleg. Nur Fakten aus den Angaben oben. Keine fremden Marken.
+
+Zusätzlich ein Skript für ein 9:16-Video (20–25 s): "hook" (max. 7 Wörter, packt in 2 Sekunden), "scenes" = genau 3 Untertitel (je max. 12 Wörter), "cta" (max. 7 Wörter, mit Domain falls Link vorhanden), "cover" (Titelbild, max. 6 Wörter).
+
+Antworte NUR mit gültigem JSON in dieser Form:
+{"channels":{"<kanal>":{"title":"","text":"","hashtags":"#a #b"}},"video":{"hook":"","scenes":["","",""],"cta":"","cover":""}}`;
+      res=parseJSON(await claude(prompt));
+    }
+  }catch(e){toast('KI nicht erreichbar – Vorlage verwendet ('+e.message+')');res=tplGen(p,topic,chs)}
+  $('#cGo').disabled=false;$('#cProg').style.display='none';
+  db.last={productId:p.id,topic,res,at:Date.now()};save();
+  fillVideoFromLast();renderResult();
+}
+function renderResult(){
+  const L=db.last;if(!L){$('#cOut').innerHTML='';return}
+  const p=prod(L.productId);if(!p)return;
+  const def=pendingSlot?.date||isoLocal(nextSlotTime());
+  let h=`<div class="card"><div class="row" style="align-items:center"><h2 style="margin:0">Ergebnis · ${esc(p.name)}</h2></div>
+  <p class="muted small" style="margin:4px 0 0">Texte direkt hier bearbeiten. Dann posten, oder in den Plan übernehmen.</p>`;
+  for(const [k,v] of Object.entries(L.res.channels||{})){const c=CH[k];if(!c)continue;
+    h+=`<div class="chan" data-k="${k}"><div class="hd"><div class="ico" style="background:${c.c}">${c.i}</div><b>${c.n}</b><span class="cnt" id="cnt-${k}"></span></div>
+    ${c.title?`<input class="r-title" value="${esc(v.title||'')}" placeholder="Titel" style="margin-bottom:6px" oninput="updLast('${k}')">`:''}
+    <textarea class="r-text" oninput="updLast('${k}')">${esc(v.text||'')}</textarea>
+    <input class="r-tags" value="${esc(v.hashtags||'')}" placeholder="#hashtags" style="margin-top:6px" oninput="updLast('${k}')">
+    <div class="btns"><button class="btn s" onclick="copy(resultText('${k}'))">⧉ Kopieren</button><button class="btn s" onclick="shareResult('${k}')">↗ Posten</button><button class="btn s" onclick="toPlan(['${k}'])">＋ Plan</button></div></div>`;}
+  const v=L.res.video;
+  if(v)h+=`<div class="chan"><div class="hd"><div class="ico" style="background:var(--accent)">🎬</div><b>Videoskript</b></div>
+    <div class="small"><b>Haken:</b> ${esc(v.hook)}<br>${(v.scenes||[]).map((s,i)=>`<b>Szene ${i+1}:</b> ${esc(s)}`).join('<br>')}<br><b>CTA:</b> ${esc(v.cta)}<br><b>Titelbild:</b> ${esc(v.cover||'')}</div>
+    <div class="btns"><button class="btn s p" onclick="go('video')">🎬 Video daraus bauen</button></div></div>`;
+  h+=`<div class="row" style="margin-top:12px;align-items:flex-end"><div><label>Termin für den Plan</label><input type="datetime-local" id="rDate" value="${def}"></div>
+   <div><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="rAuto"> automatisch posten (Modus B)</label></div></div>
+   <div class="btns"><button class="btn p" onclick="toPlan()">＋ Alle Kanäle in den Plan</button></div></div>`;
+  $('#cOut').innerHTML=h;Object.keys(L.res.channels||{}).forEach(updCount);
+}
+function readCard(k){const el=document.querySelector(`.chan[data-k="${k}"]`);return{title:el.querySelector('.r-title')?.value||'',text:el.querySelector('.r-text').value,hashtags:el.querySelector('.r-tags').value}}
+function updLast(k){Object.assign(db.last.res.channels[k],readCard(k));save();updCount(k)}
+function updCount(k){const n=resultText(k).length,lim=CH[k].lim,el=$('#cnt-'+k);if(el){el.textContent=n+' / '+lim;el.classList.toggle('over',n>lim)}}
+function resultText(k){const v=readCard(k);return fullText({...v,channel:k})}
+function shareResult(k){const v=readCard(k);sharePost({...v,channel:k,productId:db.last.productId})}
+function nextSlotTime(){const d=new Date();d.setDate(d.getDate()+1);d.setHours(9,0,0,0);return d}
+function toPlan(only){
+  const L=db.last;const date=$('#rDate')?.value||isoLocal(nextSlotTime());const auto=$('#rAuto')?.checked||false;
+  const keys=only||Object.keys(L.res.channels||{});
+  keys.forEach(k=>{const v=readCard(k);db.posts.push({id:uid(),productId:L.productId,channel:k,date,title:v.title,text:v.text,hashtags:v.hashtags,topic:L.topic,status:'entwurf',auto,videoUrl:'',stats:{}})});
+  if(pendingSlot&&!only){db.posts=db.posts.filter(x=>x.id!==pendingSlot.id);pendingSlot=null}
+  save();toast(keys.length+' Beitrag/Beiträge im Plan');
+}
+
+/* ================= TEILEN ================= */
+let lastVideoFile=null;
+async function sharePost(p){
+  const c=CH[p.channel],pr=prod(p.productId),txt=fullText(p);
+  if(c?.share){const u=c.share(txt,pr?.url);if(u){window.open(u,'_blank');return}}
+  await copy(txt);
+  if(navigator.share){
+    const data={text:txt};
+    if(c?.video&&lastVideoFile&&navigator.canShare?.({files:[lastVideoFile]}))data.files=[lastVideoFile];
+    try{await navigator.share(data);return}catch(e){if(e.name==='AbortError')return}
+  }
+  const acc=db.accounts[p.channel];window.open(acc||c?.open||'about:blank','_blank');
+  toast('Text kopiert – in der App einfügen');
+}
+
+/* ================= PLAN ================= */
+function postRow(p,withDay){
+  const pr=prod(p.productId),c=CH[p.channel];const b=BRANDS[pr?.brand]||BRANDS.apps;
+  const ico=c?`<div class="ico" style="background:${c.c}">${c.i}</div>`:`<div class="ico" style="background:${b.brand}">★</div>`;
+  const pv=p.status==='idee'?(p.topic||'Thema offen – ausarbeiten'):(p.title||p.text||'').replace(/\n/g,' ');
+  return `<div class="post">${ico}<div class="b"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b style="font-size:.88rem">${esc(pr?.name||'?')}</b><span class="pill st-${p.status}">${p.status}</span>${p.auto?'<span class="pill" style="background:#2c2350;color:#c8b8ff">auto</span>':''}${p.error?'<span class="pill" style="background:#5a1f1f;color:#ffb3b3" title="'+esc(p.error)+'">Fehler</span>':''}</div>
+  <div class="small muted">${withDay?fmtDay(p.date)+' · ':''}${fmtTime(p.date)} · ${c?c.n:'alle Kanäle'}</div><div class="pv">${esc(pv)}</div>
+  <div class="btns" style="margin-top:6px">${p.status==='idee'?`<button class="btn s p" onclick="workSlot('${p.id}')">✨ Ausarbeiten</button>`:`<button class="btn s" onclick="sharePost(db.posts.find(x=>x.id==='${p.id}'))">↗ Posten</button><button class="btn s" onclick="nextStatus('${p.id}')">→ ${({entwurf:'freigeben',freigegeben:'gepostet',gepostet:'zurück'})[p.status]}</button>`}<button class="btn s ghost" onclick="editPost('${p.id}')">✎</button></div></div></div>`;
+}
+function renderPlan(){
+  const f=$('#pFilter').value;const now=new Date();now.setHours(0,0,0,0);
+  let list=db.posts.filter(p=>!f||p.status===f).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!f)list=list.filter(p=>p.status!=='gepostet'||new Date(p.date)>=new Date(now.getTime()-14*864e5));
+  if(!list.length){$('#plan').innerHTML='<p class="muted small" style="margin-top:12px">Noch nichts geplant. Erzeuge einen Beitrag oder lass die Woche automatisch planen.</p>';return}
+  let h='',day='';
+  list.forEach(p=>{const d=p.date.slice(0,10);if(d!==day){day=d;h+=`<div class="day">${fmtDay(p.date)}</div>`}h+=postRow(p)});
+  $('#plan').innerHTML=h;
+}
+function nextStatus(id){const p=db.posts.find(x=>x.id===id);p.status=({entwurf:'freigegeben',freigegeben:'gepostet',gepostet:'entwurf'})[p.status]||'entwurf';if(p.status==='gepostet')p.postedAt=new Date().toISOString();save();renderPlan();renderStart()}
+function workSlot(id){const s=db.posts.find(x=>x.id===id);pendingSlot=s;go('create');$('#cProd').value=s.productId;onProdChange();$('#cTopic').value=s.topic||'';toast('Thema wählen und erzeugen – Termin ist übernommen')}
+function newPost(){const p={id:uid(),productId:db.products[0].id,channel:'instagram',date:isoLocal(nextSlotTime()),title:'',text:'',hashtags:'',status:'entwurf',auto:false,videoUrl:'',stats:{}};db.posts.push(p);save();editPost(p.id)}
+function editPost(id){
+  const p=db.posts.find(x=>x.id===id);const s=p.stats||{};
+  $('#modalIn').innerHTML=`<h2>Beitrag bearbeiten</h2>
+  <div class="row"><div><label>Produkt</label><select id="mProd">${db.products.map(x=>`<option value="${x.id}" ${x.id===p.productId?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
+  <div><label>Kanal</label><select id="mCh"><option value="alle">alle (Idee)</option>${Object.entries(CH).map(([k,c])=>`<option value="${k}" ${k===p.channel?'selected':''}>${c.n}</option>`).join('')}</select></div></div>
+  <div class="row"><div><label>Termin</label><input type="datetime-local" id="mDate" value="${p.date}"></div><div><label>Status</label><select id="mSt">${['idee','entwurf','freigegeben','gepostet'].map(x=>`<option ${x===p.status?'selected':''}>${x}</option>`).join('')}</select></div></div>
+  <label>Thema</label><input id="mTopic" value="${esc(p.topic||'')}">
+  <label>Titel (YouTube/Pinterest)</label><input id="mTitle" value="${esc(p.title||'')}">
+  <label>Text</label><textarea id="mText" style="min-height:160px">${esc(p.text||'')}</textarea>
+  <label>Hashtags</label><input id="mTags" value="${esc(p.hashtags||'')}">
+  <label>Video-URL (öffentlich, z. B. Cloudflare R2 – nötig für Auto-Posting auf YouTube/Instagram/TikTok)</label><input id="mVid" value="${esc(p.videoUrl||'')}" placeholder="https://…mp4">
+  <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="mAuto" ${p.auto?'checked':''}> automatisch posten, sobald freigegeben</label>
+  ${p.error?`<div class="warnbox">Letzter Fehler der Automatik: ${esc(p.error)}</div>`:''}${p.resultUrl?`<div class="okbox">Veröffentlicht: <a href="${esc(p.resultUrl)}" target="_blank">${esc(p.resultUrl)}</a></div>`:''}
+  <h3 style="margin-top:14px">Ergebnis</h3><div class="row"><div><label>Aufrufe</label><input id="mV" type="number" value="${s.views||''}"></div><div><label>Likes</label><input id="mL" type="number" value="${s.likes||''}"></div><div><label>Klicks/Anfragen</label><input id="mK" type="number" value="${s.clicks||''}"></div></div>
+  <div class="btns"><button class="btn p" onclick="savePost('${id}')">Speichern</button><button class="btn" onclick="closeModal()">Abbrechen</button><button class="btn" style="color:var(--bad);margin-left:auto" onclick="delPost('${id}')">Löschen</button></div>`;
+  $('#modal').classList.add('on');
+}
+function savePost(id){const p=db.posts.find(x=>x.id===id);Object.assign(p,{productId:$('#mProd').value,channel:$('#mCh').value,date:$('#mDate').value,status:$('#mSt').value,topic:$('#mTopic').value,title:$('#mTitle').value,text:$('#mText').value,hashtags:$('#mTags').value,videoUrl:$('#mVid').value.trim(),auto:$('#mAuto').checked,stats:{views:+$('#mV').value||0,likes:+$('#mL').value||0,clicks:+$('#mK').value||0}});save();closeModal();renderPlan();renderStart()}
+function delPost(id){if(!confirm('Beitrag löschen?'))return;db.posts=db.posts.filter(x=>x.id!==id);save();closeModal();renderPlan();renderStart()}
+function closeModal(){$('#modal').classList.remove('on')}
+
+function fillWeek(){
+  const n=+prompt('Wie viele Beiträge für die nächsten 7 Tage?','14');if(!n)return;
+  const groups=Object.keys(BRANDS);const quota={};let sum=0;
+  groups.forEach(g=>{quota[g]=Math.floor(n*BRANDS[g].mix/100);sum+=quota[g]});
+  groups.map(g=>[g,n*BRANDS[g].mix/100-quota[g]]).sort((a,b)=>b[1]-a[1]).slice(0,n-sum).forEach(([g])=>quota[g]++);
+  const seq=[];groups.forEach(g=>{for(let i=0;i<quota[g];i++)seq.push([g,(i+.5)/quota[g]])});seq.sort((a,b)=>a[1]-b[1]);
+  const start=new Date();start.setDate(start.getDate()+1);start.setHours(0,0,0,0);
+  const times=[9,18,13,20];const perDay=Math.ceil(n/7);
+  seq.forEach(([g],i)=>{
+    const ps=db.products.filter(p=>p.brand===g);if(!ps.length)return;
+    db.rot[g]=((db.rot[g]??-1)+1)%ps.length;const pr=ps[db.rot[g]];
+    const d=new Date(start);d.setDate(d.getDate()+Math.floor(i/perDay));d.setHours(times[i%perDay]||9,0,0,0);
+    const tp=TOPICS[g]||[''];
+    db.posts.push({id:uid(),productId:pr.id,channel:'alle',date:isoLocal(d),topic:tp[(db.rot[g]+i)%tp.length],status:'idee',auto:false,title:'',text:'',hashtags:'',videoUrl:'',stats:{}});
+  });
+  save();toast(n+' Themen-Slots angelegt');renderStart();renderPlan();
+}
+
+/* ================= START ================= */
+function renderStart(){
+  const ws=weekStart(),we=new Date(ws.getTime()+7*864e5);
+  const wk=db.posts.filter(p=>{const d=new Date(p.date);return d>=ws&&d<we});
+  const c=s=>wk.filter(p=>p.status===s).length;
+  $('#kpis').innerHTML=[['idee','Ideen'],['entwurf','Entwürfe'],['freigegeben','Freigegeben'],['gepostet','Gepostet']].map(([s,l])=>`<div class="kpi"><b>${c(s)}</b><span>${l}</span></div>`).join('');
+  const tot=wk.length||1;
+  $('#mix').innerHTML=Object.entries(BRANDS).map(([g,b])=>{const n=wk.filter(p=>prod(p.productId)?.brand===g).length;const pc=Math.round(n/tot*100);
+    return `<div style="margin-top:10px"><div class="small" style="display:flex;justify-content:space-between"><span><span class="dot" style="display:inline-block;background:${b.brand===BRANDS.apps.brand?b.acc:b.brand};vertical-align:-1px"></span> ${b.n}</span><span class="muted">${wk.length?pc:0} % / Soll ${b.mix} %</span></div>
+    <div class="bar"><i style="width:${wk.length?pc:0}%;background:${g==='apps'?b.acc:b.brand}"></i><b style="left:${b.mix}%"></b></div></div>`}).join('');
+  const now=new Date();const nx=db.posts.filter(p=>new Date(p.date)>=now&&p.status!=='gepostet').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  $('#next').innerHTML=nx.length?nx.map(p=>postRow(p,true)).join(''):'<p class="muted small">Nichts geplant.</p>';
+  const tp=db.posts.filter(p=>p.stats&&(p.stats.views||p.stats.clicks)).sort((a,b)=>(b.stats.clicks*50+b.stats.views)-(a.stats.clicks*50+a.stats.views)).slice(0,5);
+  if(tp.length)$('#top').innerHTML=tp.map(p=>`<div class="post"><div class="ico" style="background:${CH[p.channel]?.c||'#555'}">${CH[p.channel]?.i||'★'}</div><div class="b"><b class="small">${esc(prod(p.productId)?.name)}</b> <span class="muted small">· ${fmtDay(p.date)}</span><div class="small">👁 ${p.stats.views||0} · ♥ ${p.stats.likes||0} · ↗ ${p.stats.clicks||0}</div><div class="pv">${esc((p.text||'').replace(/\n/g,' '))}</div></div></div>`).join('');
+}
+
+/* ================= VIDEO ================= */
+function fillVideoFromLast(){
+  const L=db.last;if(!L?.res?.video)return;const v=L.res.video;
+  $('#vProd').value=L.productId;$('#vHook').value=v.hook||'';$('#vS1').value=v.scenes?.[0]||'';$('#vS2').value=v.scenes?.[1]||'';$('#vS3').value=v.scenes?.[2]||'';$('#vCta').value=v.cta||'';$('#vCover').value=v.cover||v.hook||'';
+}
+function loadImg(f){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(f)})}
+function wrap(g,text,maxW){const words=String(text).split(/\s+/);const lines=[];let l='';words.forEach(w=>{const t=l?l+' '+w:w;if(g.measureText(t).width>maxW&&l){lines.push(l);l=w}else l=t});if(l)lines.push(l);return lines}
+function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+function drawCover(g,img,k,W,H,seed){
+  const s=1+.12*k,ir=img.width/img.height,cr=W/H;let w,h;if(ir>cr){h=H*s;w=h*ir}else{w=W*s;h=w/ir}
+  const dx=(seed%2?-1:1)*(w-W)*.5*(k-.5)*.8,dy=(seed%3?1:-1)*(h-H)*.3*(k-.5);
+  g.drawImage(img,(W-w)/2+dx,(H-h)/2+dy,w,h);
+}
+function bgGrad(g,B,W,H,k){const gr=g.createLinearGradient(0,0,W*(.6+.4*k),H);gr.addColorStop(0,B.brand);gr.addColorStop(1,B.acc);g.fillStyle=gr;g.fillRect(0,0,W,H);
+  g.globalAlpha=.08;g.fillStyle='#fff';for(let i=0;i<6;i++){g.beginPath();g.arc((i*233+k*120)%W,(i*511)%H,180+i*30,0,7);g.fill()}g.globalAlpha=1}
+function caption(g,text,W,big,alpha,B){
+  g.save();g.globalAlpha=alpha;g.font=big?'700 82px "Playfair Display"':'700 60px Inter';
+  const lines=wrap(g,text,W-200);const lh=big?98:76;const h=lines.length*lh+60;const y0=1240-h/2;
+  g.fillStyle='rgba(0,0,0,.55)';rr(g,60,y0,W-120,h,28);g.fill();
+  g.fillStyle=B.acc;g.fillRect(60,y0,10,h);
+  g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';
+  lines.forEach((l,i)=>g.fillText(l,W/2,y0+30+lh/2+i*lh));g.restore();
+}
+function brandCard(g,B,p,W,H,k,outro,cta){
+  g.fillStyle=p.brand==='apps'?'#0B0F17':B.brand;g.fillRect(0,0,W,H);
+  g.save();g.globalAlpha=Math.min(1,k*3);g.textAlign='center';g.textBaseline='middle';
+  g.fillStyle=p.brand==='apps'?B.acc:B.b2;g.fillRect(W/2-60,outro?640:820,120,8);
+  g.fillStyle='#fff';g.font='700 92px "Playfair Display"';const ls=wrap(g,p.name,W-160);ls.forEach((l,i)=>g.fillText(l,W/2,(outro?760:940)+i*108));
+  if(outro){const y=760+ls.length*108+40;g.font='600 54px Inter';g.fillStyle=p.brand==='apps'?B.acc:B.b2;g.fillText(domain(p.url)||'friesh-stack',W/2,y);
+    if(cta){g.font='500 44px Inter';g.fillStyle='rgba(255,255,255,.85)';wrap(g,cta,W-200).forEach((l,i)=>g.fillText(l,W/2,y+100+i*56))}}
+  g.font='500 30px Inter';g.fillStyle='rgba(255,255,255,.55)';g.fillText('ein friesh-stack Projekt',W/2,H-330);g.restore();
+}
+async function renderVideo(){
+  if(!window.MediaRecorder){toast('Dieses Gerät kann keine Videos aufnehmen');return}
+  const p=prod($('#vProd').value),B=BRANDS[p.brand];
+  const segs=[{t:'intro',d:.8},{t:'txt',s:$('#vHook').value,d:2.6,big:1},{t:'txt',s:$('#vS1').value,d:4},{t:'txt',s:$('#vS2').value,d:4},{t:'txt',s:$('#vS3').value,d:4},{t:'txt',s:$('#vCta').value,d:3,big:1},{t:'outro',d:1.5}].filter(s=>s.t!=='txt'||s.s.trim());
+  const files=[...$('#vImgs').files].slice(0,6);let imgs=[];
+  try{imgs=await Promise.all(files.map(loadImg))}catch(e){toast('Ein Bild konnte nicht geladen werden')}
+  const W=1080,H=1920,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');
+  await document.fonts.ready;
+  let acc=0;segs.forEach(s=>{s.a=acc;acc+=s.d});const total=acc;
+  let ti=0;segs.forEach(s=>{if(s.t==='txt')s.img=imgs.length?imgs[ti%imgs.length]:null,s.seed=ti++});
+  const draw=t=>{const s=segs.find(x=>t>=x.a&&t<x.a+x.d)||segs[segs.length-1];const k=Math.min(1,(t-s.a)/s.d);
+    if(s.t==='intro')brandCard(g,B,p,W,H,k,false);
+    else if(s.t==='outro')brandCard(g,B,p,W,H,k,true,$('#vCta').value);
+    else{if(s.img){drawCover(g,s.img,k,W,H,s.seed);const gr=g.createLinearGradient(0,H*.45,0,H);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(0,0,0,.55)');g.fillStyle=gr;g.fillRect(0,0,W,H)}else bgGrad(g,B,W,H,k);
+      caption(g,s.s,W,s.big,Math.min(1,(t-s.a)/.3),B)}};
+  const stream=cv.captureStream(30);let actx,au,gain;
+  const mf=$('#vMusic').files[0];
+  if(mf){actx=new AudioContext();au=new Audio(URL.createObjectURL(mf));const src=actx.createMediaElementSource(au);gain=actx.createGain();const dest=actx.createMediaStreamDestination();src.connect(gain);gain.connect(dest);dest.stream.getAudioTracks().forEach(tr=>stream.addTrack(tr))}
+  const mime=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(m=>MediaRecorder.isTypeSupported(m))||'';
+  const rec=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:8e6}:{});const chunks=[];rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+  $('#vGo').disabled=true;$('#vProg').style.display='block';const bar=$('#vProg i');
+  draw(0);rec.start(250);if(au){await actx.resume();au.play().catch(()=>{})}
+  const t0=performance.now();
+  await new Promise(res=>{const loop=()=>{const t=(performance.now()-t0)/1000;if(t>=total){res();return}draw(t);bar.style.width=(t/total*100)+'%';
+    if(gain&&t>total-1.2)gain.gain.value=Math.max(0,(total-t)/1.2);requestAnimationFrame(loop)};loop()});
+  draw(total-.01);rec.stop();await new Promise(r=>rec.onstop=r);if(au){au.pause();actx.close()}
+  const type=(rec.mimeType||mime||'video/webm').split(';')[0];const ext=type.includes('mp4')?'mp4':'webm';
+  const blob=new Blob(chunks,{type});const name=`${p.id}-${new Date().toISOString().slice(0,10)}.${ext}`;
+  lastVideoFile=new File([blob],name,{type});
+  $('#vGo').disabled=false;bar.style.width='100%';
+  $('#vOut').innerHTML=`<video src="${URL.createObjectURL(blob)}" controls playsinline></video>
+   <div class="btns" style="justify-content:center"><button class="btn p s" onclick="dl(lastVideoFile.name,lastVideoFile)">⤓ Speichern</button><button class="btn s" onclick="shareVideo()">↗ Teilen (TikTok, Instagram …)</button></div>
+   ${ext==='webm'?'<div class="warnbox">Dieses Gerät nimmt WebM auf. TikTok/Instagram nehmen MP4 am zuverlässigsten – bei Problemen das Video einmal in StoryReel oder einer Schnitt-App als MP4 exportieren.</div>':''}`;
+}
+async function shareVideo(){if(!lastVideoFile)return;const L=db.last;const txt=L?.res?.channels?.instagram?fullText({...L.res.channels.instagram,channel:'instagram'}):'';
+  if(txt)await copy(txt);
+  if(navigator.canShare?.({files:[lastVideoFile]})){try{await navigator.share({files:[lastVideoFile],text:txt})}catch(e){}}else{dl(lastVideoFile.name,lastVideoFile);toast('Video gespeichert – Caption ist kopiert')}}
+async function makeCover(){
+  const p=prod($('#vProd').value),B=BRANDS[p.brand];const W=1080,H=1920,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');await document.fonts.ready;
+  const f=$('#vImgs').files[0];if(f){drawCover(g,await loadImg(f),.3,W,H,0);g.fillStyle='rgba(0,0,0,.35)';g.fillRect(0,0,W,H)}else bgGrad(g,B,W,H,.3);
+  g.textAlign='center';g.textBaseline='middle';g.fillStyle='#fff';g.font='700 118px "Playfair Display"';
+  const ls=wrap(g,$('#vCover').value||p.name,W-160);const y0=900-ls.length*65;g.shadowColor='rgba(0,0,0,.5)';g.shadowBlur=24;ls.forEach((l,i)=>g.fillText(l,W/2,y0+i*135));
+  g.shadowBlur=0;g.fillStyle=p.brand==='apps'?B.acc:B.b2;g.fillRect(W/2-70,y0+ls.length*135,140,10);
+  g.font='600 50px Inter';g.fillStyle='#fff';g.fillText(p.name,W/2,y0+ls.length*135+90);
+  if(p.url){g.font='500 40px Inter';g.fillStyle='rgba(255,255,255,.85)';g.fillText(domain(p.url),W/2,y0+ls.length*135+160)}
+  cv.toBlob(b=>dl(`${p.id}-titelbild.png`,b),'image/png');
+}
+
+/* ================= PRESSE ================= */
+async function genPress(tplOnly){
+  const p=prod($('#prProd').value),topic=$('#prTopic').value.trim(),facts=$('#prFacts').value.trim();
+  const ort=p.brand==='ruegen'?'Ostseebad Mönchgut':p.brand==='apps'?'Ostseebad Mönchgut':'Ostseebad Mönchgut / Burano';
+  const kontakt=`Pressekontakt:\nHans Fries\nIm Dünenwald 4a, 18586 Ostseebad Mönchgut\nE-Mail: friesh@gmx.de${p.url?'\nWeb: '+p.url:''}`;
+  const datum=new Date().toLocaleDateString('de-DE');
+  const tpl=()=>`PRESSEMITTEILUNG\n\n${topic||p.name}: ${p.nutzen.split(/[.–]/)[0].trim()}\n\n${ort}, ${datum} – ${p.nutzen}\n\n${p.fuer}${facts?'\n\n'+facts:''}${p.angebot?'\n\n'+p.angebot:''}\n\n${p.url?'Weitere Informationen: '+p.url+'\n\n':''}Über ${p.name}\n${p.nutzen}\n\n${kontakt}`;
+  if(tplOnly){$('#prText').value=tpl();return}
+  $('#prGo').disabled=true;
+  try{$('#prText').value=(await claude(`Schreibe eine deutsche Pressemitteilung (350–500 Wörter) im klassischen Aufbau: Überschrift, Unterzeile, Ortsmarke „${ort}, ${datum} –“, Lead mit W-Fragen, 2–3 Absätze, ein Zitat von Hans Fries (Gründer/Gastgeber) das nur Absichten und Motivation ausdrückt – keine erfundenen Zahlen, Bewertungen, Preise oder Auszeichnungen –, Boilerplate „Über ${p.name}“, dann exakt dieser Kontaktblock:\n${kontakt}\n\nFakten (nur diese verwenden):\nProdukt: ${p.name}\nBeschreibung: ${p.nutzen}\nZielgruppe: ${p.fuer}\nAngebot: ${p.angebot||'keins nennen'}\nLink: ${p.url||'keinen nennen'}\nAnlass: ${topic||'Vorstellung'}\nWeitere Fakten: ${facts||'keine'}\n\nNur reinen Text ohne Markdown ausgeben.`,2500)).trim()}
+  catch(e){toast('KI nicht erreichbar – Vorlage');$('#prText').value=tpl()}
+  $('#prGo').disabled=false;
+}
+function renderContacts(){
+  $('#contacts').innerHTML=db.contacts.length?db.contacts.map((c,i)=>`<div class="prod"><input type="checkbox" class="ctSel" data-i="${i}" ${c.sel?'checked':''} onchange="db.contacts[${i}].sel=this.checked;save()"><div style="flex:1"><b>${esc(c.name)}</b> <span class="muted small">· ${esc(c.med)} · ${esc(c.topic)}</span><div class="small muted">${esc(c.mail)}</div></div><button class="btn s ghost" onclick="db.contacts.splice(${i},1);save();renderContacts()">✕</button></div>`).join(''):'<p class="muted small">Noch keine Kontakte. Tipp: Lokalredaktionen, Tourismus-Blogs, App-/Tech-Blogs.</p>';
+}
+function addContact(){const c={name:$('#ctName').value.trim(),med:$('#ctMed').value.trim(),mail:$('#ctMail').value.trim(),topic:$('#ctTopic').value,sel:true};if(!c.mail){toast('E-Mail fehlt');return}db.contacts.push(c);save();['#ctName','#ctMed','#ctMail'].forEach(s=>$(s).value='');renderContacts()}
+function mailPress(){const t=$('#prText').value;if(!t){toast('Erst Text erzeugen');return}const to=db.contacts.filter(c=>c.sel).map(c=>c.mail);if(!to.length){toast('Kontakte auswählen');return}
+  const lines=t.split('\n').filter(Boolean);const subj=lines[0]==='PRESSEMITTEILUNG'?'Pressemitteilung: '+(lines[1]||''):lines[0];
+  location.href=`mailto:?bcc=${E(to.join(','))}&subject=${E(subj)}&body=${E(t)}`}
+
+/* ================= PRODUKTE ================= */
+function renderProds(){
+  $('#prods').innerHTML=Object.entries(BRANDS).map(([g,b])=>`<h3 style="margin-top:14px">${b.n}</h3>`+db.products.filter(p=>p.brand===g).map(p=>`<div class="prod"><span class="dot" style="background:${g==='apps'?b.acc:b.brand}"></span><div style="flex:1;min-width:0"><b>${esc(p.name)}</b><div class="small muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.url?esc(domain(p.url)):'<span style="color:var(--warn)">Link fehlt</span>'} · ${esc(p.nutzen)}</div></div><button class="btn s" onclick="editProd('${p.id}')">✎</button></div>`).join('')).join('');
+  $('#accounts').innerHTML=Object.entries(CH).map(([k,c])=>`<div class="row" style="align-items:center;margin-top:6px"><div style="flex:0 0 120px;min-width:0" class="small"><b>${c.n}</b></div><input value="${esc(db.accounts[k]||'')}" placeholder="https://… dein Profil" onchange="db.accounts['${k}']=this.value.trim();save()"></div>`).join('');
+}
+function editProd(id){
+  const p=id?prod(id):{id:'',name:'',brand:'apps',url:'',nutzen:'',fuer:'',angebot:'',tags:''};
+  $('#modalIn').innerHTML=`<h2>${id?'Produkt bearbeiten':'Neues Produkt / neue App'}</h2>
+  <label>Name</label><input id="eName" value="${esc(p.name)}">
+  <label>Bereich</label><select id="eBrand">${Object.entries(BRANDS).map(([k,b])=>`<option value="${k}" ${k===p.brand?'selected':''}>${b.n}</option>`).join('')}</select>
+  <label>Link (Buchungs- bzw. App-Seite)</label><input id="eUrl" value="${esc(p.url)}" placeholder="https://">
+  <label>Nutzen in einem Satz</label><textarea id="eNutzen" style="min-height:70px">${esc(p.nutzen)}</textarea>
+  <label>Für wen (ein Satz)</label><textarea id="eFuer" style="min-height:60px">${esc(p.fuer)}</textarea>
+  <label>Angebot / Preis (nur wenn festgelegt)</label><input id="eAng" value="${esc(p.angebot||'')}" placeholder="leer lassen, solange nicht entschieden">
+  <label>Hashtags</label><input id="eTags" value="${esc(p.tags)}">
+  <div class="btns"><button class="btn p" onclick="saveProd('${id||''}')">Speichern</button><button class="btn" onclick="closeModal()">Abbrechen</button>${id?`<button class="btn" style="color:var(--bad);margin-left:auto" onclick="delProd('${id}')">Löschen</button>`:''}</div>`;
+  $('#modal').classList.add('on');
+}
+function saveProd(id){const v={name:$('#eName').value.trim(),brand:$('#eBrand').value,url:$('#eUrl').value.trim(),nutzen:$('#eNutzen').value.trim(),fuer:$('#eFuer').value.trim(),angebot:$('#eAng').value.trim(),tags:$('#eTags').value.trim()};
+  if(!v.name){toast('Name fehlt');return}
+  if(id)Object.assign(prod(id),v);else db.products.push({id:v.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,30)+'-'+uid().slice(-3),...v});
+  save();closeModal();fillProdSelects();renderProds();onProdChange()}
+function delProd(id){if(db.posts.some(p=>p.productId===id)&&!confirm('Es gibt Beiträge zu diesem Produkt. Trotzdem löschen?'))return;db.products=db.products.filter(p=>p.id!==id);save();closeModal();fillProdSelects();renderProds()}
+
+/* ================= AUTOMATIK / GITHUB ================= */
+function loadSettings(){const s=db.settings;$('#sWorker').value=s.worker;$('#sModel').value=s.model;$('#sKey').value=s.key;$('#sFreeUrl').value=s.freeUrl;$('#sRepo').value=s.repo;$('#sBranch').value=s.branch;$('#sGh').value=s.gh;
+  const q=buildQueue();$('#qInfo').textContent=`${q.items.length} freigegebene Auto-Beiträge bereit für die Warteschlange.`}
+function saveSettings(silent){const s=db.settings;s.worker=$('#sWorker').value.trim()||DEF.settings.worker;s.model=$('#sModel').value.trim()||DEF.settings.model;s.key=$('#sKey').value.trim();s.freeUrl=$('#sFreeUrl').value.trim();s.repo=$('#sRepo').value.trim();s.branch=$('#sBranch').value.trim()||'main';s.gh=$('#sGh').value.trim();
+  if(s.key)localStorage.setItem('bl_api_key',s.key);save();if(!silent)toast('Gespeichert')}
+function buildQueue(){
+  return{updated:new Date().toISOString(),note:'Erzeugt von der PR-Zentrale. Nur status=freigegeben wird veröffentlicht.',
+    items:db.posts.filter(p=>p.auto&&p.channel!=='alle'&&(p.status==='freigegeben'||p.status==='gepostet')).map(p=>{const pr=prod(p.productId)||{};
+      return{id:p.id,date:p.date,channel:p.channel,product:pr.name,brand:pr.brand,link:pr.url||'',title:p.title||'',text:p.text||'',hashtags:p.hashtags||'',videoUrl:p.videoUrl||'',status:p.status,resultUrl:p.resultUrl||'',error:p.error||''}})};
+}
+const ghApi=(path,opt={})=>fetch('https://api.github.com/repos/'+db.settings.repo+path,{...opt,headers:{Authorization:'Bearer '+db.settings.gh,Accept:'application/vnd.github+json',...(opt.headers||{})}});
+const QPATH='/contents/social/queue.json';
+const b64e=s=>btoa(unescape(encodeURIComponent(s)));const b64d=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,''))));
+async function fetchRemote(){const r=await ghApi(QPATH+'?ref='+E(db.settings.branch));if(r.status===404)return{sha:null,data:null};if(!r.ok)throw new Error('GitHub '+r.status);const j=await r.json();return{sha:j.sha,data:JSON.parse(b64d(j.content))}}
+function mergeRemote(data){let n=0;(data?.items||[]).forEach(it=>{const p=db.posts.find(x=>x.id===it.id);if(!p)return;
+  if(it.status==='gepostet'&&p.status!=='gepostet'){p.status='gepostet';p.postedAt=it.postedAt;n++}
+  p.resultUrl=it.resultUrl||p.resultUrl||'';p.error=it.error||''});save();return n}
+async function pullQueue(){if(!db.settings.repo||!db.settings.gh){toast('Repo und Token unter ⚙︎ eintragen');go('auto');return}
+  try{const{data}=await fetchRemote();const n=mergeRemote(data);toast(n+' Beiträge als gepostet übernommen');renderPlan();renderStart()}catch(e){toast('Fehler: '+e.message)}}
+async function pushQueue(){
+  if(!db.settings.repo||!db.settings.gh){const q=buildQueue();dl('queue.json',JSON.stringify(q,null,2),'application/json');toast('Kein Repo eingerichtet – queue.json heruntergeladen');return}
+  try{const{sha,data}=await fetchRemote();mergeRemote(data);const q=buildQueue();
+    const r=await ghApi(QPATH,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'PR-Zentrale: Warteschlange ('+q.items.filter(i=>i.status==='freigegeben').length+' offen)',content:b64e(JSON.stringify(q,null,2)),branch:db.settings.branch,...(sha?{sha}:{})})});
+    if(!r.ok)throw new Error('GitHub '+r.status+' '+((await r.json()).message||''));
+    toast('Warteschlange im Repo aktualisiert ✓');renderPlan();
+  }catch(e){toast('Fehler: '+e.message)}
+}
+
+/* ================= DATEN ================= */
+function importBackup(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j.products)throw 0;db=j;save();init();toast('Backup geladen')}catch(e){toast('Keine gültige Backup-Datei')}};r.readAsText(f)}
+function resetAll(){if(!confirm('Wirklich alles löschen? Vorher Backup ziehen!'))return;localStorage.removeItem(KEY);location.reload()}
+
+/* ================= START ================= */
+function init(){fillProdSelects();renderChans();onProdChange();renderStart();if(db.last){renderResult();fillVideoFromLast()}}
+init();
+</script>
+</body>
+</html>

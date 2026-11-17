@@ -1,0 +1,70 @@
+# .github/workflows/social-post.yml
+# Prüft stündlich social/queue.json und veröffentlicht fällige, freigegebene Beiträge.
+name: Social-Posting
+
+on:
+  schedule:
+    - cron: '7 * * * *'      # stündlich (UTC); Termine in der Queue sind Berliner Zeit
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Nur testen, nichts veröffentlichen'
+        type: boolean
+        default: false
+  push:
+    paths: ['social/queue.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: social-posting
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Europe/Berlin
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fällige Beiträge veröffentlichen
+        run: node scripts/post.mjs
+        env:
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
+          THREADS_TOKEN: ${{ secrets.THREADS_TOKEN }}
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          LI_ACCESS_TOKEN: ${{ secrets.LI_ACCESS_TOKEN }}
+          LI_AUTHOR_URN: ${{ secrets.LI_AUTHOR_URN }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+
+      - name: Status zurück ins Repo schreiben
+        run: |
+          git config user.name "friesh-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add social/queue.json
+          if git diff --cached --quiet; then
+            echo "Keine Änderungen."
+          else
+            git commit -m "Social: Status aktualisiert [skip ci]"
+            git pull --rebase
+            git push
+          fi
