@@ -89,6 +89,10 @@ async function ensurePageToken() {
 async function postFacebook(it) {
   if (!env.FB_PAGE_ID || !env.FB_PAGE_TOKEN) return null;
   await ensurePageToken();
+  if (it.videoUrl) {   // Video als Seitenvideo hochladen (Facebook holt die Datei per URL)
+    const v = await j(await fetch(`https://graph.facebook.com/${GRAPH}/${env.FB_PAGE_ID}/videos`, { method: 'POST', body: form({ file_url: it.videoUrl, title: it.title || undefined, description: fullText(it, true), published: it.published === false ? 'false' : undefined, access_token: env.FB_PAGE_TOKEN }) }));
+    return `https://www.facebook.com/${env.FB_PAGE_ID}/videos/${v.id}`;
+  }
   const d = await j(await fetch(`https://graph.facebook.com/${GRAPH}/${env.FB_PAGE_ID}/feed`, { method: 'POST', body: form({ message: fullText(it), link: it.link, published: it.published === false ? 'false' : undefined, access_token: env.FB_PAGE_TOKEN }) }));
   return `https://www.facebook.com/${d.id}`;
 }
