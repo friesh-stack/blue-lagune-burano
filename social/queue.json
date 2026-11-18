@@ -1,5 +1,5 @@
 {
-  "updated": null,
+  "updated": "2026-11-18T11:09:14.608Z",
   "items": [
     {
       "id": "test-youtube-1",
@@ -13,7 +13,8 @@
       "videoUrl": "https://raw.githubusercontent.com/friesh-stack/blue-lagune-burano/main/social/test/test-upload.mp4",
       "privacy": "private",
       "date": "2026-11-18T11:06:59Z",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "HTTP 401: {\"error\":\"invalid_client\",\"error_description\":\"The OAuth client was not found.\"}"
     }
   ]
 }
