@@ -66,9 +66,29 @@ async function postLinkedIn(it) {
   return id ? `https://www.linkedin.com/feed/update/${id}` : 'LinkedIn: veröffentlicht';
 }
 
+/* ---------- Seiten-Token sicherstellen ----------
+   Falls in FB_PAGE_TOKEN / IG_ACCESS_TOKEN ein Nutzer-Token statt des Seiten-Tokens liegt,
+   holt das Skript sich den Seiten-Token der Seite FB_PAGE_ID selbst. */
+let pageTokenChecked = false;
+async function ensurePageToken() {
+  if (pageTokenChecked || !env.FB_PAGE_ID || !env.FB_PAGE_TOKEN) return;
+  pageTokenChecked = true;
+  try {
+    const me = await j(await fetch(`https://graph.facebook.com/${GRAPH}/me?fields=id&access_token=${env.FB_PAGE_TOKEN}`));
+    if (me.id === env.FB_PAGE_ID) { console.log('Facebook-Prüfung: Seiten-Token ok'); return; }
+    const pg = await j(await fetch(`https://graph.facebook.com/${GRAPH}/${env.FB_PAGE_ID}?fields=access_token&access_token=${env.FB_PAGE_TOKEN}`));
+    if (pg.access_token) {
+      console.log('Facebook-Prüfung: Nutzer-Token erkannt – Seiten-Token wurde automatisch geholt. Bitte FB_PAGE_TOKEN durch den Seiten-Token ersetzen (gilt sonst nur 60 Tage).');
+      if (env.IG_ACCESS_TOKEN === env.FB_PAGE_TOKEN || !env.IG_ACCESS_TOKEN) env.IG_ACCESS_TOKEN = pg.access_token;
+      env.FB_PAGE_TOKEN = pg.access_token;
+    }
+  } catch (e) { console.log('Facebook-Prüfung fehlgeschlagen: ' + String(e.message || e).slice(0, 200)); }
+}
+
 /* ---------- Facebook-Seite ---------- */
 async function postFacebook(it) {
   if (!env.FB_PAGE_ID || !env.FB_PAGE_TOKEN) return null;
+  await ensurePageToken();
   const d = await j(await fetch(`https://graph.facebook.com/${GRAPH}/${env.FB_PAGE_ID}/feed`, { method: 'POST', body: form({ message: fullText(it), link: it.link, published: it.published === false ? 'false' : undefined, access_token: env.FB_PAGE_TOKEN }) }));
   return `https://www.facebook.com/${d.id}`;
 }
@@ -86,6 +106,7 @@ async function postThreads(it) {
 /* ---------- Instagram Reels ---------- */
 async function postInstagram(it) {
   if (!env.IG_USER_ID || !env.IG_ACCESS_TOKEN) return null;
+  await ensurePageToken();
   if (!it.videoUrl) throw new Error('Video-URL fehlt (Instagram braucht ein Video)');
   const base = `https://graph.facebook.com/${GRAPH}`;
   const c = await j(await fetch(`${base}/${env.IG_USER_ID}/media`, { method: 'POST', body: form({ media_type: 'REELS', video_url: it.videoUrl, caption: fullText(it), share_to_feed: 'true', access_token: env.IG_ACCESS_TOKEN }) }));

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T15:09:03.176Z",
+  "updated": "2026-11-18T15:10:09.242426+00:00",
   "items": [
     {
       "id": "test-facebook-1",
@@ -10,8 +10,7 @@
       "link": "https://myburano.com",
       "published": false,
       "status": "freigegeben",
-      "date": "2026-11-18T15:06:39Z",
-      "error": "HTTP 403: {\"error\":{\"message\":\"(#200) Unpublished posts must be posted to a page as the page itself.\",\"type\":\"OAuthException\",\"code\":200,\"fbtrace_id\":\"A-S2q9oXdWNcVPkisThp6Co\"}}"
+      "date": "2026-11-18T15:08:09Z"
     }
   ]
 }
