@@ -1,13 +1,16 @@
 {
-  "updated": "2026-11-18T15:34:17.755616+00:00",
+  "updated": "2026-11-18T15:34:35.714Z",
   "items": [
     {
       "id": "test-check-1",
       "channel": "check",
       "product": "Verbindungstest",
       "text": "",
-      "status": "freigegeben",
-      "date": "2026-11-18T15:32:17Z"
+      "status": "gepostet",
+      "date": "2026-11-18T15:32:17Z",
+      "postedAt": "2026-11-18T15:34:35.714Z",
+      "resultUrl": "Facebook ok: Dünenvilla | Instagram ok: @duenenvilla",
+      "error": ""
     }
   ]
 }
