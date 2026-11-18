@@ -1,22 +1,4 @@
 {
   "updated": "2026-11-18T11:55:45.335Z",
-  "items": [
-    {
-      "id": "test-youtube-1",
-      "channel": "youtube",
-      "brand": "ruegen",
-      "product": "Test",
-      "title": "friesh-stack Test-Upload (bitte löschen)",
-      "text": "Technischer Test der automatischen Veröffentlichung.",
-      "hashtags": "",
-      "link": "https://myburano.com",
-      "videoUrl": "https://raw.githubusercontent.com/friesh-stack/blue-lagune-burano/main/social/test/test-upload.mp4",
-      "privacy": "private",
-      "date": "2026-11-18T11:53:30Z",
-      "status": "gepostet",
-      "postedAt": "2026-11-18T11:55:45.335Z",
-      "resultUrl": "https://youtube.com/shorts/TtuHwBIf4O0",
-      "error": ""
-    }
-  ]
+  "items": []
 }
