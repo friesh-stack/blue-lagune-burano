@@ -5,7 +5,9 @@ import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
 
 const QUEUE = process.env.QUEUE_PATH || 'social/queue.json';
-const env = process.env;
+// Werte säubern: Leerzeichen, Tabs, Zeilenumbrüche und Anführungszeichen (z. B. aus Excel kopiert) entfernen
+const env = Object.fromEntries(Object.entries(process.env).map(([k, v]) =>
+  [k, typeof v === 'string' ? v.replace(/[\s\u00a0\u200b\ufeff]+/g, ' ').trim().replace(/^["'„“”]+|["'„“”,;]+$/g, '').trim() : v]));
 const GRAPH = env.GRAPH_VERSION || 'v23.0';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const DRY = env.DRY_RUN === '1';
@@ -102,6 +104,10 @@ async function postInstagram(it) {
 async function postYouTube(it) {
   if (!env.YT_CLIENT_ID || !env.YT_REFRESH_TOKEN) return null;
   if (!it.videoUrl) throw new Error('Video-URL fehlt (YouTube braucht ein Video)');
+  const idOk = /^\d+-[a-z0-9]+\.apps\.googleusercontent\.com$/.test(env.YT_CLIENT_ID);
+  const secOk = /^GOCSPX-/.test(env.YT_CLIENT_SECRET || '');
+  const rtOk = /^1\/\//.test(env.YT_REFRESH_TOKEN);
+  console.log(`YouTube-Prüfung: Client-ID ${idOk ? 'Format ok' : 'FORMAT FALSCH (Länge ' + env.YT_CLIENT_ID.length + ')'}, Clientschlüssel ${secOk ? 'ok' : 'FORMAT FALSCH'}, Refresh-Token ${rtOk ? 'ok' : 'FORMAT FALSCH'}`);
   const tok = await j(await fetch('https://oauth2.googleapis.com/token', { method: 'POST', body: form({ client_id: env.YT_CLIENT_ID, client_secret: env.YT_CLIENT_SECRET, refresh_token: env.YT_REFRESH_TOKEN, grant_type: 'refresh_token' }) }));
   const vr = await fetch(it.videoUrl); if (!vr.ok) throw new Error('Video nicht abrufbar: HTTP ' + vr.status);
   const buf = Buffer.from(await vr.arrayBuffer());
