@@ -104,6 +104,9 @@ async function postInstagram(it) {
 async function postYouTube(it) {
   if (!env.YT_CLIENT_ID || !env.YT_REFRESH_TOKEN) return null;
   if (!it.videoUrl) throw new Error('Video-URL fehlt (YouTube braucht ein Video)');
+  // Falls die ganze Playground-Antwort (HTTP/1.1 200 OK … "refresh_token": "1//…") eingefügt wurde: Token herausziehen
+  const rtm = String(env.YT_REFRESH_TOKEN).match(/1\/\/[A-Za-z0-9_\-]+/);
+  if (rtm) env.YT_REFRESH_TOKEN = rtm[0];
   const idOk = /^\d+-[a-z0-9]+\.apps\.googleusercontent\.com$/.test(env.YT_CLIENT_ID);
   const secOk = /^GOCSPX-/.test(env.YT_CLIENT_SECRET || '');
   const rtOk = /^1\/\//.test(env.YT_REFRESH_TOKEN);

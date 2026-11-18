@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T11:20:47.303Z",
+  "updated": "2026-11-18T11:49:20.902465+00:00",
   "items": [
     {
       "id": "test-youtube-1",
@@ -12,9 +12,8 @@
       "link": "https://myburano.com",
       "videoUrl": "https://raw.githubusercontent.com/friesh-stack/blue-lagune-burano/main/social/test/test-upload.mp4",
       "privacy": "private",
-      "date": "2026-11-18T11:18:33Z",
-      "status": "freigegeben",
-      "error": "HTTP 400: {\"error\":\"invalid_grant\",\"error_description\":\"Bad Request\"}"
+      "date": "2026-11-18T11:47:20Z",
+      "status": "freigegeben"
     }
   ]
 }
