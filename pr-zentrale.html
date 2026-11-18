@@ -724,7 +724,7 @@ async function pullQueue(){if(!db.settings.repo||!db.settings.gh){toast('Repo un
   try{const{data}=await fetchRemote();const n=mergeRemote(data);toast(n+' Beiträge als gepostet übernommen');renderPlan();renderStart()}catch(e){toast('Fehler: '+e.message)}}
 async function pushQueue(){
   if(!db.settings.repo||!db.settings.gh){const q=buildQueue();dl('queue.json',JSON.stringify(q,null,2),'application/json');toast('Kein Repo eingerichtet – queue.json heruntergeladen');return}
-  try{const{sha,data}=await fetchRemote();mergeRemote(data);const q=buildQueue();
+  try{const{sha,data}=await fetchRemote();mergeRemote(data);const q=buildQueue();/* Beiträge, die nicht aus dieser PR-Zentrale stammen (z. B. von Claude eingeplante Shorts), bleiben erhalten */const own=new Set(db.posts.map(x=>x.id)),mine=new Set(q.items.map(x=>x.id));(data?.items||[]).forEach(it=>{if(!own.has(it.id)&&!mine.has(it.id))q.items.push(it)});q.items.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
     const r=await ghApi(QPATH,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'PR-Zentrale: Warteschlange ('+q.items.filter(i=>i.status==='freigegeben').length+' offen)',content:b64e(JSON.stringify(q,null,2)),branch:db.settings.branch,...(sha?{sha}:{})})});
     if(!r.ok)throw new Error('GitHub '+r.status+' '+((await r.json()).message||''));
     toast('Warteschlange im Repo aktualisiert ✓');renderPlan();
