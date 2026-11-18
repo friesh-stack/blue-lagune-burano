@@ -109,7 +109,7 @@ async function postYouTube(it) {
   const tags = (it.hashtags || '').split(/\s+/).map(t => t.replace(/^#/, '')).filter(Boolean).slice(0, 15);
   const meta = {
     snippet: { title, description: fullText(it, true).slice(0, 4900), tags, categoryId: it.brand === 'apps' ? '28' : '19', defaultLanguage: 'de' },
-    status: { privacyStatus: env.YT_PRIVACY || 'public', selfDeclaredMadeForKids: false }
+    status: { privacyStatus: it.privacy || env.YT_PRIVACY || 'public', selfDeclaredMadeForKids: false }
   };
   const init = await fetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status', {
     method: 'POST',
