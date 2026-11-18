@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T15:10:09.242426+00:00",
+  "updated": "2026-11-18T15:10:28.881Z",
   "items": [
     {
       "id": "test-facebook-1",
@@ -9,8 +9,11 @@
       "text": "Technischer Test der automatischen Veröffentlichung (unveröffentlicht, nur für Seitenadmins sichtbar).",
       "link": "https://myburano.com",
       "published": false,
-      "status": "freigegeben",
-      "date": "2026-11-18T15:08:09Z"
+      "status": "gepostet",
+      "date": "2026-11-18T15:08:09Z",
+      "postedAt": "2026-11-18T15:10:28.881Z",
+      "resultUrl": "https://www.facebook.com/103858452996336_1864749348990758",
+      "error": ""
     }
   ]
 }
