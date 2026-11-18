@@ -69,7 +69,7 @@ async function postLinkedIn(it) {
 /* ---------- Facebook-Seite ---------- */
 async function postFacebook(it) {
   if (!env.FB_PAGE_ID || !env.FB_PAGE_TOKEN) return null;
-  const d = await j(await fetch(`https://graph.facebook.com/${GRAPH}/${env.FB_PAGE_ID}/feed`, { method: 'POST', body: form({ message: fullText(it), link: it.link, access_token: env.FB_PAGE_TOKEN }) }));
+  const d = await j(await fetch(`https://graph.facebook.com/${GRAPH}/${env.FB_PAGE_ID}/feed`, { method: 'POST', body: form({ message: fullText(it), link: it.link, published: it.published === false ? 'false' : undefined, access_token: env.FB_PAGE_TOKEN }) }));
   return `https://www.facebook.com/${d.id}`;
 }
 

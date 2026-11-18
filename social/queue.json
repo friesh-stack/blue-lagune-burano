@@ -1,4 +1,16 @@
 {
-  "updated": "2026-11-18T11:55:45.335Z",
-  "items": []
+  "updated": "2026-11-18T15:08:39.274800+00:00",
+  "items": [
+    {
+      "id": "test-facebook-1",
+      "channel": "facebook",
+      "brand": "ruegen",
+      "product": "Test",
+      "text": "Technischer Test der automatischen Veröffentlichung (unveröffentlicht, nur für Seitenadmins sichtbar).",
+      "link": "https://myburano.com",
+      "published": false,
+      "status": "freigegeben",
+      "date": "2026-11-18T15:06:39Z"
+    }
+  ]
 }
