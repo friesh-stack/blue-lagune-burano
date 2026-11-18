@@ -165,7 +165,26 @@ async function postTikTok(it) {
   return `TikTok-Inbox (Entwurf, in der App veröffentlichen) – ${d.data?.publish_id || ''}`;
 }
 
-const HANDLERS = { x: postX, linkedin: postLinkedIn, facebook: postFacebook, threads: postThreads, instagram: postInstagram, youtube: postYouTube, tiktok: postTikTok };
+/* ---------- Verbindungstest (postet nichts) ---------- */
+async function checkConnections() {
+  const out = [];
+  try { await ensurePageToken(); } catch {}
+  if (env.FB_PAGE_ID && env.FB_PAGE_TOKEN) {
+    try { const p = await j(await fetch(`https://graph.facebook.com/${GRAPH}/${env.FB_PAGE_ID}?fields=name&access_token=${env.FB_PAGE_TOKEN}`)); out.push('Facebook ok: ' + p.name); }
+    catch (e) { out.push('Facebook FEHLER: ' + String(e.message).slice(0, 150)); }
+  } else out.push('Facebook: nicht eingerichtet');
+  if (env.IG_USER_ID && env.IG_ACCESS_TOKEN) {
+    try { const u = await j(await fetch(`https://graph.facebook.com/${GRAPH}/${env.IG_USER_ID}?fields=username&access_token=${env.IG_ACCESS_TOKEN}`)); out.push('Instagram ok: @' + u.username); }
+    catch (e) {
+      if (env.IG_ACCESS_TOKEN !== env.FB_PAGE_TOKEN) {
+        try { const u = await j(await fetch(`https://graph.facebook.com/${GRAPH}/${env.IG_USER_ID}?fields=username&access_token=${env.FB_PAGE_TOKEN}`)); env.IG_ACCESS_TOKEN = env.FB_PAGE_TOKEN; out.push('Instagram ok (mit Seiten-Token): @' + u.username); }
+        catch { out.push('Instagram FEHLER: ' + String(e.message).slice(0, 150)); }
+      } else out.push('Instagram FEHLER: ' + String(e.message).slice(0, 150));
+    }
+  } else out.push('Instagram: nicht eingerichtet');
+  const r = out.join(' | '); console.log('Verbindungstest: ' + r); return r;
+}
+const HANDLERS = { check: checkConnections, x: postX, linkedin: postLinkedIn, facebook: postFacebook, threads: postThreads, instagram: postInstagram, youtube: postYouTube, tiktok: postTikTok };
 
 /* ---------- Ablauf ---------- */
 const q = JSON.parse(await fs.readFile(QUEUE, 'utf8'));

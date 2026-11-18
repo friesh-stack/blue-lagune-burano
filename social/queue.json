@@ -1,4 +1,13 @@
 {
-  "updated": "2026-11-18T15:31:38.693Z",
-  "items": []
+  "updated": "2026-11-18T15:34:17.755616+00:00",
+  "items": [
+    {
+      "id": "test-check-1",
+      "channel": "check",
+      "product": "Verbindungstest",
+      "text": "",
+      "status": "freigegeben",
+      "date": "2026-11-18T15:32:17Z"
+    }
+  ]
 }
