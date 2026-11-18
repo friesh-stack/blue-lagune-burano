@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T15:31:19.285546+00:00",
+  "updated": "2026-11-18T15:31:38.693Z",
   "items": [
     {
       "id": "test-youtube-2",
@@ -12,8 +12,11 @@
       "link": "https://myburano.com",
       "videoUrl": "https://raw.githubusercontent.com/friesh-stack/blue-lagune-burano/main/social/test/test-upload.mp4",
       "privacy": "private",
-      "status": "freigegeben",
-      "date": "2026-11-18T15:29:19Z"
+      "status": "gepostet",
+      "date": "2026-11-18T15:29:19Z",
+      "postedAt": "2026-11-18T15:31:38.693Z",
+      "resultUrl": "https://youtube.com/shorts/7sFk-2tSnrY",
+      "error": ""
     }
   ]
 }
