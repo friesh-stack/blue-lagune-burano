@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T15:34:35.714Z",
+  "updated": "2026-11-19T18:19:11.105Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -12,7 +12,10 @@
       "text": "Ende Februar 2023 tanzte das Polarlicht über Mönchgut – danach Abendrot am Weststrand und Sonne auf der Steilküste. Winterurlaub direkt an der Ostsee: duenenvilla.de",
       "hashtags": "#Rügen #Polarlicht #Mönchgut #Ostsee #Thiessow #Winterurlaub #Nordlicht #Ostseeurlaub",
       "videoUrl": "https://myburano.com/social/videos/2026-11_polarlicht.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-19T18:18:24.863Z",
+      "resultUrl": "https://youtube.com/shorts/HxMGngfruyc",
+      "error": ""
     },
     {
       "id": "short-polarlicht-instagram",
@@ -25,7 +28,10 @@
       "text": "Polarlicht über Mönchgut 🌌 Wer sagt, dass man dafür nach Norwegen muss? Im Februar 2023 leuchtete der Himmel über Rügen grün und violett – und am nächsten Abend glühte der Weststrand.\nFerienwohnungen nah am Strand in Thiessow 👉 duenenvilla.de",
       "hashtags": "#Rügen #Polarlicht #Mönchgut #Ostsee #Thiessow #Winterurlaub #Nordlicht #Ostseeurlaub",
       "videoUrl": "https://myburano.com/social/videos/2026-11_polarlicht.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-19T18:19:06.313Z",
+      "resultUrl": "https://www.instagram.com/reel/Df7tP_nj2eq/",
+      "error": ""
     },
     {
       "id": "short-polarlicht-facebook",
@@ -38,7 +44,10 @@
       "text": "Polarlicht über Mönchgut 🌌 Wer sagt, dass man dafür nach Norwegen muss? Im Februar 2023 leuchtete der Himmel über Rügen grün und violett – und am nächsten Abend glühte der Weststrand.\nFerienwohnungen nah am Strand in Thiessow 👉 duenenvilla.de",
       "hashtags": "#Rügen #Polarlicht #Mönchgut #Ostsee #Thiessow #Winterurlaub #Nordlicht #Ostseeurlaub",
       "videoUrl": "https://myburano.com/social/videos/2026-11_polarlicht.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-19T18:19:11.104Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/1546636283941813",
+      "error": ""
     },
     {
       "id": "short-polarlicht-tiktok",
@@ -51,7 +60,8 @@
       "link": "https://duenenvilla.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_polarlicht.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-polarlicht-x",
@@ -65,7 +75,8 @@
       "link": "https://duenenvilla.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_polarlicht.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-winter-youtube",
