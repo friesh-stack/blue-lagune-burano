@@ -39,8 +39,16 @@ function oauth1(method, url) {
 }
 async function postX(it) {
   if (!env.X_API_KEY || !env.X_ACCESS_TOKEN) return null;
+  let link = '';
+  if (it.linkFromId) {   // z. B. der YouTube-Beitrag desselben Shorts
+    const src = (q.items || []).find(x => x.id === it.linkFromId);
+    if (!src || src.status !== 'gepostet' || !/^https?:/.test(src.resultUrl || '')) throw new Error('wartet auf ' + it.linkFromId);
+    link = src.resultUrl;
+  }
   let text = [it.text, it.hashtags].filter(Boolean).join(' ').trim();
-  if (text.length > 280) text = text.slice(0, 279) + '…';
+  const room = 280 - (link ? 24 : 0);   // X zählt jeden Link als 23 Zeichen
+  if (text.length > room) text = text.slice(0, room - 1) + '…';
+  if (link) text += ' ' + link;
   const url = 'https://api.twitter.com/2/tweets';
   const d = await j(await fetch(url, { method: 'POST', headers: { Authorization: oauth1('POST', url), 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) }));
   return `https://x.com/i/web/status/${d.data.id}`;
@@ -193,9 +201,13 @@ const HANDLERS = { check: checkConnections, x: postX, linkedin: postLinkedIn, fa
 /* ---------- Ablauf ---------- */
 const q = JSON.parse(await fs.readFile(QUEUE, 'utf8'));
 const now = new Date();
+const MAX_AGE_H = Number(env.MAX_AGE_HOURS || 36);
 let changed = false, done = 0;
 for (const it of q.items || []) {
   if (it.status !== 'freigegeben' || !it.date || new Date(it.date) > now) continue;
+  if (now - new Date(it.date) > MAX_AGE_H * 3600e3) {   // älter als erlaubt: nicht mehr nachholen
+    it.status = 'verpasst'; it.error = `nicht gepostet: Termin liegt mehr als ${MAX_AGE_H} Stunden zurück`; changed = true; continue;
+  }
   const h = HANDLERS[it.channel];
   if (!h) { const m = `${it.channel} wird nicht automatisch gepostet – bitte manuell`; if (it.error !== m) { it.error = m; changed = true; } continue; }
   try {
