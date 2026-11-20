@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T16:36:27.170Z",
+  "updated": "2026-11-20T20:00:44.128Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -121,7 +121,10 @@
       "text": "Rügen im Wintermärchen ❄️ Lichter am Kurhaus Binz, die Seebrücke im Schnee, Dünen unter Puderzucker – und der Rasende Roland dampft durch den Winter.\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Rügen #Winter #Binz #Mönchgut #RasenderRoland #Ostsee #Schnee #Ferienwohnung",
       "videoUrl": "https://myburano.com/social/videos/2026-11_winter.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-20T20:00:44.127Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/1624299378720970",
+      "error": ""
     },
     {
       "id": "short-winter-tiktok",
@@ -134,7 +137,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_winter.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-winter-x",
@@ -148,7 +152,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_winter.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-wintereinbruch-youtube",
