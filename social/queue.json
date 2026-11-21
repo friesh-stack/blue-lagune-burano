@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-21T16:34:43.930Z",
+  "updated": "2026-11-21T17:23:20.874Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -182,7 +182,10 @@
       "text": "Über Nacht kam der Schnee ❄️ Dünengras im Winterkleid, Spuren am leeren Strand, Wellen an den Findlingen – Mönchgut zeigt sich von seiner stillsten Seite.\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Rügen #Mönchgut #Schnee #Ostsee #Thiessow #Winterstrand #Ferienwohnung",
       "videoUrl": "https://myburano.com/social/videos/2026-11_wintereinbruch.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-21T17:23:15.099Z",
+      "resultUrl": "https://www.instagram.com/reel/DgAwc-piXeU/",
+      "error": ""
     },
     {
       "id": "short-wintereinbruch-facebook",
@@ -195,7 +198,10 @@
       "text": "Über Nacht kam der Schnee ❄️ Dünengras im Winterkleid, Spuren am leeren Strand, Wellen an den Findlingen – Mönchgut zeigt sich von seiner stillsten Seite.\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Rügen #Mönchgut #Schnee #Ostsee #Thiessow #Winterstrand #Ferienwohnung",
       "videoUrl": "https://myburano.com/social/videos/2026-11_wintereinbruch.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-21T17:23:20.874Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/2381488376048165",
+      "error": ""
     },
     {
       "id": "short-wintereinbruch-tiktok",
@@ -208,7 +214,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_wintereinbruch.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-wintereinbruch-x",
@@ -222,7 +229,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_wintereinbruch.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-sturm-youtube",
