@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T20:00:44.128Z",
+  "updated": "2026-11-21T09:38:00.802Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -60,8 +60,8 @@
       "link": "https://duenenvilla.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_polarlicht.mp4",
       "title": "",
-      "status": "freigegeben",
-      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
+      "status": "verpasst",
+      "error": "nicht gepostet: Termin liegt mehr als 36 Stunden zurück"
     },
     {
       "id": "short-polarlicht-x",
@@ -75,8 +75,8 @@
       "link": "https://duenenvilla.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_polarlicht.mp4",
       "title": "",
-      "status": "freigegeben",
-      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
+      "status": "verpasst",
+      "error": "nicht gepostet: Termin liegt mehr als 36 Stunden zurück"
     },
     {
       "id": "short-winter-youtube",
