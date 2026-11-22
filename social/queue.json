@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-21T17:23:20.874Z",
+  "updated": "2026-11-22T11:06:16.736Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -137,8 +137,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_winter.mp4",
       "title": "",
-      "status": "freigegeben",
-      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
+      "status": "verpasst",
+      "error": "nicht gepostet: Termin liegt mehr als 36 Stunden zurück"
     },
     {
       "id": "short-winter-x",
@@ -152,8 +152,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_winter.mp4",
       "title": "",
-      "status": "freigegeben",
-      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
+      "status": "verpasst",
+      "error": "nicht gepostet: Termin liegt mehr als 36 Stunden zurück"
     },
     {
       "id": "short-wintereinbruch-youtube",
