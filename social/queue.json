@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-23T16:36:16.726Z",
+  "updated": "2026-11-23T21:15:32.072Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -352,7 +352,10 @@
       "text": "Sturmflut in Sassnitz, Oktober 2023 🌊 Promenade zerlegt, Steine wie Spielzeug, die Seebrücke beschädigt – nur der Leuchtturm hielt stand.\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Rügen #Sassnitz #Sturmflut #Ostsee #Naturgewalten #Oktober2023",
       "videoUrl": "https://myburano.com/social/videos/2026-11_sassnitz.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-23T21:15:32.071Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/2625019468010827",
+      "error": ""
     },
     {
       "id": "short-sassnitz-tiktok",
@@ -365,7 +368,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_sassnitz.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-sassnitz-x",
@@ -379,7 +383,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-11_sassnitz.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-schneesturm-youtube",
