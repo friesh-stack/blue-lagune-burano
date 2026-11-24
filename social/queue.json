@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T17:30:56.529Z",
+  "updated": "2026-11-24T19:37:21.086Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -508,7 +508,8 @@
       "text": "Heute Abend steht ein Supermond über Rügen 🌕 Der Vollmond ist nur rund 360.000 km entfernt – etwas größer und rund 13 % heller als ein durchschnittlicher Vollmond. Dass er am Horizont riesig wirkt, ist eine optische Täuschung. Nächster Supermond: Heiligabend, 24. Dezember – der größte des Jahres.\n\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Supermond #Vollmond #Rügen #Ostsee #Mond #Nachthimmel #Mönchgut",
       "videoUrl": "https://myburano.com/social/videos/2026-11_supermond.mp4",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Video nicht abrufbar: HTTP 404"
     },
     {
       "id": "short-supermond-instagram",
@@ -521,7 +522,8 @@
       "text": "Heute Abend steht ein Supermond über Rügen 🌕 Der Vollmond ist nur rund 360.000 km entfernt – etwas größer und rund 13 % heller als ein durchschnittlicher Vollmond. Dass er am Horizont riesig wirkt, ist eine optische Täuschung. Nächster Supermond: Heiligabend, 24. Dezember – der größte des Jahres.\n\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Supermond #Vollmond #Rügen #Ostsee #Mond #Nachthimmel #Mönchgut",
       "videoUrl": "https://myburano.com/social/videos/2026-11_supermond.mp4",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Instagram-Verarbeitung: Error: Media upload has failed with error code 2207076"
     },
     {
       "id": "short-supermond-facebook",
@@ -534,7 +536,10 @@
       "text": "Heute Abend steht ein Supermond über Rügen 🌕 Der Vollmond ist nur rund 360.000 km entfernt – etwas größer und rund 13 % heller als ein durchschnittlicher Vollmond. Dass er am Horizont riesig wirkt, ist eine optische Täuschung. Nächster Supermond: Heiligabend, 24. Dezember – der größte des Jahres.\n\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Supermond #Vollmond #Rügen #Ostsee #Mond #Nachthimmel #Mönchgut",
       "videoUrl": "https://myburano.com/social/videos/2026-11_supermond.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-24T19:37:21.085Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/2710055646116600",
+      "error": ""
     },
     {
       "id": "short-supermond-tiktok",
@@ -547,7 +552,8 @@
       "text": "Heute Abend steht ein Supermond über Rügen 🌕 Der Vollmond ist nur rund 360.000 km entfernt – etwas größer und rund 13 % heller als ein durchschnittlicher Vollmond. Dass er am Horizont riesig wirkt, ist eine optische Täuschung. Nächster Supermond: Heiligabend, 24. Dezember – der größte des Jahres.\n\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Supermond #Vollmond #Rügen #Ostsee #Mond #Nachthimmel #Mönchgut",
       "videoUrl": "https://myburano.com/social/videos/2026-11_supermond.mp4",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-supermond-x",
@@ -561,7 +567,8 @@
       "hashtags": "#Supermond #Rügen #Vollmond",
       "videoUrl": "https://myburano.com/social/videos/2026-11_supermond.mp4",
       "status": "freigegeben",
-      "linkFromId": "short-supermond-youtube"
+      "linkFromId": "short-supermond-youtube",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-hafeneis-youtube",
