@@ -401,9 +401,7 @@
       "status": "gepostet",
       "postedAt": "2026-11-24T11:20:54.062Z",
       "resultUrl": "https://www.youtube.com/watch?v=-LDBM4D8D88",
-      "error": "",
-      "thumbnailUrl": "https://myburano.com/social/videos/2026-11_froschkonzert_16x9_thumb.jpg",
-      "thumbnailError": "Vorschaubild nicht abrufbar: HTTP 404"
+      "error": ""
     },
     {
       "id": "video-froschkonzert-facebook",
