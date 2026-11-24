@@ -223,6 +223,18 @@ for (const it of q.items || []) {
   }
   changed = true;
 }
+/* ---------- Veraltete Facebook-Videos löschen (status "löschen") ---------- */
+for (const it of q.items || []) {
+  if (it.channel !== 'facebook' || it.status !== 'löschen' || DRY) continue;
+  try {
+    await ensurePageToken();
+    const id = (String(it.resultUrl).match(/videos\/(\d+)/) || [])[1];
+    if (!id) throw new Error('Video-ID nicht gefunden');
+    await j(await fetch(`https://graph.facebook.com/${GRAPH}/${id}?access_token=${env.FB_PAGE_TOKEN}`, { method: 'DELETE' }));
+    it.status = 'gelöscht'; it.deletedAt = new Date().toISOString(); it.error = ''; console.log('✓ gelöscht', it.resultUrl);
+  } catch (e) { it.error = 'Löschen fehlgeschlagen: ' + String(e.message || e).slice(0, 300); console.error('✗', it.error); }
+  changed = true;
+}
 /* ---------- Eigene Vorschaubilder für bereits hochgeladene YouTube-Videos ---------- */
 for (const it of q.items || []) {
   if (it.channel !== 'youtube' || it.status !== 'gepostet' || !it.thumbnailUrl || it.thumbnailSet || DRY) continue;
