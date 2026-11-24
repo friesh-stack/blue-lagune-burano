@@ -133,7 +133,7 @@ async function postInstagram(it) {
   try { const m = await j(await fetch(`${base}/${p.id}?fields=permalink&access_token=${env.IG_ACCESS_TOKEN}`)); return m.permalink; } catch { return `Instagram: ${p.id}`; }
 }
 
-/* ---------- YouTube Shorts ---------- */
+/* ---------- YouTube (Shorts und lange Videos mit format: 'lang') ---------- */
 async function postYouTube(it) {
   if (!env.YT_CLIENT_ID || !env.YT_REFRESH_TOKEN) return null;
   if (!it.videoUrl) throw new Error('Video-URL fehlt (YouTube braucht ein Video)');
@@ -147,7 +147,8 @@ async function postYouTube(it) {
   const tok = await j(await fetch('https://oauth2.googleapis.com/token', { method: 'POST', body: form({ client_id: env.YT_CLIENT_ID, client_secret: env.YT_CLIENT_SECRET, refresh_token: env.YT_REFRESH_TOKEN, grant_type: 'refresh_token' }) }));
   const vr = await fetch(it.videoUrl); if (!vr.ok) throw new Error('Video nicht abrufbar: HTTP ' + vr.status);
   const buf = Buffer.from(await vr.arrayBuffer());
-  let title = (it.title || it.product || 'Video').trim(); if (!/#shorts/i.test(title) && title.length < 90) title += ' #Shorts'; title = title.slice(0, 100);
+  const isLong = it.format === 'lang';   // normales 16:9-Video statt Short
+  let title = (it.title || it.product || 'Video').trim(); if (!isLong && !/#shorts/i.test(title) && title.length < 90) title += ' #Shorts'; title = title.slice(0, 100);
   const tags = (it.hashtags || '').split(/\s+/).map(t => t.replace(/^#/, '')).filter(Boolean).slice(0, 15);
   const meta = {
     snippet: { title, description: fullText(it, true).slice(0, 4900), tags, categoryId: it.brand === 'apps' ? '28' : '19', defaultLanguage: 'de' },
@@ -161,7 +162,7 @@ async function postYouTube(it) {
   if (!init.ok) await j(init);
   const loc = init.headers.get('location');
   const d = await j(await fetch(loc, { method: 'PUT', headers: { 'Content-Type': vr.headers.get('content-type') || 'video/mp4' }, body: buf }));
-  return `https://youtube.com/shorts/${d.id}`;
+  return isLong ? `https://www.youtube.com/watch?v=${d.id}` : `https://youtube.com/shorts/${d.id}`;
 }
 
 /* ---------- TikTok (Inbox-Entwurf, ohne App-Prüfung) ---------- */
