@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24T16:36:17.257Z",
+  "updated": "2026-11-24T17:30:56.529Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -463,7 +463,10 @@
       "text": "Schneesturm an der Ostsee ❄️🌊 Wilde See, Schneetreiben am Strand und Brandung an der Seebrücke – Naturgewalten auf Rügen.\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Rügen #Schneesturm #Ostsee #Winter #Seebrücke #Naturgewalten #Mönchgut",
       "videoUrl": "https://myburano.com/social/videos/2026-12_schneesturm.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-24T17:30:56.528Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/1633234767968624",
+      "error": ""
     },
     {
       "id": "short-schneesturm-tiktok",
@@ -476,7 +479,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_schneesturm.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-schneesturm-x",
@@ -490,7 +494,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_schneesturm.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-hafeneis-youtube",
