@@ -223,5 +223,21 @@ for (const it of q.items || []) {
   }
   changed = true;
 }
+/* ---------- Eigene Vorschaubilder für bereits hochgeladene YouTube-Videos ---------- */
+for (const it of q.items || []) {
+  if (it.channel !== 'youtube' || it.status !== 'gepostet' || !it.thumbnailUrl || it.thumbnailSet || DRY) continue;
+  if (!env.YT_CLIENT_ID || !env.YT_REFRESH_TOKEN) break;
+  try {
+    const rtm = String(env.YT_REFRESH_TOKEN).match(/1\/\/[A-Za-z0-9_\-]+/); if (rtm) env.YT_REFRESH_TOKEN = rtm[0];
+    const vid = (String(it.resultUrl).match(/(?:v=|shorts\/)([A-Za-z0-9_\-]{6,})/) || [])[1];
+    if (!vid) throw new Error('Video-ID nicht gefunden');
+    const tok = await j(await fetch('https://oauth2.googleapis.com/token', { method: 'POST', body: form({ client_id: env.YT_CLIENT_ID, client_secret: env.YT_CLIENT_SECRET, refresh_token: env.YT_REFRESH_TOKEN, grant_type: 'refresh_token' }) }));
+    const img = await fetch(it.thumbnailUrl); if (!img.ok) throw new Error('Vorschaubild nicht abrufbar: HTTP ' + img.status);
+    const buf = Buffer.from(await img.arrayBuffer());
+    await j(await fetch(`https://www.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=${vid}`, { method: 'POST', headers: { Authorization: 'Bearer ' + tok.access_token, 'Content-Type': 'image/jpeg' }, body: buf }));
+    it.thumbnailSet = new Date().toISOString(); it.thumbnailError = ''; console.log('✓ Vorschaubild', vid);
+  } catch (e) { it.thumbnailError = String(e.message || e).slice(0, 300); console.error('✗ Vorschaubild', it.id, it.thumbnailError); }
+  changed = true;
+}
 if (changed) { q.updated = new Date().toISOString(); await fs.writeFile(QUEUE, JSON.stringify(q, null, 2)); }
 console.log(`Fertig: ${done} veröffentlicht.`);
