@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25T16:35:00.043Z",
+  "updated": "2026-11-25T22:26:41.317Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -618,7 +618,10 @@
       "text": "Eiszeit im Hafen 🧊 Eiszapfen an der Reling, ein Segel aus Eis und Eisschollen unter dem Bug – Rügen im Februar 2021.\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Rügen #Eis #Winter #Hafen #Ostsee #Segelboot #Wintersonne",
       "videoUrl": "https://myburano.com/social/videos/2026-12_hafeneis.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-25T22:26:34.620Z",
+      "resultUrl": "https://www.instagram.com/reel/DgLmVqshCZw/",
+      "error": ""
     },
     {
       "id": "short-hafeneis-facebook",
@@ -631,7 +634,10 @@
       "text": "Eiszeit im Hafen 🧊 Eiszapfen an der Reling, ein Segel aus Eis und Eisschollen unter dem Bug – Rügen im Februar 2021.\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Rügen #Eis #Winter #Hafen #Ostsee #Segelboot #Wintersonne",
       "videoUrl": "https://myburano.com/social/videos/2026-12_hafeneis.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-25T22:26:41.316Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/1143775048632874",
+      "error": ""
     },
     {
       "id": "short-hafeneis-tiktok",
@@ -644,7 +650,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_hafeneis.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-hafeneis-x",
@@ -658,7 +665,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_hafeneis.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-nadia-youtube",
