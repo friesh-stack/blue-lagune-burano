@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T10:42:54.438Z",
+  "updated": "2026-11-26T10:49:08.583Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -756,7 +756,10 @@
       "text": "Hamburg als Strategiespiel 🗺️ Eine Hex-Karte wie in Civilization – gebaut aus echten öffentlichen Daten: 7 Bezirke, 104 Stadtteile, Einkommen, Wohnungspreise, Einwohner und 81 Ausflugsziele von der Elbphilharmonie bis ins Alte Land. Karte erkunden, Senatsaufträge lösen, vom Neubürger zum Ersten Bürgermeister – kostenlos im Browser auf hamburgbnb.de",
       "hashtags": "#Hamburg #Strategiespiel #Karte #Civilization #Elbphilharmonie #HafenCity #Stadtteile",
       "videoUrl": "https://myburano.com/social/videos/2026-11_hamburg_strategiespiel.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-26T10:48:19.957Z",
+      "resultUrl": "https://youtube.com/shorts/y-YFenSCN9I",
+      "error": ""
     },
     {
       "id": "short-hh-strategiespiel-instagram",
@@ -769,7 +772,10 @@
       "text": "Hamburg als Strategiespiel 🗺️ Eine Hex-Karte wie in Civilization – gebaut aus echten öffentlichen Daten: 7 Bezirke, 104 Stadtteile, Einkommen, Wohnungspreise, Einwohner und 81 Ausflugsziele von der Elbphilharmonie bis ins Alte Land. Karte erkunden, Senatsaufträge lösen, vom Neubürger zum Ersten Bürgermeister – kostenlos im Browser auf hamburgbnb.de",
       "hashtags": "#Hamburg #Strategiespiel #Karte #Civilization #Elbphilharmonie #HafenCity #Stadtteile",
       "videoUrl": "https://myburano.com/social/videos/2026-11_hamburg_strategiespiel.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-26T10:49:02.999Z",
+      "resultUrl": "https://www.instagram.com/reel/DgM7ToitH5r/",
+      "error": ""
     },
     {
       "id": "short-hh-strategiespiel-facebook",
@@ -782,7 +788,10 @@
       "text": "Hamburg als Strategiespiel 🗺️ Eine Hex-Karte wie in Civilization – gebaut aus echten öffentlichen Daten: 7 Bezirke, 104 Stadtteile, Einkommen, Wohnungspreise, Einwohner und 81 Ausflugsziele von der Elbphilharmonie bis ins Alte Land. Karte erkunden, Senatsaufträge lösen, vom Neubürger zum Ersten Bürgermeister – kostenlos im Browser auf hamburgbnb.de",
       "hashtags": "#Hamburg #Strategiespiel #Karte #Civilization #Elbphilharmonie #HafenCity #Stadtteile",
       "videoUrl": "https://myburano.com/social/videos/2026-11_hamburg_strategiespiel.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-26T10:49:08.582Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/1693317239162740",
+      "error": ""
     },
     {
       "id": "short-hh-strategiespiel-tiktok",
@@ -795,7 +804,8 @@
       "text": "Hamburg als Strategiespiel 🗺️ Eine Hex-Karte wie in Civilization – gebaut aus echten öffentlichen Daten: 7 Bezirke, 104 Stadtteile, Einkommen, Wohnungspreise, Einwohner und 81 Ausflugsziele von der Elbphilharmonie bis ins Alte Land. Karte erkunden, Senatsaufträge lösen, vom Neubürger zum Ersten Bürgermeister – kostenlos im Browser auf hamburgbnb.de",
       "hashtags": "#Hamburg #Strategiespiel #Karte #Civilization #Elbphilharmonie #HafenCity #Stadtteile",
       "videoUrl": "https://myburano.com/social/videos/2026-11_hamburg_strategiespiel.mp4",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-hh-strategiespiel-x",
@@ -809,7 +819,8 @@
       "hashtags": "#Hamburg #Strategiespiel #Karte",
       "videoUrl": "https://myburano.com/social/videos/2026-11_hamburg_strategiespiel.mp4",
       "status": "freigegeben",
-      "linkFromId": "short-hh-strategiespiel-youtube"
+      "linkFromId": "short-hh-strategiespiel-youtube",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-nadia-youtube",
