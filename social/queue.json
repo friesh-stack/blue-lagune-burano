@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T10:40:42.434Z",
+  "updated": "2026-11-26T10:42:54.438Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -679,7 +679,10 @@
       "text": "Rügen als Strategiespiel 🗺️ Eine Hex-Karte wie in Civilization – gebaut aus echten öffentlichen Daten: 39 Gemeinden, Übernachtungen, Einwohner, Wachstum und 40 Ausflugsziele von Kap Arkona bis Thiessow. Karte erkunden, Inselaufträge lösen, vom Tagesgast zum Inselkönig – kostenlos im Browser auf ostseebad-mönchgut.de",
       "hashtags": "#Rügen #Strategiespiel #Ostsee #Karte #Civilization #Mönchgut #Insel",
       "videoUrl": "https://myburano.com/social/videos/2026-11_ruegen_strategiespiel.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-26T10:42:04.974Z",
+      "resultUrl": "https://youtube.com/shorts/3gfi1lVCQEU",
+      "error": ""
     },
     {
       "id": "short-strategiespiel-instagram",
@@ -692,7 +695,10 @@
       "text": "Rügen als Strategiespiel 🗺️ Eine Hex-Karte wie in Civilization – gebaut aus echten öffentlichen Daten: 39 Gemeinden, Übernachtungen, Einwohner, Wachstum und 40 Ausflugsziele von Kap Arkona bis Thiessow. Karte erkunden, Inselaufträge lösen, vom Tagesgast zum Inselkönig – kostenlos im Browser auf ostseebad-mönchgut.de",
       "hashtags": "#Rügen #Strategiespiel #Ostsee #Karte #Civilization #Mönchgut #Insel",
       "videoUrl": "https://myburano.com/social/videos/2026-11_ruegen_strategiespiel.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-26T10:42:49.737Z",
+      "resultUrl": "https://www.instagram.com/reel/DgM6l7RBykI/",
+      "error": ""
     },
     {
       "id": "short-strategiespiel-facebook",
@@ -705,7 +711,10 @@
       "text": "Rügen als Strategiespiel 🗺️ Eine Hex-Karte wie in Civilization – gebaut aus echten öffentlichen Daten: 39 Gemeinden, Übernachtungen, Einwohner, Wachstum und 40 Ausflugsziele von Kap Arkona bis Thiessow. Karte erkunden, Inselaufträge lösen, vom Tagesgast zum Inselkönig – kostenlos im Browser auf ostseebad-mönchgut.de",
       "hashtags": "#Rügen #Strategiespiel #Ostsee #Karte #Civilization #Mönchgut #Insel",
       "videoUrl": "https://myburano.com/social/videos/2026-11_ruegen_strategiespiel.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-26T10:42:54.437Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/1157407620154761",
+      "error": ""
     },
     {
       "id": "short-strategiespiel-tiktok",
@@ -718,7 +727,8 @@
       "text": "Rügen als Strategiespiel 🗺️ Eine Hex-Karte wie in Civilization – gebaut aus echten öffentlichen Daten: 39 Gemeinden, Übernachtungen, Einwohner, Wachstum und 40 Ausflugsziele von Kap Arkona bis Thiessow. Karte erkunden, Inselaufträge lösen, vom Tagesgast zum Inselkönig – kostenlos im Browser auf ostseebad-mönchgut.de",
       "hashtags": "#Rügen #Strategiespiel #Ostsee #Karte #Civilization #Mönchgut #Insel",
       "videoUrl": "https://myburano.com/social/videos/2026-11_ruegen_strategiespiel.mp4",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-strategiespiel-x",
@@ -732,7 +742,8 @@
       "hashtags": "#Rügen #Strategiespiel #Ostsee",
       "videoUrl": "https://myburano.com/social/videos/2026-11_ruegen_strategiespiel.mp4",
       "status": "freigegeben",
-      "linkFromId": "short-strategiespiel-youtube"
+      "linkFromId": "short-strategiespiel-youtube",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-nadia-youtube",
