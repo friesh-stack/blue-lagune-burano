@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T04:56:12.451Z",
+  "updated": "2026-11-26T10:40:42.434Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -557,8 +557,8 @@
       "text": "Heute Abend steht ein Supermond über Rügen 🌕 Der Vollmond ist nur rund 360.000 km entfernt – etwas größer und rund 13 % heller als ein durchschnittlicher Vollmond. Dass er am Horizont riesig wirkt, ist eine optische Täuschung. Nächster Supermond: Heiligabend, 24. Dezember – der größte des Jahres.\n\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Supermond #Vollmond #Rügen #Ostsee #Mond #Nachthimmel #Mönchgut",
       "videoUrl": "https://myburano.com/social/videos/2026-11_supermond_v2.mp4",
-      "status": "freigegeben",
-      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
+      "status": "verpasst",
+      "error": "nicht gepostet: Termin liegt mehr als 36 Stunden zurück"
     },
     {
       "id": "short-supermond-x",
@@ -571,9 +571,9 @@
       "text": "Heute Abend: Supermond über Rügen 🌕 nur rund 360.000 km entfernt 👉 ostseebad-mönchgut.de",
       "hashtags": "#Supermond #Rügen #Vollmond",
       "videoUrl": "https://myburano.com/social/videos/2026-11_supermond_v2.mp4",
-      "status": "freigegeben",
+      "status": "verpasst",
       "linkFromId": "short-supermond-youtube",
-      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
+      "error": "nicht gepostet: Termin liegt mehr als 36 Stunden zurück"
     },
     {
       "id": "short-supermond-facebook-v2",
