@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T16:35:43.783Z",
+  "updated": "2026-11-26T23:44:53.983Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -865,7 +865,10 @@
       "text": "Sturmtief Nadia 🌪️ Im Januar 2022 bog der Sturm die Kiefern, entwurzelte Bäume – und am Morgen danach war der Strand wie leergefegt.\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Rügen #Sturm #Nadia #Mönchgut #Göhren #Sellin #Ostsee #Naturgewalten",
       "videoUrl": "https://myburano.com/social/videos/2026-12_nadia.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-26T23:44:53.983Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/1711605320626282",
+      "error": ""
     },
     {
       "id": "short-nadia-tiktok",
@@ -878,7 +881,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_nadia.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-nadia-x",
@@ -892,7 +896,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_nadia.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-binz-youtube",
