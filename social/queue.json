@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-27T16:36:06.633Z",
+  "updated": "2026-11-27T18:51:36.838Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -942,7 +942,10 @@
       "text": "Binz von oben 🌅 Seebrücke im Morgenlicht, das Kurhaus, Bäderarchitektur und türkisblaues Wasser.\nVermietest du auf Rügen? Deine eigene Landingpage mit 3 Unterseiten auf ostseebad-mönchgut.de – 14 Tage gratis testen, danach nur 9 € im Monat.",
       "hashtags": "#Rügen #Binz #Drohne #Seebrücke #Kurhaus #Ostsee #Ferienwohnung",
       "videoUrl": "https://myburano.com/social/videos/2026-12_binz.mp4",
-      "status": "freigegeben"
+      "status": "gepostet",
+      "postedAt": "2026-11-27T18:51:36.837Z",
+      "resultUrl": "https://www.facebook.com/103858452996336/videos/1897051734626141",
+      "error": ""
     },
     {
       "id": "short-binz-tiktok",
@@ -955,7 +958,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_binz.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-binz-x",
@@ -969,7 +973,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_binz.mp4",
       "title": "",
-      "status": "freigegeben"
+      "status": "freigegeben",
+      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
     },
     {
       "id": "short-froschkonzert-youtube",
