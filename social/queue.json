@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26T23:44:53.983Z",
+  "updated": "2026-11-27T08:09:22.332Z",
   "items": [
     {
       "id": "short-polarlicht-youtube",
@@ -650,8 +650,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_hafeneis.mp4",
       "title": "",
-      "status": "freigegeben",
-      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
+      "status": "verpasst",
+      "error": "nicht gepostet: Termin liegt mehr als 36 Stunden zurück"
     },
     {
       "id": "short-hafeneis-x",
@@ -665,8 +665,8 @@
       "link": "https://ostseebad-mönchgut.de",
       "videoUrl": "https://myburano.com/social/videos/2026-12_hafeneis.mp4",
       "title": "",
-      "status": "freigegeben",
-      "error": "Kanal nicht eingerichtet (Secrets fehlen)"
+      "status": "verpasst",
+      "error": "nicht gepostet: Termin liegt mehr als 36 Stunden zurück"
     },
     {
       "id": "short-strategiespiel-youtube",
